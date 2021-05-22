@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "de.keksuccino.fancyhud.mixin.client",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "MixinMinecraft",
+    "MixinPlayerController"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "fancyhud.mixin-refmap.json"
+}
