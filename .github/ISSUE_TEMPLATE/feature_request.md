@@ -1,20 +1,12 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Tell me about your idea for FancyHud
 title: ''
-labels: ''
+labels: feature request
 assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
-
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
-
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
-
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**Describe your idea**
+A detailed and clear description of what you want to see in the mod.
+The feature should fit the mod's lore. Something like "add speaking potatos ridden by Trump" will be ignored.
