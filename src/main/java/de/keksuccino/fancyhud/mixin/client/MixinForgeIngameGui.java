@@ -15,7 +15,7 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 @Mixin(ForgeIngameGui.class)
 public class MixinForgeIngameGui {
 	
-	@Inject(at = @At(value = "HEAD"), method = "render")
+	@Inject(at = @At(value = "HEAD"), method = "renderIngameGui")
 	protected void onRenderIngameGuiPre(MatrixStack matrix, float partialTicks, CallbackInfo info) {
 
 		if (CustomizationHandler.isLightModeEnabled() && !(Minecraft.getInstance().currentScreen instanceof LayoutEditorScreen)) {
@@ -26,7 +26,7 @@ public class MixinForgeIngameGui {
 		
 	}
 	
-	@Inject(at = @At(value = "TAIL"), method = "render")
+	@Inject(at = @At(value = "TAIL"), method = "renderIngameGui")
 	protected void onRenderIngameGuiPost(MatrixStack matrix, float partialTicks, CallbackInfo info) {
 		
 		if (CustomizationHandler.isLightModeEnabled() && !(Minecraft.getInstance().currentScreen instanceof LayoutEditorScreen)) {

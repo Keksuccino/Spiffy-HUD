@@ -13,15 +13,15 @@ import net.minecraft.client.gui.IngameGui;
 @Mixin(value = Minecraft.class)
 public class MixinMinecraft {
 
-	@Shadow protected IngameGui gui;
+	@Shadow protected IngameGui ingameGUI;
 	
 	private static boolean ingameGuiUpdated = false;
 	
-	@Inject(at = @At(value = "HEAD"), method = "resizeDisplay")
+	@Inject(at = @At(value = "HEAD"), method = "updateWindowSize")
 	protected void onUpdateWindowSize(CallbackInfo info) {
 		if (!ingameGuiUpdated) {
 			if (!CustomizationHandler.isLightModeEnabled()) {
-				this.gui = CustomizationHandler.INGAME_GUI;
+				this.ingameGUI = CustomizationHandler.INGAME_GUI;
 			}
 			ingameGuiUpdated = true;
 		}

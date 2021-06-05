@@ -12,7 +12,7 @@ import net.minecraft.client.multiplayer.PlayerController;
 @Mixin(value = PlayerController.class)
 public class MixinPlayerController {
 
-	@Inject(at = @At(value = "HEAD"), method = "canHurtPlayer", cancellable = true)
+	@Inject(at = @At(value = "HEAD"), method = "gameIsSurvivalOrAdventure", cancellable = true)
 	protected void onShouldDrawHUD(CallbackInfoReturnable<Boolean> info) {
 		if ((Minecraft.getInstance() != null) && (Minecraft.getInstance().currentScreen instanceof LayoutEditorScreen)) {
 			info.setReturnValue(true);
