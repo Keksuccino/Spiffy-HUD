@@ -76,7 +76,7 @@ public class OverlayMessageHudElement extends IngameHudElement {
 					RenderSystem.enableBlend();
 //					RenderSystem.defaultBlendFunc();
 					int c = (this.handler.getAnimateOverlayMessageColor() ? MathHelper.hsvToRGB(hue / 50.0F, 0.7F, 0.6F) & baseColor : baseColor);
-//					this.handler.func_238448_a_(matrix, this.mc.fontRenderer, -4, this.mc.fontRenderer.getStringPropertyWidth(overlayMessage), 16777215 | (opacity << 24));
+//					this.handler.drawBackdrop(matrix, this.mc.fontRenderer, -4, this.mc.fontRenderer.getStringPropertyWidth(overlayMessage), 16777215 | (opacity << 24));
 					this.mc.fontRenderer.func_238422_b_(matrix, overlayMessage.func_241878_f(), posX, posY, c | (MathHelper.ceil(opacity) << 24));
 					RenderSystem.disableBlend();
 				}

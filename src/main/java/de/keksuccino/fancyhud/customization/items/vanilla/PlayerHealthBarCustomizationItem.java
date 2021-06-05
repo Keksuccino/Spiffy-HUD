@@ -9,6 +9,8 @@ import de.keksuccino.konkrete.properties.PropertiesSection;
 
 public class PlayerHealthBarCustomizationItem extends VanillaCustomizationItem {
 
+	public boolean hideWhenFull = false;
+	
 	public BarAlignment barAlignment = BarAlignment.LEFT;
 	
 	public PlayerHealthBarCustomizationItem(IngameHudElement element, PropertiesSection props, boolean isSecondItemOfThisType) {
@@ -26,13 +28,24 @@ public class PlayerHealthBarCustomizationItem extends VanillaCustomizationItem {
 			}
 		}
 		
+		String hideFull = props.getEntryValue("hidewhenfull");
+		if ((hideFull != null) && hideFull.equalsIgnoreCase("true")) {
+			this.hideWhenFull = true;
+		}
+		
 	}
 	
 	@Override
 	public void render(MatrixStack matrix) {
 
+		PlayerHealthHudElement he = ((PlayerHealthHudElement)this.element);
+		
+		if (this.hideWhenFull || !this.isSecondItemOfThisType) {
+			he.hideWhenFull = this.hideWhenFull;
+		}
+		
 		if (this.isOriginalOrientation) {
-			((PlayerHealthHudElement)this.element).isDefaultPos = true;
+			he.isDefaultPos = true;
 		}
 		
 		if (!this.orientation.equals("bottom-centered")) {

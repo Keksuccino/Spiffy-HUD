@@ -13,7 +13,13 @@ import de.keksuccino.fancyhud.api.item.CustomizationItemContainer;
 import de.keksuccino.fancyhud.api.item.CustomizationItemRegistry;
 import de.keksuccino.fancyhud.customization.CustomizationHandler;
 import de.keksuccino.fancyhud.customization.CustomizationPropertiesHandler;
+import de.keksuccino.fancyhud.customization.helper.CustomizationHelperScreen;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutElement;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomAirBar;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomArmorBar;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomExpBar;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomFoodBar;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomHealthBar;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.VanillaLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.ui.UIBase;
 import de.keksuccino.fancyhud.customization.helper.ui.content.CustomizationButton;
@@ -23,6 +29,11 @@ import de.keksuccino.fancyhud.customization.helper.ui.content.MenuBar.ElementAli
 import de.keksuccino.fancyhud.customization.helper.ui.popup.ChooseFilePopup;
 import de.keksuccino.fancyhud.customization.helper.ui.popup.DynamicValueInputPopup;
 import de.keksuccino.fancyhud.customization.helper.ui.popup.FHYesNoPopup;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomAirBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomArmorBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomExpBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomFoodBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomHealthBarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.ShapeCustomizationItem.Shape;
 import de.keksuccino.fancyhud.customization.rendering.slideshow.SlideshowHandler;
 import de.keksuccino.konkrete.gui.content.AdvancedButton;
@@ -249,7 +260,7 @@ public class LayoutEditorUI extends UIBase {
 				this.parent.height = Minecraft.getInstance().getMainWindow().getScaledHeight();
 				this.parent.width = Minecraft.getInstance().getMainWindow().getScaledWidth();
 				
-				Minecraft.getInstance().displayGuiScreen(null);
+				Minecraft.getInstance().displayGuiScreen(new CustomizationHelperScreen());
 				
 			}
 		});
@@ -713,6 +724,88 @@ public class LayoutEditorUI extends UIBase {
 				shapesMenu.openMenuAt(0, press.y, screenWidth, screenHeight);
 			});
 			this.addContent(shapesButton);
+			
+			this.addSeparator();
+			
+			/** CUSTOM HEALTH BAR **/
+			AdvancedButton customHealthButton = new AdvancedButton(0, 0, 0, 20, Locals.localize("fancyhud.helper.creator.add.customhealthbar"), (press) -> {
+				this.parent.history.saveSnapshot(this.parent.history.createSnapshot());
+				
+				PropertiesSection sec = new PropertiesSection("customization");
+				sec.addEntry("action", "addcustomhealthbar");
+				sec.addEntry("width", "100");
+				sec.addEntry("height", "20");
+				sec.addEntry("x", "0");
+				sec.addEntry("y", "" + (int)(this.parent.ui.bar.getHeight() * UIBase.getUIScale()));
+				
+				CustomHealthBarCustomizationItem i = new CustomHealthBarCustomizationItem(sec);
+				this.parent.addContent(new LayoutCustomHealthBar(i, this.parent));
+			});
+			this.addContent(customHealthButton);
+			
+			/** CUSTOM FOOD BAR **/
+			AdvancedButton customFoodButton = new AdvancedButton(0, 0, 0, 20, Locals.localize("fancyhud.helper.creator.add.customfoodbar"), (press) -> {
+				this.parent.history.saveSnapshot(this.parent.history.createSnapshot());
+				
+				PropertiesSection sec = new PropertiesSection("customization");
+				sec.addEntry("action", "addcustomfoodbar");
+				sec.addEntry("width", "100");
+				sec.addEntry("height", "20");
+				sec.addEntry("x", "0");
+				sec.addEntry("y", "" + (int)(this.parent.ui.bar.getHeight() * UIBase.getUIScale()));
+				
+				CustomFoodBarCustomizationItem i = new CustomFoodBarCustomizationItem(sec);
+				this.parent.addContent(new LayoutCustomFoodBar(i, this.parent));
+			});
+			this.addContent(customFoodButton);
+			
+			/** CUSTOM ARMOR BAR **/
+			AdvancedButton customArmorButton = new AdvancedButton(0, 0, 0, 20, Locals.localize("fancyhud.helper.creator.add.customarmorbar"), (press) -> {
+				this.parent.history.saveSnapshot(this.parent.history.createSnapshot());
+				
+				PropertiesSection sec = new PropertiesSection("customization");
+				sec.addEntry("action", "addcustomarmorbar");
+				sec.addEntry("width", "100");
+				sec.addEntry("height", "20");
+				sec.addEntry("x", "0");
+				sec.addEntry("y", "" + (int)(this.parent.ui.bar.getHeight() * UIBase.getUIScale()));
+				
+				CustomArmorBarCustomizationItem i = new CustomArmorBarCustomizationItem(sec);
+				this.parent.addContent(new LayoutCustomArmorBar(i, this.parent));
+			});
+			this.addContent(customArmorButton);
+			
+			/** CUSTOM AIR BAR **/
+			AdvancedButton customAirButton = new AdvancedButton(0, 0, 0, 20, Locals.localize("fancyhud.helper.creator.add.customairbar"), (press) -> {
+				this.parent.history.saveSnapshot(this.parent.history.createSnapshot());
+				
+				PropertiesSection sec = new PropertiesSection("customization");
+				sec.addEntry("action", "addcustomairbar");
+				sec.addEntry("width", "100");
+				sec.addEntry("height", "20");
+				sec.addEntry("x", "0");
+				sec.addEntry("y", "" + (int)(this.parent.ui.bar.getHeight() * UIBase.getUIScale()));
+				
+				CustomAirBarCustomizationItem i = new CustomAirBarCustomizationItem(sec);
+				this.parent.addContent(new LayoutCustomAirBar(i, this.parent));
+			});
+			this.addContent(customAirButton);
+			
+			/** CUSTOM EXP BAR **/
+			AdvancedButton customExpButton = new AdvancedButton(0, 0, 0, 20, Locals.localize("fancyhud.helper.creator.add.customexpbar"), (press) -> {
+				this.parent.history.saveSnapshot(this.parent.history.createSnapshot());
+				
+				PropertiesSection sec = new PropertiesSection("customization");
+				sec.addEntry("action", "addcustomexpbar");
+				sec.addEntry("width", "100");
+				sec.addEntry("height", "20");
+				sec.addEntry("x", "0");
+				sec.addEntry("y", "" + (int)(this.parent.ui.bar.getHeight() * UIBase.getUIScale()));
+				
+				CustomExpBarCustomizationItem i = new CustomExpBarCustomizationItem(sec);
+				this.parent.addContent(new LayoutCustomExpBar(i, this.parent));
+			});
+			this.addContent(customExpButton);
 			
 			this.addSeparator();
 			

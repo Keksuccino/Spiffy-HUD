@@ -14,6 +14,8 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
+import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.IngameHudElement.BarAlignment;
+
 public class PlayerHealthHudElement extends IngameHudElement {
 
 	protected Random rand = new Random();
@@ -21,23 +23,26 @@ public class PlayerHealthHudElement extends IngameHudElement {
 	protected int playerHealth;
 	protected long lastSystemTime;
 	protected int lastPlayerHealth;
-	
 	public int currentHealthHeight = 10;
 	public boolean isDefaultPos = false;
+	public boolean hideWhenFull = false;
 	
 	public BarAlignment alignment = BarAlignment.LEFT;
 	
 	public PlayerHealthHudElement(CustomizableIngameGui handler) {
 		super(handler);
-		
-		this.width = 80;
-		this.height = 9;
+
+		this.width = (int) (80 * this.scale);
+		this.height = (int) (9 * this.scale);
 	}
 
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
+
+		this.width = (int) (80 * this.scale);
+		this.height = (int) (9 * this.scale);
 		
-		this.currentHealthHeight = 10;
+		this.currentHealthHeight = (int) (10 * this.scale);
 
 		this.renderHealth(scaledWidth, scaledHeight, matrix);
 
@@ -62,6 +67,10 @@ public class PlayerHealthHudElement extends IngameHudElement {
 			int health = 10;
 			if (!this.handler.isEditor()) {
 				health = MathHelper.ceil(player.getHealth());
+				
+				if ((player.getHealth() >= player.getMaxHealth()) && this.hideWhenFull) {
+					return;
+				}
 			}
 			boolean highlight = healthUpdateCounter > (long)this.handler.getTicks() && (healthUpdateCounter - (long)this.handler.getTicks()) / 3L %2L == 1L;
 
@@ -91,14 +100,16 @@ public class PlayerHealthHudElement extends IngameHudElement {
 			
 			this.currentHealthHeight = (healthRows * rowHeight);
 	        if (rowHeight != 10) this.currentHealthHeight += 10 - rowHeight;
+	        
+	        this.currentHealthHeight = (int) (this.currentHealthHeight * this.scale);
 
 			this.rand.setSeed((long)(this.handler.getTicks() * 312871));
 
-			int left = this.x;
+			int left = (int) (this.x / this.scale);
 			if (this.alignment == BarAlignment.RIGHT) {
-				left = this.x + 90 - 18;
+				left = left + 90 - 18;
 			}
-			int top = this.y;
+			int top = (int) (this.y / this.scale);
 
 			int regen = -1;
 			if (player.isPotionActive(Effects.REGENERATION)) {
@@ -115,6 +126,10 @@ public class PlayerHealthHudElement extends IngameHudElement {
 			}
 			float absorbRemaining = absorb;
 
+			matrix.push();
+
+			matrix.scale(this.scale, this.scale, this.scale);
+			
 			for (int i = MathHelper.ceil((healthMax + absorb) / 2.0F) - 1; i >= 0; --i) {
 				int row = MathHelper.ceil((float)(i + 1) / 10.0F) - 1;
 				int x = left + i % 10 * 8;
@@ -155,6 +170,8 @@ public class PlayerHealthHudElement extends IngameHudElement {
 					}
 				}
 			}
+
+			matrix.pop();
 
 			RenderSystem.disableBlend();
 			mc.getProfiler().endSection();

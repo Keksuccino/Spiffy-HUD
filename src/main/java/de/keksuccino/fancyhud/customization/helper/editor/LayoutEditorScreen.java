@@ -20,17 +20,17 @@ import de.keksuccino.fancyhud.api.item.CustomizationItem;
 import de.keksuccino.fancyhud.api.item.CustomizationItemContainer;
 import de.keksuccino.fancyhud.api.item.CustomizationItemLayoutElement;
 import de.keksuccino.fancyhud.customization.CustomizationHandler;
-import de.keksuccino.fancyhud.customization.DynamicValueHelper;
+import de.keksuccino.fancyhud.customization.dynamicvalues.DynamicValueHelper;
 import de.keksuccino.fancyhud.customization.helper.editor.EditHistory.Snapshot;
 import de.keksuccino.fancyhud.customization.helper.editor.LayoutEditorUI.LayoutPropertiesContextMenu;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutShape;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutSlideshow;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutSplashText;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutString;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutTexture;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutWebString;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutWebTexture;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.string.LayoutString;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.AirBarLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.ArmorBarLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.BossBarLayoutElement;
@@ -40,6 +40,7 @@ import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.FoodM
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.HotbarLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.OverlayMessageLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.PlayerHealthBarLayoutElement;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.SidebarLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.SelectedItemNameLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.TitleLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.VanillaLayoutElement;
@@ -65,6 +66,7 @@ import de.keksuccino.fancyhud.customization.items.vanilla.FoodMountHealthCustomi
 import de.keksuccino.fancyhud.customization.items.vanilla.HotbarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.OverlayMessageCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.PlayerHealthBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.vanilla.SidebarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.SelectedItemNameCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.TitleCustomizationItem;
 import de.keksuccino.fancyhud.customization.rendering.slideshow.SlideshowHandler;
@@ -143,6 +145,7 @@ public class LayoutEditorScreen extends Screen {
 	protected AirBarLayoutElement airLayoutElement;
 	protected SelectedItemNameLayoutElement selectedItemNameLayoutElement;
 	protected OverlayMessageLayoutElement overlayMessageLayoutElement;
+	protected SidebarLayoutElement sidebarLayoutElement;
 	
 	protected Map<String, CustomVanillaLayoutElement> customElements = new HashMap<String, CustomVanillaLayoutElement>(); 
 	
@@ -171,6 +174,7 @@ public class LayoutEditorScreen extends Screen {
 		this.subtitleLayoutElement = new TitleLayoutElement(new TitleCustomizationItem(this.ingameHud.subtitleElement, sec, false), this);
 		this.selectedItemNameLayoutElement = new SelectedItemNameLayoutElement(new SelectedItemNameCustomizationItem(this.ingameHud.selectedItemNameElement, sec, false), this);
 		this.overlayMessageLayoutElement = new OverlayMessageLayoutElement(new OverlayMessageCustomizationItem(this.ingameHud.overlayMessageElement, sec, false), this);
+		this.sidebarLayoutElement = new SidebarLayoutElement(new SidebarCustomizationItem(this.ingameHud.sidebarElement, sec, false), this);
 		
 		this.content.add(this.bossBarLayoutElement);
 		this.content.add(this.crosshairLayoutElement);
@@ -185,6 +189,7 @@ public class LayoutEditorScreen extends Screen {
 		this.content.add(this.subtitleLayoutElement);
 		this.content.add(this.selectedItemNameLayoutElement);
 		this.content.add(this.overlayMessageLayoutElement);
+		this.content.add(this.sidebarLayoutElement);
 		
 		//Custom vanilla elements
 		for (Map.Entry<String, HudElementContainer> m : HudElementRegistry.getInstance().getElements().entrySet()) {
@@ -349,7 +354,9 @@ public class LayoutEditorScreen extends Screen {
 		//Renders all layout objects. The focused object is always rendered on top of all other objects.
 		for (LayoutElement l : this.content) {
 			if (!this.isFocused(l)) {
-				l.render(matrix, mouseX, mouseY);
+				if (((l instanceof VanillaLayoutElement) && !CustomizationHandler.isLightModeEnabled()) || !(l instanceof VanillaLayoutElement) || (l instanceof CustomVanillaLayoutElement)) {
+					l.render(matrix, mouseX, mouseY);
+				}
 			}
 		}
 

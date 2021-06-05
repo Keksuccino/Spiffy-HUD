@@ -3,7 +3,7 @@ package de.keksuccino.fancyhud.customization.items;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import de.keksuccino.fancyhud.customization.DynamicValueHelper;
+import de.keksuccino.fancyhud.customization.dynamicvalues.DynamicValueHelper;
 import de.keksuccino.konkrete.properties.PropertiesSection;
 import de.keksuccino.konkrete.resources.TextureHandler;
 import de.keksuccino.konkrete.resources.WebTextureResourceLocation;

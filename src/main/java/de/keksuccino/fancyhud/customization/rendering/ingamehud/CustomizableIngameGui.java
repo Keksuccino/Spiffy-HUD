@@ -18,6 +18,7 @@ import de.keksuccino.fancyhud.api.hud.HudElementRegistry;
 import de.keksuccino.fancyhud.api.item.CustomizationItem;
 import de.keksuccino.fancyhud.api.item.CustomizationItemContainer;
 import de.keksuccino.fancyhud.api.item.CustomizationItemRegistry;
+import de.keksuccino.fancyhud.customization.CustomizationHandler;
 import de.keksuccino.fancyhud.customization.CustomizationPropertiesHandler;
 import de.keksuccino.fancyhud.customization.items.CustomizationItemBase;
 import de.keksuccino.fancyhud.customization.items.ShapeCustomizationItem;
@@ -27,6 +28,11 @@ import de.keksuccino.fancyhud.customization.items.StringCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.TextureCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.WebStringCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.WebTextureCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomAirBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomArmorBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomExpBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomFoodBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomHealthBarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.AirBarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.ArmorBarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.BossBarCustomizationItem;
@@ -36,6 +42,7 @@ import de.keksuccino.fancyhud.customization.items.vanilla.FoodMountHealthCustomi
 import de.keksuccino.fancyhud.customization.items.vanilla.HotbarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.OverlayMessageCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.PlayerHealthBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.vanilla.SidebarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.SelectedItemNameCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.TitleCustomizationItem;
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.AirBarHudElement;
@@ -47,6 +54,7 @@ import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.Hotb
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.OverlayMessageHudElement;
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.FoodMountHealthHudElement;
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.PlayerHealthHudElement;
+import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.SidebarHudElement;
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.SelectedItemNameHudElement;
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.TitleHudElement;
 import de.keksuccino.fancyhud.events.CustomizationSystemReloadedEvent;
@@ -63,6 +71,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -73,9 +82,9 @@ import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CustomizableIngameGui extends ForgeIngameGui {
-	
+
 	private boolean isEditor;
-	
+
 	public CrosshairHudElement crosshairElement = new CrosshairHudElement(this);
 	public BossBarHudElement bossBarElement = new BossBarHudElement(this);
 	public HotbarHudElement hotbarElement = new HotbarHudElement(this);
@@ -83,88 +92,89 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 	public FoodMountHealthHudElement foodMountHealthElement = new FoodMountHealthHudElement(this);
 	public ExperienceJumpBarHudElement experienceJumpBarElement = new ExperienceJumpBarHudElement(this);
 	//TODO implementieren
-//	public PotionIconsHudElement potionIconsElement = new PotionIconsHudElement(this);
+	//	public PotionIconsHudElement potionIconsElement = new PotionIconsHudElement(this);
 	public ArmorBarHudElement armorBarElement = new ArmorBarHudElement(this);
 	public AirBarHudElement airBarElement = new AirBarHudElement(this);
 	public TitleHudElement titleElement = new TitleHudElement(this, false);
 	public TitleHudElement subtitleElement = new TitleHudElement(this, true);
 	public SelectedItemNameHudElement selectedItemNameElement = new SelectedItemNameHudElement(this);
 	public OverlayMessageHudElement overlayMessageElement = new OverlayMessageHudElement(this);
-	
+	public SidebarHudElement sidebarElement = new SidebarHudElement(this);
+
 	public Map<String, HudElementContainer> customElements;
-	
+
 	protected CustomizableBossOverlayGui bossGui;
-	
+
 	protected List<CustomizationItemBase> backgroundElements = new ArrayList<CustomizationItemBase>();
 	protected List<CustomizationItemBase> foregroundElements = new ArrayList<CustomizationItemBase>();
-	
+
 	protected boolean prevTickIsSingleplayer = true;
 	protected boolean prevTickWorldNull = true;
-	
+
 	public boolean showVignette = true;
-	
+
 	public CustomizableIngameGui(Minecraft mc, boolean isEditor) {
 		super(mc);
-		
+
 		this.isEditor = isEditor;
-		
+
 		this.bossGui = new CustomizableBossOverlayGui(mc, this);
-		
+
 		this.customElements = HudElementRegistry.getInstance().getElements();
-		
+
 		if (!this.isEditor()) {
 			MinecraftForge.EVENT_BUS.register(this);
 			this.reloadHud(Minecraft.getInstance().getMainWindow().getScaledWidth(), Minecraft.getInstance().getMainWindow().getScaledHeight());
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onWindowResized(WindowResizedEvent e) {
 		this.reloadHud(e.getScaledWidth(), e.getScaledHeight());
 	}
-	
+
 	@SubscribeEvent
 	public void onSystemReloaded(CustomizationSystemReloadedEvent e) {
 		this.reloadHud(Minecraft.getInstance().getMainWindow().getScaledWidth(), Minecraft.getInstance().getMainWindow().getScaledHeight());
 	}
-	
+
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent e) {
 		if ((Minecraft.getInstance() != null)) {
-			
+
 			if ((Minecraft.getInstance().world == null) != this.prevTickWorldNull) {
 				this.reloadHud(Minecraft.getInstance().getMainWindow().getScaledWidth(), Minecraft.getInstance().getMainWindow().getScaledHeight());
 			}
 			this.prevTickWorldNull = (Minecraft.getInstance().world == null);
-			
+
 			if (Minecraft.getInstance().isSingleplayer() != this.prevTickIsSingleplayer) {
 				this.reloadHud(Minecraft.getInstance().getMainWindow().getScaledWidth(), Minecraft.getInstance().getMainWindow().getScaledHeight());
 			}
 			this.prevTickIsSingleplayer = Minecraft.getInstance().isSingleplayer();
-			
+
 		}
 	}
-	
+
 	public void reloadHud(int scaledWidth, int scaledHeight) {
 
 		try {
-			
+
 			if (this.isEditor()) {
 				return;
 			}
-			
+
 			this.foregroundElements.clear();
 			this.backgroundElements.clear();
-			
+
 			this.customElements = HudElementRegistry.getInstance().getElements();
-			
+
 			for (HudElementContainer c : this.customElements.values()) {
 				c.onResetElement();
 				c.element.setHandler(this);
 			}
-			
+
 			List<PropertiesSet> props = CustomizationPropertiesHandler.getProperties();
-			
+
 			boolean crossSet = false;
 			boolean bossSet = false;
 			boolean hotbarSet = false;
@@ -177,29 +187,30 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 			boolean airSet = false;
 			boolean selectedItemNameSet = false;
 			boolean overlayMessageSet = false;
-			
+			boolean sidebarSet = false;
+
 			List<String> customElementsSet = new ArrayList<String>();
-			
+
 			for (PropertiesSet s : props) {
-				
+
 				boolean renderInBackground = false;
-				
+
 				List<PropertiesSection> metas = s.getPropertiesOfType("customization-meta");
-				
+
 				if (metas.isEmpty()) {
 					continue;
 				}
-				
+
 				String roString = metas.get(0).getEntryValue("renderorder");
 				if ((roString != null) && roString.equalsIgnoreCase("background")) {
 					renderInBackground = true;
 				}
-				
+
 				String vignetteString = metas.get(0).getEntryValue("showvignette");
 				if ((vignetteString != null) && vignetteString.equalsIgnoreCase("false")) {
 					this.showVignette = false;
 				}
-				
+
 				String showIn = metas.get(0).getEntryValue("showin");
 				if (showIn != null) {
 					if (showIn.equalsIgnoreCase("singleplayer")) {
@@ -213,112 +224,122 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 						}
 					}
 				}
-				
+
 				//TODO reimplement biggerthan, smallerthan, etc ----> AT THIS LINE <----
-				
+
 				for (PropertiesSection sec : s.getPropertiesOfType("customization")) {
 					String action = sec.getEntryValue("action");
-					
+
 					if (action != null) {
-						
-						/** ################## VANILLA ELEMENTS / CUSTOMIZATIONS ################## **/
-						
-						/** CROSSHAIR **/
-						if (action.equalsIgnoreCase("editcrosshair")) {
-							this.backgroundElements.add(new CrosshairCustomizationItem(this.crosshairElement, sec, crossSet));
-							crossSet = true;
-						}
-						
-						/** BOSS HEALTH **/
-						if (action.equalsIgnoreCase("editbosshealth")) {
-							this.backgroundElements.add(new BossBarCustomizationItem(this.bossBarElement, sec, bossSet));
-							bossSet = true;
-						}
-						
-						/** HOTBAR **/
-						if (action.equalsIgnoreCase("edithotbar")) {
-							this.backgroundElements.add(new HotbarCustomizationItem(this.hotbarElement, sec, hotbarSet));
-							hotbarSet = true;
-						}
-						
-						/** PLAYER HEALTH BAR **/
-						if (action.equalsIgnoreCase("editplayerhealthbar")) {
-							this.backgroundElements.add(new PlayerHealthBarCustomizationItem(this.healthElement, sec, playerHealthSet));
-							playerHealthSet = true;
-						}
-						
-						/** PLAYER FOOD BAR | MOUNT HEALTH BAR **/
-						if (action.equalsIgnoreCase("editplayerfoodbar")) {
-							this.backgroundElements.add(new FoodMountHealthCustomizationItem(this.foodMountHealthElement, sec, foodSet));
-							foodSet = true;
-						}
-						
-						/** EXPERIENCE BAR | JUMP BAR **/
-						if (action.equalsIgnoreCase("editexperiencebar")) {
-							this.backgroundElements.add(new ExperienceJumpBarCustomizationItem(this.experienceJumpBarElement, sec, experienceSet));
-							experienceSet = true;
-						}
-						
-						/** TITLE **/
-						if (action.equalsIgnoreCase("edittitle")) {
-							this.backgroundElements.add(new TitleCustomizationItem(this.titleElement, sec, titleSet));
-							titleSet = true;
-						}
-						
-						/** SUBTITLE **/
-						if (action.equalsIgnoreCase("editsubtitle")) {
-							this.backgroundElements.add(new TitleCustomizationItem(this.subtitleElement, sec, subtitleSet));
-							subtitleSet = true;
-						}
 
-						/** ARMOR BAR **/
-						if (action.equalsIgnoreCase("editarmorbar")) {
-							this.backgroundElements.add(new ArmorBarCustomizationItem(this.armorBarElement, sec, armorSet));
-							armorSet = true;
-						}
+						if (!CustomizationHandler.isLightModeEnabled()) {
 
-						/** AIR BAR **/
-						if (action.equalsIgnoreCase("editairbar")) {
-							this.backgroundElements.add(new AirBarCustomizationItem(this.airBarElement, sec, airSet));
-							airSet = true;
-						}
-						
-						/** SELECTED ITEM NAME **/
-						if (action.equalsIgnoreCase("editselecteditemname")) {
-							this.backgroundElements.add(new SelectedItemNameCustomizationItem(this.selectedItemNameElement, sec, selectedItemNameSet));
-							selectedItemNameSet = true;
-						}
-						
-						/** OVERLAY MESSAGE **/
-						if (action.equalsIgnoreCase("editoverlaymessage")) {
-							this.backgroundElements.add(new OverlayMessageCustomizationItem(this.overlayMessageElement, sec, overlayMessageSet));
-							overlayMessageSet = true;
-						}
-						
-						/** ################## CUSTOM VANILLA ELEMENTS ################## **/
-						
-						if (action.startsWith("edit_")) {
+							/** ################## VANILLA ELEMENTS / CUSTOMIZATIONS ################## **/
+
+							/** CROSSHAIR **/
+							if (action.equalsIgnoreCase("editcrosshair")) {
+								this.backgroundElements.add(new CrosshairCustomizationItem(this.crosshairElement, sec, crossSet));
+								crossSet = true;
+							}
+
+							/** BOSS HEALTH **/
+							if (action.equalsIgnoreCase("editbosshealth")) {
+								this.backgroundElements.add(new BossBarCustomizationItem(this.bossBarElement, sec, bossSet));
+								bossSet = true;
+							}
+
+							/** HOTBAR **/
+							if (action.equalsIgnoreCase("edithotbar")) {
+								this.backgroundElements.add(new HotbarCustomizationItem(this.hotbarElement, sec, hotbarSet));
+								hotbarSet = true;
+							}
+
+							/** PLAYER HEALTH BAR **/
+							if (action.equalsIgnoreCase("editplayerhealthbar")) {
+								this.backgroundElements.add(new PlayerHealthBarCustomizationItem(this.healthElement, sec, playerHealthSet));
+								playerHealthSet = true;
+							}
+
+							/** PLAYER FOOD BAR | MOUNT HEALTH BAR **/
+							if (action.equalsIgnoreCase("editplayerfoodbar")) {
+								this.backgroundElements.add(new FoodMountHealthCustomizationItem(this.foodMountHealthElement, sec, foodSet));
+								foodSet = true;
+							}
+
+							/** EXPERIENCE BAR | JUMP BAR **/
+							if (action.equalsIgnoreCase("editexperiencebar")) {
+								this.backgroundElements.add(new ExperienceJumpBarCustomizationItem(this.experienceJumpBarElement, sec, experienceSet));
+								experienceSet = true;
+							}
+
+							/** TITLE **/
+							if (action.equalsIgnoreCase("edittitle")) {
+								this.backgroundElements.add(new TitleCustomizationItem(this.titleElement, sec, titleSet));
+								titleSet = true;
+							}
+
+							/** SUBTITLE **/
+							if (action.equalsIgnoreCase("editsubtitle")) {
+								this.backgroundElements.add(new TitleCustomizationItem(this.subtitleElement, sec, subtitleSet));
+								subtitleSet = true;
+							}
+
+							/** ARMOR BAR **/
+							if (action.equalsIgnoreCase("editarmorbar")) {
+								this.backgroundElements.add(new ArmorBarCustomizationItem(this.armorBarElement, sec, armorSet));
+								armorSet = true;
+							}
+
+							/** AIR BAR **/
+							if (action.equalsIgnoreCase("editairbar")) {
+								this.backgroundElements.add(new AirBarCustomizationItem(this.airBarElement, sec, airSet));
+								airSet = true;
+							}
+
+							/** SELECTED ITEM NAME **/
+							if (action.equalsIgnoreCase("editselecteditemname")) {
+								this.backgroundElements.add(new SelectedItemNameCustomizationItem(this.selectedItemNameElement, sec, selectedItemNameSet));
+								selectedItemNameSet = true;
+							}
+
+							/** OVERLAY MESSAGE **/
+							if (action.equalsIgnoreCase("editoverlaymessage")) {
+								this.backgroundElements.add(new OverlayMessageCustomizationItem(this.overlayMessageElement, sec, overlayMessageSet));
+								overlayMessageSet = true;
+							}
 							
+							/** SIDEBAR **/
+							if (action.equalsIgnoreCase("editsidebar")) {
+								this.backgroundElements.add(new SidebarCustomizationItem(this.sidebarElement, sec, sidebarSet));
+								sidebarSet = true;
+							}
+
+						}
+
+						/** ################## CUSTOM VANILLA ELEMENTS ################## **/
+
+						if (action.startsWith("edit_")) {
+
 							String id = action.split("[_]", 2)[1];
 							HudElementContainer c = this.customElements.get(id);
 							boolean isSecond = false;
 							if (customElementsSet.contains(id)) {
 								isSecond = true;
 							}
-							
+
 							if (c != null) {
-								
+
 								this.backgroundElements.add(new CustomVanillaCustomizationItem(c, sec, isSecond));
 								if (!customElementsSet.contains(id)) {
 									customElementsSet.add(id);
 								}
-								
+
 							}
-							
+
 						}
-						
+
 						/** ################## ITEMS ################## **/
-						
+
 						/** TEXT ELEMENT **/
 						if (action.equalsIgnoreCase("addtext")) {
 							if (renderInBackground) {
@@ -336,7 +357,7 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 								foregroundElements.add(new WebStringCustomizationItem(sec));
 							}
 						}
-						
+
 						/** TEXTURE ELEMENT **/
 						if (action.equalsIgnoreCase("addtexture")) {
 							if (renderInBackground) {
@@ -363,7 +384,7 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 								foregroundElements.add(new ShapeCustomizationItem(sec));
 							}
 						}
-						
+
 						/** SLIDESHOW ELEMENT **/
 						if (action.equalsIgnoreCase("addslideshow")) {
 							if (renderInBackground) {
@@ -373,62 +394,107 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 							}
 						}
 
-//						if (action.equalsIgnoreCase("addentity")) {
-//							if (renderInBackground) {
-//								backgroundElements.add(new PlayerEntityCustomizationItem(sec));
-//							} else {
-//								foregroundElements.add(new PlayerEntityCustomizationItem(sec));
-//							}
-//						}
-						
+						//						if (action.equalsIgnoreCase("addentity")) {
+						//							if (renderInBackground) {
+						//								backgroundElements.add(new PlayerEntityCustomizationItem(sec));
+						//							} else {
+						//								foregroundElements.add(new PlayerEntityCustomizationItem(sec));
+						//							}
+						//						}
+
 						/** SPLASH TEXT ELEMENT **/
 						if (action.equalsIgnoreCase("addsplash")) {
 							String file = sec.getEntryValue("splashfilepath");
 							String text = sec.getEntryValue("text");
 							if ((file != null) || (text != null)) {
-								
+
 								SplashTextCustomizationItem i = new SplashTextCustomizationItem(sec);
-								
+
 								if (renderInBackground) {
 									backgroundElements.add(i);
 								} else {
 									foregroundElements.add(i);
 								}
-								
+
 							}
 						}
 						
-						/** ################## CUSTOM ITEMS ################## **/
+						/** CUSTOM HEALTH BAR **/
+						if (action.equalsIgnoreCase("addcustomhealthbar")) {
+							if (renderInBackground) {
+								backgroundElements.add(new CustomHealthBarCustomizationItem(sec));
+							} else {
+								foregroundElements.add(new CustomHealthBarCustomizationItem(sec));
+							}
+						}
 						
+						/** CUSTOM FOOD BAR **/
+						if (action.equalsIgnoreCase("addcustomfoodbar")) {
+							if (renderInBackground) {
+								backgroundElements.add(new CustomFoodBarCustomizationItem(sec));
+							} else {
+								foregroundElements.add(new CustomFoodBarCustomizationItem(sec));
+							}
+						}
+						
+						/** CUSTOM ARMOR BAR **/
+						if (action.equalsIgnoreCase("addcustomarmorbar")) {
+							if (renderInBackground) {
+								backgroundElements.add(new CustomArmorBarCustomizationItem(sec));
+							} else {
+								foregroundElements.add(new CustomArmorBarCustomizationItem(sec));
+							}
+						}
+						
+						/** CUSTOM AIR BAR **/
+						if (action.equalsIgnoreCase("addcustomairbar")) {
+							if (renderInBackground) {
+								backgroundElements.add(new CustomAirBarCustomizationItem(sec));
+							} else {
+								foregroundElements.add(new CustomAirBarCustomizationItem(sec));
+							}
+						}
+						
+						/** CUSTOM EXP BAR **/
+						if (action.equalsIgnoreCase("addcustomexpbar")) {
+							if (renderInBackground) {
+								backgroundElements.add(new CustomExpBarCustomizationItem(sec));
+							} else {
+								foregroundElements.add(new CustomExpBarCustomizationItem(sec));
+							}
+						}
+
+						/** ################## CUSTOM ITEMS ################## **/
+
 						if (action.startsWith("add_")) {
 							String id = action.split("[_]", 2)[1];
 							CustomizationItemContainer c = CustomizationItemRegistry.getInstance().getElement(id);
 							if (c != null) {
-								
+
 								CustomizationItem i = c.constructWithProperties(sec);
 								if (renderInBackground) {
 									backgroundElements.add(i);
 								} else {
 									foregroundElements.add(i);
 								}
-								
+
 							}
 						}
-						
+
 					}
-					
+
 				}
-				
+
 			}
-			
+
 			//Add dummy customization items to handle positions of all non-customized elements
 			PropertiesSection dummySec = new PropertiesSection("customization");
 			if (!crossSet) {
 				this.backgroundElements.add(new CrosshairCustomizationItem(this.crosshairElement, dummySec, false));
 			}
-//			if (!potionsSet) {
-//				this.backgroundElements.add(new PotionIconsCustomizationItem(this.potionIconsElement, dummySec));
-//			}
+			//			if (!potionsSet) {
+			//				this.backgroundElements.add(new PotionIconsCustomizationItem(this.potionIconsElement, dummySec));
+			//			}
 			if (!bossSet) {
 				this.backgroundElements.add(new BossBarCustomizationItem(this.bossBarElement, dummySec, false));
 			}
@@ -462,91 +528,106 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 			if (!overlayMessageSet) {
 				this.backgroundElements.add(new OverlayMessageCustomizationItem(this.overlayMessageElement, dummySec, false));
 			}
-			
+			if (!sidebarSet) {
+				this.backgroundElements.add(new SidebarCustomizationItem(this.sidebarElement, dummySec, false));
+			}
+
 			for (Map.Entry<String, HudElementContainer> m : this.customElements.entrySet()) {
 				HudElementContainer c = m.getValue();
 				if (!customElementsSet.contains(c.elementIdentifier)) {
 					this.backgroundElements.add(new CustomVanillaCustomizationItem(c, dummySec, false));
 				}
 			}
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
+
 	}
-	
+
 	@Override
 	public void renderIngameGui(MatrixStack matrix, float partialTicks) {
-				
+
 		try {
-			
+
 			if (!this.isEditor()) {
-				for (CustomizationItemBase c : this.backgroundElements) {
-					c.render(matrix);
-				}
+				this.renderBackgroundItems(matrix);
 			}
-			
+
 			super.renderIngameGui(matrix, partialTicks);
-			
+
 			//Render custom vanilla elements
 			if (!this.isEditor()) {
-				for (Map.Entry<String, HudElementContainer> m : this.customElements.entrySet()) {
-					m.getValue().element.render(matrix, scaledWidth, scaledHeight, partialTicks);
-				}
+				this.renderCustomVanillaElements(matrix, partialTicks);
 			}
-			
+
 			if (!this.isEditor()) {
-				for (CustomizationItemBase c : this.foregroundElements) {
-					c.render(matrix);
-				}
+				this.renderForegroundItems(matrix);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 	
+	public void renderBackgroundItems(MatrixStack matrix) {
+		for (CustomizationItemBase c : this.backgroundElements) {
+			c.render(matrix);
+		}
+	}
+
+	public void renderForegroundItems(MatrixStack matrix) {
+		for (CustomizationItemBase c : this.foregroundElements) {
+			c.render(matrix);
+		}
+	}
+
+	public void renderCustomVanillaElements(MatrixStack matrix, float partialTicks) {
+		for (Map.Entry<String, HudElementContainer> m : this.customElements.entrySet()) {
+			m.getValue().element.render(matrix, scaledWidth, scaledHeight, partialTicks);
+		}
+	}
+
 	@Override
 	protected void renderVignette(Entity entity) {
 		if (this.showVignette) {
 			super.renderVignette(entity);
 		}
 	}
-	
+
 	//Render Crosshair
 	@Override
 	protected void func_238456_d_(MatrixStack matrix) {
-		
+
 		this.crosshairElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
-		
+
 	}
 
 	//TODO editierbar machen
-//	@Override
-//    protected void renderPotionIcons(MatrixStack matrix) {
-//
-//		if (this.potionIconsElement.fireEvents) {
-//			if (pre(ElementType.POTION_ICONS, matrix, false)) return;
-//		}
-//
-//		if (this.potionIconsElement.visible) {
-//
-//			this.renderPotionIconsRaw(matrix);
-//
-//		}
-//
-//		if (this.potionIconsElement.fireEvents) {
-//			post(ElementType.POTION_ICONS, matrix, false);
-//		}
-//
-////		this.potionIconsElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
-//        
-//    }
+	//	@Override
+	//    protected void renderPotionIcons(MatrixStack matrix) {
+	//
+	//		if (this.potionIconsElement.fireEvents) {
+	//			if (pre(ElementType.POTION_ICONS, matrix, false)) return;
+	//		}
+	//
+	//		if (this.potionIconsElement.visible) {
+	//
+	//			this.renderPotionIconsRaw(matrix);
+	//
+	//		}
+	//
+	//		if (this.potionIconsElement.fireEvents) {
+	//			post(ElementType.POTION_ICONS, matrix, false);
+	//		}
+	//
+	////		this.potionIconsElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
+	//        
+	//    }
 
 	protected void renderPotionIconsRaw(MatrixStack matrix) {
-		
+
 		Collection<EffectInstance> collection = this.mc.player.getActivePotionEffects();
 		if (!collection.isEmpty()) {
 			RenderSystem.enableBlend();
@@ -603,92 +684,99 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 
 			list.forEach(Runnable::run);
 		}
-		
+
 	}
 
 	@Override
 	protected void renderBossHealth(MatrixStack matrix) {
-		
+
 		this.bossBarElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
-        
-    }
-	
+
+	}
+
 	@Override
 	protected void renderHotbar(float partialTicks, MatrixStack matrix) {
 
 		this.hotbarElement.render(matrix, scaledWidth, scaledHeight, partialTicks);
-		
+
 	}
-	
+
 	@Override
 	public void renderHealth(int width, int height, MatrixStack matrix) {
-		
+
 		this.healthElement.render(matrix, width, height, Minecraft.getInstance().getRenderPartialTicks());
-		
+
 		this.armorBarElement.render(matrix, width, height, Minecraft.getInstance().getRenderPartialTicks());
 
 		this.foodMountHealthElement.render(matrix, width, height, Minecraft.getInstance().getRenderPartialTicks());
 
 		this.airBarElement.render(matrix, width, height, Minecraft.getInstance().getRenderPartialTicks());
-		
+
 		this.experienceJumpBarElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
 
 	}
-	
+
 	//renderSelectedItemName
 	@Override
 	public void func_238453_b_(MatrixStack matrix) {
-		
+
 		this.selectedItemNameElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
-		
+
 	}
-	
+
 	@Override
 	protected void renderRecordOverlay(int width, int height, float partialTicks, MatrixStack matrix) {
-		
+
 		this.overlayMessageElement.render(matrix, width, height, partialTicks);
-		
+
 	}
-	
+
 	@Override
 	public void renderFood(int width, int height, MatrixStack matrix) {
 		//empty bc food + mount health are rendered in renderHealth
-    }
-	
+	}
+
 	@Override
 	protected void renderHealthMount(int width, int height, MatrixStack matrix) {
 		//empty bc food + mount health are rendered in renderHealth
-    }
-	
+	}
+
 	@Override
 	public void renderHorseJumpBar(MatrixStack matrix, int posX) {
 		//empty bc exp + jump bar are rendered in renderHealth
 	}
-	
+
 	@Override
 	protected void renderExperience(int posX, MatrixStack matrix) {
 		//empty bc exp + jump bar are rendered in renderHealth
 	}
-	
+
 	@Override
 	protected void renderArmor(MatrixStack matrix, int width, int height) {
 		//empty bc armor bar is rendered in renderHealth
 	}
-	
+
 	@Override
 	protected void renderAir(int width, int height, MatrixStack matrix) {
 		//empty bc air bar is rendered in renderHealth
 	}
-	
+
 	@Override
 	protected void renderTitle(int width, int height, float partialTicks, MatrixStack matrix) {
-		
+
 		this.titleElement.render(matrix, width, height, partialTicks);
-		
+
 		this.subtitleElement.render(matrix, width, height, partialTicks);
-        
-    }
+
+	}
 	
+	@Override
+	protected void func_238447_a_(MatrixStack matrix, ScoreObjective objective) {
+		
+		this.sidebarElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
+		
+	}
+
 	@Override
 	public BossOverlayGui getBossOverlay() {
 		return this.bossGui;
@@ -696,11 +784,11 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 
 	public boolean pre(ElementType type, MatrixStack matrix, boolean isInsideCustomization) {
 		if (isInsideCustomization && !FancyHud.config.getOrDefault("customizeforgehooks", true)) {
-    		return false;
-    	}
-    	if (!isInsideCustomization && FancyHud.config.getOrDefault("customizeforgehooks", true)) {
-    		return false;
-    	}
+			return false;
+		}
+		if (!isInsideCustomization && FancyHud.config.getOrDefault("customizeforgehooks", true)) {
+			return false;
+		}
 		try {
 			Method m = ForgeIngameGui.class.getDeclaredMethod("pre", ElementType.class, MatrixStack.class);
 			m.setAccessible(true);
@@ -709,79 +797,85 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 			e.printStackTrace();
 		}
 		return false;
-    }
-	
-    public void post(ElementType type, MatrixStack matrix, boolean isInsideCustomization) {
-    	if (isInsideCustomization && !FancyHud.config.getOrDefault("customizeforgehooks", true)) {
-    		return;
-    	}
-    	if (!isInsideCustomization && FancyHud.config.getOrDefault("customizeforgehooks", true)) {
-    		return;
-    	}
-    	try {
+	}
+
+	public void post(ElementType type, MatrixStack matrix, boolean isInsideCustomization) {
+		if (isInsideCustomization && !FancyHud.config.getOrDefault("customizeforgehooks", true)) {
+			return;
+		}
+		if (!isInsideCustomization && FancyHud.config.getOrDefault("customizeforgehooks", true)) {
+			return;
+		}
+		try {
 			Method m = ForgeIngameGui.class.getDeclaredMethod("post", ElementType.class, MatrixStack.class);
 			m.setAccessible(true);
 			m.invoke(this, type, matrix);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    }
-    
-    public void bind(ResourceLocation res) {
-        mc.getTextureManager().bindTexture(res);
-    }
-    
-    public boolean isEditor() {
-    	return this.isEditor;
-    }
-    
-    public ITextComponent getCurrentTitle() {
+	}
+
+	public void bind(ResourceLocation res) {
+		mc.getTextureManager().bindTexture(res);
+	}
+
+	public boolean isEditor() {
+		return this.isEditor;
+	}
+
+	public ITextComponent getCurrentTitle() {
 		return this.displayedTitle;
 	}
-	
+
 	public ITextComponent getCurrentSubTitle() {
 		return this.displayedSubTitle;
 	}
-	
+
 	public int getTitlesTimer() {
 		return this.titlesTimer;
 	}
-	
+
 	public int getTitleFadeOut() {
 		return this.titleFadeOut;
 	}
-	
+
 	public int getTitleFadeIn() {
 		return this.titleFadeIn;
 	}
-	
+
 	public int getTitleDisplayTime() {
 		return this.titleDisplayTime;
 	}
-	
+
 	public int getRemainingHighlightingTicks() {
 		return this.remainingHighlightTicks;
 	}
-	
+
 	public ItemStack getHighlightingItemStack() {
 		return this.highlightingItemStack;
 	}
-	
+
 	public int getOverlayMessageTime() {
 		return this.overlayMessageTime;
 	}
-	
+
 	public ITextComponent getOverlayMessage() {
 		return this.overlayMessage;
 	}
-	
+
 	public boolean getAnimateOverlayMessageColor() {
 		return this.animateOverlayMessageColor;
 	}
-	
+
 	@Override
 	public void func_238448_a_(MatrixStack matrix, FontRenderer p_238448_2_, int p_238448_3_, int p_238448_4_, int p_238448_5_) {
 		super.func_238448_a_(matrix, p_238448_2_, p_238448_3_, p_238448_4_, p_238448_5_);
+	}
+
+	public void onClose() {
+		if (!this.isEditor()) {
+			MinecraftForge.EVENT_BUS.unregister(this);
+		}
 	}
 
 }

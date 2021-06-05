@@ -25,10 +25,14 @@ public class SlideshowHandler {
 	public static void updateSlideshows() {
 		File f = FancyHud.SLIDESHOW_DIR;
 		
+		if (!FancyHud.SLIDESHOW_DIR.exists()) {
+			FancyHud.SLIDESHOW_DIR.mkdirs();
+		}
+		
 		slideshows.clear();
 		for (File f2 : f.listFiles()) {
 			if (f2.isDirectory()) {
-				File f3 = new File(f2.getPath() + "/properties.txt");
+				File f3 = new File(f2.getPath() + "/slideshow.properties");
 				File f4 = new File(f2.getPath() + "/images");
 				if (f3.exists() && f4.exists()) {
 					ExternalTextureSlideshowRenderer render = new ExternalTextureSlideshowRenderer(f2.getPath());
@@ -37,9 +41,7 @@ public class SlideshowHandler {
 						render.prepareSlideshow();
 						slideshows.put(name, render);
 					} else {
-						Logging.print("############## ERROR [FANCYMENU] ##############");
-						Logging.print("Invalid slideshow found: " + f2.getPath());
-						Logging.print("###############################################");
+						Logging.error("Invalid slideshow found: " + f2.getPath());
 					}
 				}
 			}
@@ -67,7 +69,7 @@ public class SlideshowHandler {
 	}
 	
 	@SubscribeEvent
-	public void onMenuReload(CustomizationSystemReloadedEvent e) {
+	public void onSystemReload(CustomizationSystemReloadedEvent e) {
 		updateSlideshows();
 	}
 

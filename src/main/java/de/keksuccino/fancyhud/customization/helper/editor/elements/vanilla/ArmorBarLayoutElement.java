@@ -19,6 +19,9 @@ public class ArmorBarLayoutElement extends VanillaLayoutElement {
 	
 	@Override
 	public void init() {
+		
+		this.scaleable = true;
+		
 		super.init();
 
 		this.rightclickMenu.addSeparator();
@@ -40,6 +43,24 @@ public class ArmorBarLayoutElement extends VanillaLayoutElement {
 		});
 		barAlignmentButton.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.editor.elements.vanilla.bars.alignment.btn.desc", ""), "%n%"));
 		this.rightclickMenu.addContent(barAlignmentButton);
+		
+		/** HIDE WHEN EMPTY **/
+		String hideFullString = Locals.localize("fancyhud.helper.editor.elements.vanilla.bars.hidewhenempty.on");
+		if (!((ArmorBarCustomizationItem)this.getVanillaObject()).hideWhenEmpty) {
+			hideFullString = Locals.localize("fancyhud.helper.editor.elements.vanilla.bars.hidewhenempty.off");
+		}
+		AdvancedButton hideWhenFullButton = new AdvancedButton(0, 0, 0, 0, hideFullString, (press) -> {
+			this.handler.history.saveSnapshot(this.handler.history.createSnapshot());
+			if (((ArmorBarCustomizationItem)this.getVanillaObject()).hideWhenEmpty) {
+				((AdvancedButton)press).setMessage(Locals.localize("fancyhud.helper.editor.elements.vanilla.bars.hidewhenempty.off"));
+				((ArmorBarCustomizationItem)this.getVanillaObject()).hideWhenEmpty = false;
+			} else {
+				((AdvancedButton)press).setMessage(Locals.localize("fancyhud.helper.editor.elements.vanilla.bars.hidewhenempty.on"));
+				((ArmorBarCustomizationItem)this.getVanillaObject()).hideWhenEmpty = true;
+			}
+		});
+		hideWhenFullButton.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.editor.elements.vanilla.bars.hidewhenempty.btn.desc"), "%n%"));
+		this.rightclickMenu.addContent(hideWhenFullButton);
 		
 	}
 
@@ -64,10 +85,17 @@ public class ArmorBarLayoutElement extends VanillaLayoutElement {
 		if (!this.getVanillaObject().fireEvents) {
 			p.addEntry("fireevents", "" + this.getVanillaObject().fireEvents);
 		}
+		if (this.getVanillaObject().scale != 1.0F) {
+			p.addEntry("scale", "" + this.getVanillaObject().scale);
+		}
 		
 		BarAlignment a = ((ArmorBarCustomizationItem)this.getVanillaObject()).barAlignment;
 		if ((a != null) && (a != BarAlignment.LEFT)) {
 			p.addEntry("alignment", a.getName());
+		}
+		
+		if (((ArmorBarCustomizationItem)this.getVanillaObject()).hideWhenEmpty) {
+			p.addEntry("hidewhenempty", "true");
 		}
 		
 		if (p.getEntries().size() > 1) {

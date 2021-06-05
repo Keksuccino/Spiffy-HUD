@@ -4,7 +4,7 @@ license="KML (Keksuccino Mod License)"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 modId="fancyhud" #mandatory
-version="1.0.0" #mandatory
+version="1.2.0" #mandatory
 displayName="FancyHud" #mandatory
 authors="Keksuccino" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/fancyhud" #optional
@@ -14,7 +14,7 @@ COPYRIGHT:
 
 > FancyHud © Copyright 2021 Keksuccino.
   FancyHud is licensed under KML.
-  Visit https://github.com/Keksuccino/fancyhud for more infos about this license.'''
+  See https://github.com/Keksuccino/FancyHud/blob/main/LICENSE.md for more infos about this license.'''
 
 [[dependencies.fancyhud]]
 modId="konkrete"

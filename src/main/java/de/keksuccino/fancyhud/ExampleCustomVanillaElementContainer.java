@@ -18,13 +18,15 @@ public class ExampleCustomVanillaElementContainer extends HudElementContainer {
 	public boolean isRedColor = false;
 	
 	public ExampleCustomVanillaElementContainer() {
+		//The last 5 arguments are for setting the default size, orientation and position for this element,
+		//because it is part of the HUD by default, even if there are not layouts to set its position.
 		super("fancyhud.test.cusvanillaelement", new ExampleCustomVanillaElement(), "Test Element", 50, 50, "bottom-left", 10, -10);
 	}
 
 	@Override
 	public void onResetElement() {
 		
-		//Resetting the cached custom property value (Don't reset values of the actual element here!)
+		//Resetting the cached custom property value to the default value (Don't reset values of the actual element here!)
 		this.isRedColor = false;
 		
 	}
@@ -72,7 +74,8 @@ public class ExampleCustomVanillaElementContainer extends HudElementContainer {
 		//Don't override this completely! The parent method contains important things to handle the position of the element.
 		super.onTick(item);
 		
-		//Applying the cached isRedColor property variable to the actual element
+		//Applying/Syncing the cached isRedColor property variable to the actual element.
+		//This will also reset the element's value if it's not customized by a layout anymore.
 		((ExampleCustomVanillaElement)this.element).isRedColor = this.isRedColor;
 		
 	}
@@ -83,7 +86,7 @@ public class ExampleCustomVanillaElementContainer extends HudElementContainer {
 		Map<String, String> m = new HashMap<String, String>();
 		
 		//It's really important to only save customized variables (variables that don't have the default value),
-		//otherwise they could override real customizations
+		//otherwise they could override real customizations.
 		if (this.isRedColor) {
 			m.put("redcolor", "true");
 		}

@@ -13,6 +13,8 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.FoodStats;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
+import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.IngameHudElement.BarAlignment;
+
 public class FoodMountHealthHudElement extends IngameHudElement {
 
 	protected Random rand = new Random();
@@ -20,23 +22,26 @@ public class FoodMountHealthHudElement extends IngameHudElement {
 	protected int playerHealth;
 	protected long lastSystemTime;
 	protected int lastPlayerHealth;
-	
 	public int currentFoodHeight = 10;
 	public boolean isDefaultPos = false;
+	public boolean hideWhenFull = false;
 	
 	public BarAlignment alignment = BarAlignment.RIGHT;
 
 	public FoodMountHealthHudElement(CustomizableIngameGui handler) {
 		super(handler);
 
-		this.width = 80; //90
-		this.height = 9;
+		this.width = (int) (80 * this.scale);
+		this.height = (int) (9 * this.scale);
 	}
 
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
+		
+		this.width = (int) (80 * this.scale);
+		this.height = (int) (9 * this.scale);
 
-		this.currentFoodHeight = 10;
+		this.currentFoodHeight = (int) (10 * this.scale);
 		
 		if (CustomizableIngameGui.renderFood && !CustomizableIngameGui.renderHealthMount) {
 			
@@ -66,18 +71,28 @@ public class FoodMountHealthHudElement extends IngameHudElement {
 			mc.getProfiler().startSection("food");
 			
 			RenderSystem.enableBlend();
-			int left = this.x + 90;
+			int left = ((int)(this.x / this.scale)) + 90;
 			if (this.alignment == BarAlignment.LEFT) {
-				left = this.x + 18;
+				left = ((int)(this.x / this.scale)) + 18;
 			}
-			int top = this.y;
+			int top = (int) (this.y / this.scale);
 
 			FoodStats stats = mc.player.getFoodStats();
 			int level = 10;
 			
 			if (!this.handler.isEditor()) {
+				
 				level = stats.getFoodLevel();
+				
+				if (this.hideWhenFull && !stats.needFood()) {
+					return;
+				}
+				
 			}
+
+            matrix.push();
+
+			matrix.scale(this.scale, this.scale, this.scale);
 
 			for (int i = 0; i < 10; ++i) {
 				int idx = i * 2 + 1;
@@ -107,11 +122,13 @@ public class FoodMountHealthHudElement extends IngameHudElement {
 				else if (idx == level)
 					blit(matrix, x, y, icon + 45, 27, 9, 9);
 			}
+			
+			matrix.pop();
 
 			RenderSystem.disableBlend();
 			mc.getProfiler().endSection();
 			
-			this.currentFoodHeight = 10;
+			this.currentFoodHeight = (int) (10 * this.scale);
 
 		}
 
@@ -142,9 +159,9 @@ public class FoodMountHealthHudElement extends IngameHudElement {
 
 		if (this.visible) {
 
-			int left = this.x + 90;
+			int left = ((int)(this.x / this.scale)) + 90;
 			if (this.alignment == BarAlignment.LEFT) {
-				left = this.x + 18;
+				left = ((int)(this.x / this.scale)) + 18;
 			}
 
 			mc.getProfiler().endStartSection("mountHealth");
@@ -157,15 +174,23 @@ public class FoodMountHealthHudElement extends IngameHudElement {
 			if (hearts > 30) {
 				hearts = 30;
 			}
+			
+			if ((mount.getHealth() >= mount.getMaxHealth()) && this.hideWhenFull) {
+				return;
+			}
 
 			final int MARGIN = 52;
 			final int BACKGROUND = MARGIN;
 			final int HALF = MARGIN + 45;
 			final int FULL = MARGIN + 36;
 
+            matrix.push();
+
+			matrix.scale(this.scale, this.scale, this.scale);
+			
 			int heightRow = 0;
 			for (int heart = 0; hearts > 0; heart += 20) {
-				int top = this.y - heightRow;
+				int top = ((int)(this.y / this.scale)) - heightRow;
 
 				int rowCount = Math.min(hearts, 10);
 				hearts -= rowCount;
@@ -189,7 +214,9 @@ public class FoodMountHealthHudElement extends IngameHudElement {
 				heightRow += 10;
 			}
 			
-			this.currentFoodHeight = heightRow;
+			matrix.pop();
+			
+			this.currentFoodHeight = (int) (heightRow * this.scale);
 
 			RenderSystem.disableBlend();
 

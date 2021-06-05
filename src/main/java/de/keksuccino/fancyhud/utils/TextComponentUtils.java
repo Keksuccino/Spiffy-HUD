@@ -6,11 +6,12 @@ import com.google.common.collect.Streams;
 
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 
 public class TextComponentUtils {
-	
+
 	public static String getFormattedStringFromComponent(ITextComponent component) {
 		StringBuilder stringbuilder = new StringBuilder();
 		String s = "";
@@ -29,7 +30,7 @@ public class TextComponentUtils {
 
 			stringbuilder.append(s1);
 		}
-		
+
 		for (ITextComponent c : component.getSiblings()) {
 			String s3 = c.getString();
 			if (!s3.isEmpty()) {
@@ -53,14 +54,14 @@ public class TextComponentUtils {
 
 		return stringbuilder.toString();
 	}
-	
+
 	public static Stream<ITextComponent> getStreamOfComponent(ITextComponent component) {
 		return Streams.concat(Stream.of(component));
 	}
-	
+
 	public static String getFormattingCodesFromStyle(Style style) {
 		String s = "";
-		
+
 		Color c = style.getColor();
 		if (c != null) {
 			if (c.getColor() == TextFormatting.AQUA.getColor()) {
@@ -112,7 +113,7 @@ public class TextComponentUtils {
 				s += "§e";
 			}
 		}
-		
+
 		if (style.getBold()) {
 			s += "§l";
 		}
@@ -128,8 +129,43 @@ public class TextComponentUtils {
 		if (style.getUnderlined()) {
 			s += "§n";
 		}
-		
+
 		return s;
+	}
+
+	public static String toHexString(int red, int green, int blue) {
+		String hex = String. format("#%02X%02X%02X", red, green, blue);
+		return hex;
+	}
+	
+	public static StringTextComponent getWithGradient(java.awt.Color start, String text, java.awt.Color end) {
+
+		StringTextComponent sc = new StringTextComponent("");
+
+		int length = text.length();
+		int i = 0;
+		for (char c : text.toCharArray()) {
+
+			int red = (int)(start.getRed() + ((float)(end.getRed() - start.getRed())) / (length - 1) * i);
+			int green = (int)(start.getGreen() + ((float)(end.getGreen() - start.getGreen())) / (length - 1) * i);
+			int blue = (int)(start.getBlue() + ((float)(end.getBlue() - start.getBlue())) / (length - 1) * i);
+
+			StringTextComponent charComp = new StringTextComponent("" + c);
+
+			Style s = charComp.getStyle();
+			net.minecraft.util.text.Color textColor = net.minecraft.util.text.Color.fromHex(toHexString(red, green, blue));
+			Style colored = s.setColor(textColor);
+
+			charComp.setStyle(colored);
+
+			sc.append(charComp);
+			
+			i++;
+
+		}
+
+		return sc;
+
 	}
 
 }

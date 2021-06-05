@@ -19,6 +19,9 @@ public class AirBarLayoutElement extends VanillaLayoutElement {
 	
 	@Override
 	public void init() {
+		
+		this.scaleable = true;
+		
 		super.init();
 
 		this.rightclickMenu.addSeparator();
@@ -63,6 +66,9 @@ public class AirBarLayoutElement extends VanillaLayoutElement {
 		}
 		if (!this.getVanillaObject().fireEvents) {
 			p.addEntry("fireevents", "" + this.getVanillaObject().fireEvents);
+		}
+		if (this.getVanillaObject().scale != 1.0F) {
+			p.addEntry("scale", "" + this.getVanillaObject().scale);
 		}
 		
 		BarAlignment a = ((AirBarCustomizationItem)this.getVanillaObject()).barAlignment;

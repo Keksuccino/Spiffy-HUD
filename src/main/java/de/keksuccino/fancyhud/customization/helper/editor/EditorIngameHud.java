@@ -2,20 +2,31 @@ package de.keksuccino.fancyhud.customization.helper.editor;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import de.keksuccino.fancyhud.customization.CustomizationHandler;
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class EditorIngameHud extends CustomizableIngameGui {
+	
+	private static ForgeIngameGui lightModeHud;
 
 	public EditorIngameHud() {
 		super(Minecraft.getInstance(), true);
+		if (lightModeHud == null) {
+			lightModeHud = new ForgeIngameGui(Minecraft.getInstance());
+		}
 	}
 	
 	@Override
 	public void renderIngameGui(MatrixStack matrix, float partialTicks) {
 		
-		super.renderIngameGui(matrix, partialTicks);
+		if (CustomizationHandler.isLightModeEnabled()) {
+			lightModeHud.renderIngameGui(matrix, partialTicks);
+		} else {
+			super.renderIngameGui(matrix, partialTicks);
+		}
 		
 	}
 	
@@ -27,6 +38,7 @@ public class EditorIngameHud extends CustomizableIngameGui {
 		this.displayedSubTitle = new StringTextComponent("Subtitle");
 		
 		super.renderTitle(width, height, partialTicks, matrix);
+		
 	}
 	
 }

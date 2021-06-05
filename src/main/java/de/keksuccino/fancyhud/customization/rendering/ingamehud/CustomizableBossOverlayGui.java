@@ -89,7 +89,7 @@ public class CustomizableBossOverlayGui extends BossOverlayGui {
 	
 	public Map<UUID, ClientBossInfo> getBossInfoMap() {
 		try {
-			Field f = ObfuscationReflectionHelper.findField(BossOverlayGui.class, "field_184060_g");
+			Field f = ObfuscationReflectionHelper.findField(BossOverlayGui.class, "mapBossInfos");
 			return (Map<UUID, ClientBossInfo>) f.get(this);
 		} catch (Exception e) {
 			e.printStackTrace();

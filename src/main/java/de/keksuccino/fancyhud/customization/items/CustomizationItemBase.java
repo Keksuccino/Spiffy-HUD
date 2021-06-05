@@ -3,7 +3,7 @@ package de.keksuccino.fancyhud.customization.items;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import de.keksuccino.fancyhud.customization.CustomizationHandler;
-import de.keksuccino.fancyhud.customization.DynamicValueHelper;
+import de.keksuccino.fancyhud.customization.dynamicvalues.DynamicValueHelper;
 import de.keksuccino.fancyhud.customization.helper.editor.LayoutEditorScreen;
 import de.keksuccino.konkrete.math.MathUtils;
 import de.keksuccino.konkrete.properties.PropertiesSection;

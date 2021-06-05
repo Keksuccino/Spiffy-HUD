@@ -293,7 +293,7 @@ fancyhud.helper.buttons.tools.misc.openmessagescreen.btndesc = Will open an inst
 fancyhud.helper.menubar.expand = Expand Menu Bar
 fancyhud.helper.menubar.shrink = Shrink Menu Bar
 
-fancyhud.helper.ui.dynamicvariabletextfield.variables.desc = §lSession-Specific Values%n%%n%Insert placeholders into the text%n%that will later be replaced with%n%session-specific values like%n%the player name or the MC version.%n%%n%§l§cIMPORTANT:%n%You will see these values as%n%placeholders in the editor and%n%as real values in the actual menu.
+fancyhud.helper.ui.dynamicvariabletextfield.variables.desc = §lPlaceholder Text Values%n%%n%Insert placeholders into the text%n%that will later be replaced with%n%real values like%n%the player name or the MC version.%n%%n%§l§cIMPORTANT:%n%You will see these values as%n%placeholders in the editor and%n%as real values in the actual menu.
 fancyhud.helper.ui.dynamicvariabletextfield.variables.playername = Player Name
 fancyhud.helper.ui.dynamicvariabletextfield.variables.playername.desc = Gets the player name.
 fancyhud.helper.ui.dynamicvariabletextfield.variables.playeruuid = Player UUID
@@ -507,6 +507,75 @@ fancyhud.helper.editor.properties.showin.btn.desc = Set if the layout should be 
 
 fancyhud.helper.editor.elements.vanilla.resetelement = Reset Element
 fancyhud.helper.editor.elements.vanilla.resetelement.btn.desc = Will reset the element%n%to it's defaults.
+
+fancyhud.helper.ui.dynamicvariabletextfield.variables.biome = Current Biome
+fancyhud.helper.ui.dynamicvariabletextfield.variables.direction = Facing Direction
+fancyhud.helper.ui.dynamicvariabletextfield.variables.fps = Current FPS
+fancyhud.helper.ui.dynamicvariabletextfield.variables.percentram = Currently Used RAM in %
+fancyhud.helper.ui.dynamicvariabletextfield.variables.usedram = Currently Used RAM in MB
+fancyhud.helper.ui.dynamicvariabletextfield.variables.maxram = Max RAM in MB
+fancyhud.helper.ui.dynamicvariabletextfield.variables.targetblock = Targetted Block
+
+fancyhud.helper.editor.elements.vanilla.bars.hidewhenfull.on = Hide If Full: §aOn
+fancyhud.helper.editor.elements.vanilla.bars.hidewhenfull.off = Hide If Full: §cOff
+fancyhud.helper.editor.elements.vanilla.bars.hidewhenfull.btn.desc = Don't show bar if completely full.
+
+fancyhud.helper.editor.elements.vanilla.bars.hidewhenempty.on = Hide If Empty: §aOn
+fancyhud.helper.editor.elements.vanilla.bars.hidewhenempty.off = Hide If Empty: §cOff
+fancyhud.helper.editor.elements.vanilla.bars.hidewhenempty.btn.desc = Don't show bar if completely empty.
+
+fancyhud.helper.editor.elements.scale = Scale
+fancyhud.helper.editor.elements.scale.btn.desc = Set the scale of this element.
+
+fancyhud.helper.ui.hud.lightmode.on = Light Mode: §aOn
+fancyhud.helper.ui.hud.lightmode.off = Light Mode: §cOff
+fancyhud.helper.ui.hud.lightmode.btn.desc = If enabled, vanilla HUD elements%n%will no longer be customizable.%n%%n%You can still add new elements%n%to the HUD, but customizations%n%for vanilla elements will%n%be ignored.%n%%n%§cWill drastically improve%n%§ccompatibility with other mods%n%§cwhen enabled.%n%%n%§oClick to toggle mode.
+fancyhud.helper.ui.hud.lightmode.popup.msg = §c§lAre you sure?%n%%n%This action requires a restart§r.%n%%n%Are you sure that you want to §cquit the game §rnow?%n% %n% %n% %n% %n%
+
+fancyhud.helper.editor.elements.vanilla.sidebar.headlinebackcolor = Headline Background HEX Color
+fancyhud.helper.editor.elements.vanilla.sidebar.bodybackcolor = Body Background HEX Color
+fancyhud.helper.editor.elements.vanilla.sidebar.headlinetextcolor = Headline Text HEX Color
+fancyhud.helper.editor.elements.vanilla.sidebar.nametextcolor = Name Text HEX Color
+fancyhud.helper.editor.elements.vanilla.sidebar.scoretextcolor = Score Text HEX Color
+
+fancyhud.helper.ui.dynamicvariabletextfield.variables.cps = CPS (Clicks Per Second)
+fancyhud.helper.ui.dynamicvariabletextfield.variables.bps = BPS (Blocks Per Second)
+fancyhud.helper.ui.dynamicvariabletextfield.variables.tps = TPS (Ticks Per Second)
+
+fancyhud.helper.editor.elements.string.rainbow.on = Rainbow Mode: §aOn
+fancyhud.helper.editor.elements.string.rainbow.off = Rainbow Mode: §cOff
+fancyhud.helper.editor.elements.string.rainbow.btn.desc = If the text should be rendered%n%as fancy colored RGB text or not.
+fancyhud.helper.editor.elements.string.rainbow.speed = Rainbow Fade-Speed
+fancyhud.helper.editor.elements.string.rainbow.colors = Set Rainbow Color Gradients
+fancyhud.helper.editor.elements.string.rainbow.colors.popup.firststartcolor = First Start Color
+fancyhud.helper.editor.elements.string.rainbow.colors.popup.firstendcolor = First End Color
+fancyhud.helper.editor.elements.string.rainbow.colors.popup.secondstartcolor = Second Start Color
+fancyhud.helper.editor.elements.string.rainbow.colors.popup.secondendcolor = Second End Color
+fancyhud.helper.editor.elements.string.rainbow.colors.popup.colordesc.line1 = The first two colors will be the text gradient when fading starts
+fancyhud.helper.editor.elements.string.rainbow.colors.popup.colordesc.line2 = and the second two will be the gradient when it ends.
+fancyhud.helper.editor.elements.string.rainbow.colors.popup.colordesc.line3 = The text is fading from the first gradient to the second gradient.
+
+fancyhud.helper.creator.add.custombars.barcolor = Bar HEX Color
+fancyhud.helper.creator.add.custombars.backgroundcolor = Background HEX Color
+fancyhud.helper.creator.add.custombars.bartexture = Bar Texture
+fancyhud.helper.creator.add.custombars.bartexture.btn.desc = Set a custom texture for the bar.%n%This will replace the bar color.
+fancyhud.helper.creator.add.custombars.backgroundtexture = Background Texture
+fancyhud.helper.creator.add.custombars.backgroundtexture.btn.desc = Set a custom texture for%n%the bar background.%n%This will replace the background color.
+fancyhud.helper.creator.add.custombars.direction.left = Direction: §6Left
+fancyhud.helper.creator.add.custombars.direction.right = Direction: §6Right
+fancyhud.helper.creator.add.custombars.direction.up = Direction: §6Up
+fancyhud.helper.creator.add.custombars.direction.down = Direction: §6Down
+
+fancyhud.helper.creator.add.customhealthbar = Custom Health Bar
+
+fancyhud.helper.creator.add.customfoodbar = Custom Food Bar
+fancyhud.helper.creator.add.customfoodbar.maxfood = Max Food
+
+fancyhud.helper.creator.add.customarmorbar = Custom Armor Bar
+
+fancyhud.helper.creator.add.customairbar = Custom Air Bar
+
+fancyhud.helper.creator.add.customexpbar = Custom EXP Bar
 
 
 

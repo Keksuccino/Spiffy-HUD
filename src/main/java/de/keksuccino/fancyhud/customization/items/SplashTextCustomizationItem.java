@@ -9,7 +9,7 @@ import java.util.Map;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import de.keksuccino.fancyhud.customization.DynamicValueHelper;
+import de.keksuccino.fancyhud.customization.dynamicvalues.DynamicValueHelper;
 import de.keksuccino.fancyhud.events.CustomizationSystemReloadedEvent;
 import de.keksuccino.konkrete.file.FileUtils;
 import de.keksuccino.konkrete.input.StringUtils;

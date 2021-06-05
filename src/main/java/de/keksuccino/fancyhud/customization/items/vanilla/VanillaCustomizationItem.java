@@ -40,8 +40,7 @@ public class VanillaCustomizationItem extends CustomizationItemBase {
 			Logging.error("VanillaCustomizationItem: element null");
 			return;
 		}
-		
-		//unused
+
 		String sc = props.getEntryValue("scale");
 		if ((sc != null) && MathUtils.isFloat(sc)) {
 			this.scale = Float.parseFloat(sc);
@@ -111,7 +110,8 @@ public class VanillaCustomizationItem extends CustomizationItemBase {
 		
 //		this.element.rotation = this.rotation;
 //		this.element.opacity = this.opacity;
-//		this.element.scale = this.scale;
+		
+		this.element.scale = this.scale;
 		
 		if (!this.vanillaVisible || !this.isSecondItemOfThisType) {
 			this.element.visible = this.vanillaVisible;

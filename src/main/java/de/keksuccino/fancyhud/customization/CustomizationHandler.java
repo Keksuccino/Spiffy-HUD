@@ -9,8 +9,10 @@ import java.util.UUID;
 
 import com.google.common.io.Files;
 
+import de.keksuccino.fancyhud.FancyHud;
 import de.keksuccino.fancyhud.customization.helper.editor.LayoutEditorScreen;
 import de.keksuccino.fancyhud.customization.helper.editor.PreloadedLayoutEditorScreen;
+import de.keksuccino.fancyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import de.keksuccino.fancyhud.events.CustomizationSystemReloadedEvent;
 import de.keksuccino.konkrete.properties.PropertiesSection;
 import de.keksuccino.konkrete.properties.PropertiesSerializer;
@@ -24,6 +26,11 @@ public class CustomizationHandler {
 	private static boolean initDone = false;
 	private static List<String> sounds = new ArrayList<String>();
 	
+	private static boolean isLightmode = false;
+	private static boolean lightModeCached = false;
+	
+	public static final CustomizableIngameGui INGAME_GUI = new CustomizableIngameGui(Minecraft.getInstance(), false);
+	
 	public static void init() {
 		if (!initDone) {
 			
@@ -32,6 +39,7 @@ public class CustomizationHandler {
 			CustomizationPropertiesHandler.loadProperties();
 			
 			initDone = true;
+			
 		}
 	}
 
@@ -176,6 +184,46 @@ public class CustomizationHandler {
 		
 		return saveLayoutTo(props, to);
 		
+	}
+	
+	public static void setLightmode(boolean lightmode) {
+		try {
+			File f = new File(FancyHud.HOME_DIR.getPath() + "/lightmode.enabled");
+			if (lightmode && !isLightmode) {
+				if (!f.exists()) {
+					if (!FancyHud.HOME_DIR.exists()) {
+						FancyHud.HOME_DIR.mkdirs();
+					}
+					f.createNewFile();
+				}
+			}
+			if (!lightmode) {
+				if (f.exists()) {
+					f.delete();
+				}
+			}
+			isLightmode = lightmode;
+			lightModeCached = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static boolean isLightModeEnabled() {
+		if (!lightModeCached) {
+			setLightmode(lightModeFileExists());
+		}
+		return isLightmode;
+	}
+	
+	private static boolean lightModeFileExists() {
+		try {
+			File f = new File(FancyHud.HOME_DIR.getPath() + "/lightmode.enabled");
+			return f.exists();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 }

@@ -5,9 +5,8 @@ import java.awt.Color;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import de.keksuccino.fancyhud.customization.rendering.ingamehud.CustomizableIngameGui;
+import de.keksuccino.fancyhud.api.IngameHud;
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.IngameHudElement;
-import net.minecraft.client.Minecraft;
 
 public class ExampleCustomVanillaElement extends IngameHudElement {
 
@@ -15,9 +14,7 @@ public class ExampleCustomVanillaElement extends IngameHudElement {
 	public boolean isRedColor = false;
 	
 	public ExampleCustomVanillaElement() {
-		//Casting the ingameGUI to it's real class should always work, but if you get a cast exception,
-		//you're probably trying to register elements way too early.
-		super((CustomizableIngameGui) Minecraft.getInstance().ingameGUI);
+		super(IngameHud.getInstance().getGui());
 	}
 
 	@Override

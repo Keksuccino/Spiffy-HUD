@@ -1,5 +1,6 @@
 package de.keksuccino.fancyhud.api;
 
+import de.keksuccino.fancyhud.customization.CustomizationHandler;
 import de.keksuccino.fancyhud.customization.helper.editor.LayoutEditorScreen;
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.AirBarHudElement;
@@ -14,7 +15,6 @@ import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.Play
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.SelectedItemNameHudElement;
 import de.keksuccino.fancyhud.customization.rendering.ingamehud.hudelements.TitleHudElement;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IngameGui;
 
 public class IngameHud {
 	
@@ -28,11 +28,18 @@ public class IngameHud {
 		if (Minecraft.getInstance().currentScreen instanceof LayoutEditorScreen) {
 			return ((LayoutEditorScreen)Minecraft.getInstance().currentScreen).ingameHud;
 		}
-		IngameGui g = Minecraft.getInstance().ingameGUI;
-		if (g instanceof CustomizableIngameGui) {
-			return (CustomizableIngameGui) g;
-		}
-		return null;
+		return CustomizationHandler.INGAME_GUI;
+	}
+	
+	/**
+	 * If the customization light mode is enabled.<br>
+	 * When light mode is enabled, the vanilla HUD does not get overridden and all vanilla HUD element customizations are disabled.<br>
+	 * In this mode, you can't customize vanilla elements, it's only possible to add customization items like images, text, etc. to the HUD.<br><br>
+	 * 
+	 * <b>If enabled, you don't need to care about getting customized vanilla element positions, as they are all just the default ones.</b>
+	 */
+	public boolean isLightModeEnabled() {
+		return CustomizationHandler.isLightModeEnabled();
 	}
 	
 	/**

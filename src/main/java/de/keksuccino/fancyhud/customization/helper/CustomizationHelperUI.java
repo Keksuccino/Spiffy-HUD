@@ -58,6 +58,25 @@ public class CustomizationHelperUI extends UIBase {
 			hudMenu.setAutoclose(true);
 			bar.addChild(hudMenu, "fh.ui.tab.hud", ElementAlignment.LEFT);
 			
+			String lightModeString = Locals.localize("fancyhud.helper.ui.hud.lightmode.on");
+			if (!CustomizationHandler.isLightModeEnabled()) {
+				lightModeString = Locals.localize("fancyhud.helper.ui.hud.lightmode.off");
+			}
+			CustomizationButton lightModeButton = new CustomizationButton(0, 0, 0, 0, lightModeString, true, (press) -> {
+				PopupHandler.displayPopup(new FHYesNoPopup(300, new Color(0, 0, 0, 0), 240, (call) -> {
+					if (call) {
+						if (CustomizationHandler.isLightModeEnabled()) {
+							CustomizationHandler.setLightmode(false);
+						} else {
+							CustomizationHandler.setLightmode(true);
+						}
+						Minecraft.getInstance().shutdown();
+					}
+				}, StringUtils.splitLines(Locals.localize("fancyhud.helper.ui.hud.lightmode.popup.msg"), "%n%")));
+			});
+			lightModeButton.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.ui.hud.lightmode.btn.desc"), "%n%"));
+			hudMenu.addContent(lightModeButton);
+			
 			FHContextMenu layoutsMenu = new FHContextMenu();
 			layoutsMenu.setAutoclose(true);
 			hudMenu.addChild(layoutsMenu);

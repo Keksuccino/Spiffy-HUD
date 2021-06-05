@@ -1,4 +1,4 @@
-package de.keksuccino.fancyhud.customization;
+package de.keksuccino.fancyhud.customization.dynamicvalues;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,12 +10,17 @@ import de.keksuccino.fancyhud.api.DynamicValueRegistry;
 import de.keksuccino.fancyhud.api.DynamicValueRegistry.DynamicValue;
 import de.keksuccino.konkrete.input.StringUtils;
 import de.keksuccino.konkrete.math.MathUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.client.ExtendedServerListData;
@@ -23,9 +28,26 @@ import net.minecraftforge.versions.mcp.MCPVersion;
 
 public class DynamicValueHelper {
 	
+	public static void init() {
+		
+		CpsHandler.init();
+		
+		BpsHandler.init();
+		
+		TpsHandler.init();
+		
+	}
+	
 	public static String convertFromRaw(String in) {
-		String playername = Minecraft.getInstance().getSession().getUsername();
-		String playeruuid = Minecraft.getInstance().getSession().getPlayerID();
+		Minecraft mc = Minecraft.getInstance();
+		Entity entity = mc.getRenderViewEntity();
+		BlockPos blockpos = null;
+		if (entity != null) {
+			blockpos = entity.getPosition();
+		}
+		
+		String playername = mc.getSession().getUsername();
+		String playeruuid = mc.getSession().getPlayerID();
 		String mcversion = MCPVersion.getMCVersion();
 		
 		//Convert &-formatcodes to real ones
@@ -62,7 +84,7 @@ public class DynamicValueHelper {
 		//Current game day time minutes
 		in = in.replace("%daytimeminutes%", getDayTimeMinutes());
 		
-		ClientPlayerEntity p = Minecraft.getInstance().player;
+		ClientPlayerEntity p = mc.player;
 		
 		if (p != null) {
 			
@@ -115,7 +137,7 @@ public class DynamicValueHelper {
 			
 		}
 		
-		ServerData sd = Minecraft.getInstance().getCurrentServerData();
+		ServerData sd = mc.getCurrentServerData();
 			
 		//Current IP
 		if (sd != null) {
@@ -174,6 +196,45 @@ public class DynamicValueHelper {
 		in = in.replace("%realtimeminute%", formatToFancyDateTime(c.get(Calendar.MINUTE)));
 		
 		in = in.replace("%realtimesecond%", formatToFancyDateTime(c.get(Calendar.SECOND)));
+		
+		if (blockpos != null) {
+			in = in.replace("%biome%", "" + mc.world.func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(mc.world.getBiome(blockpos)));
+		}
+		
+		if (entity != null) {
+			in = in.replace("%direction%", "" + entity.getHorizontalFacing());
+		}
+		
+		in = in.replace("%fps%", mc.debug.split("[ ]", 2)[0]);
+		
+		long i = Runtime.getRuntime().maxMemory();
+		long j = Runtime.getRuntime().totalMemory();
+		long k = Runtime.getRuntime().freeMemory();
+		long l = j - k;
+	      
+		in = in.replace("%percentram%", (l * 100L / i) + "%");
+		
+		in = in.replace("%usedram%", "" + bytesToMb(l));
+		
+		in = in.replace("%maxram%", "" + bytesToMb(i));
+		
+		if (entity != null) {
+			RayTraceResult lookingAt = entity.pick(20.0D, 0.0F, false);
+			if ((lookingAt != null) && (lookingAt.getType() == RayTraceResult.Type.BLOCK)) {
+				BlockPos blockpos2 = ((BlockRayTraceResult)lookingAt).getPos();
+	            BlockState blockstate = mc.world.getBlockState(blockpos2);
+	            
+				in = in.replace("%targetblock%", String.valueOf((Object)Registry.BLOCK.getKey(blockstate.getBlock())));
+			} else {
+				in = in.replace("%targetblock%", "none");
+			}
+		}
+		
+		in = in.replace("%cps%", "" + CpsHandler.getCps());
+		
+		in = in.replace("%bps%", "" + BpsHandler.getBps());
+		
+		in = in.replace("%tps%", "" + TpsHandler.getTps());
 		
 		//Apply all custom value
 		for (DynamicValue v : DynamicValueRegistry.getInstance().getValuesAsList()) {
@@ -342,6 +403,10 @@ public class DynamicValueHelper {
 			s = "0" + s;
 		}
 		return s;
+	}
+	
+	private static long bytesToMb(long bytes) {
+		return bytes / 1024L / 1024L;
 	}
 
 }

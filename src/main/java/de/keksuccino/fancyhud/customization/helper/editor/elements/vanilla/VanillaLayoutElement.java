@@ -7,17 +7,22 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import de.keksuccino.fancyhud.FancyHud;
 import de.keksuccino.fancyhud.customization.helper.editor.LayoutEditorScreen;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutElement;
+import de.keksuccino.fancyhud.customization.helper.ui.popup.FHTextInputPopup;
 import de.keksuccino.fancyhud.customization.helper.ui.popup.FHYesNoPopup;
 import de.keksuccino.fancyhud.customization.items.vanilla.VanillaCustomizationItem;
 import de.keksuccino.konkrete.gui.content.AdvancedButton;
 import de.keksuccino.konkrete.gui.screens.popup.PopupHandler;
+import de.keksuccino.konkrete.input.CharacterFilter;
 import de.keksuccino.konkrete.input.StringUtils;
 import de.keksuccino.konkrete.localization.Locals;
+import de.keksuccino.konkrete.math.MathUtils;
 import de.keksuccino.konkrete.rendering.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 
 public abstract class VanillaLayoutElement extends LayoutElement {
+	
+	protected boolean scaleable = false;
 	
 	public VanillaLayoutElement(VanillaCustomizationItem object, LayoutEditorScreen handler) {
 		super(object, true, handler);
@@ -55,6 +60,32 @@ public abstract class VanillaLayoutElement extends LayoutElement {
 		});
 		modCustomizationsButton.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.editor.elements.vanilla.modcustomizations.desc", ""), "%n%"));
 		this.rightclickMenu.addContent(modCustomizationsButton);
+		
+		this.rightclickMenu.addSeparator();
+		
+		/** SCALE **/
+		if (this.scaleable) {
+			AdvancedButton scaleButton = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.editor.elements.scale"), (press) -> {
+				FHTextInputPopup pop = new FHTextInputPopup(new Color(0, 0, 0, 0), Locals.localize("fancyhud.helper.editor.elements.scale"), CharacterFilter.getDoubleCharacterFiler(), 240, (call) -> {
+					if (call != null) {
+						float f = 1.0F;
+						if (MathUtils.isFloat(call)) {
+							f = Float.parseFloat(call);
+						}
+						if (f != this.getVanillaObject().scale) {
+							this.handler.history.saveSnapshot(this.handler.history.createSnapshot());
+						}
+						this.getVanillaObject().scale = f;
+					}
+				});
+				pop.setText("" + this.getVanillaObject().scale);
+				PopupHandler.displayPopup(pop);
+			});
+			scaleButton.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.editor.elements.scale.btn.desc"), "%n%"));
+			this.rightclickMenu.addContent(scaleButton);
+		}
+		
+		this.rightclickMenu.addSeparator();
 		
 	}
 	

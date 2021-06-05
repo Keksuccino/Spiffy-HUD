@@ -46,7 +46,7 @@ public class ExternalTextureSlideshowRenderer extends AbstractGui {
 
 	public ExternalTextureSlideshowRenderer(String slideshowDir) {
 		this.dir = slideshowDir;
-		File props = new File(this.dir + "/properties.txt");
+		File props = new File(this.dir + "/slideshow.properties");
 		
 		if (props.exists()) {
 			

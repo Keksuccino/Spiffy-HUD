@@ -16,10 +16,15 @@ import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutElement
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutShape;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutSlideshow;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutSplashText;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutString;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutTexture;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutWebString;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutWebTexture;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomAirBar;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomArmorBar;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomExpBar;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomFoodBar;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomHealthBar;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.string.LayoutString;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.AirBarLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.ArmorBarLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.BossBarLayoutElement;
@@ -29,10 +34,16 @@ import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.FoodM
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.HotbarLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.OverlayMessageLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.PlayerHealthBarLayoutElement;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.SidebarLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.SelectedItemNameLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.TitleLayoutElement;
 import de.keksuccino.fancyhud.customization.items.ShapeCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.ShapeCustomizationItem.Shape;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomAirBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomArmorBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomExpBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomFoodBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.CustomHealthBarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.AirBarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.ArmorBarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.BossBarCustomizationItem;
@@ -42,6 +53,7 @@ import de.keksuccino.fancyhud.customization.items.vanilla.FoodMountHealthCustomi
 import de.keksuccino.fancyhud.customization.items.vanilla.HotbarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.OverlayMessageCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.PlayerHealthBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.vanilla.SidebarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.SelectedItemNameCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.TitleCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.SlideshowCustomizationItem;
@@ -146,6 +158,7 @@ public class PreloadedLayoutEditorScreen extends LayoutEditorScreen {
 		boolean airSet = false;
 		boolean selectedItemNameSet = false;
 		boolean overlayMessageSet = false;
+		boolean sidebarSet = false;
 		
 		List<String> customElementsSet = new ArrayList<String>();
 		
@@ -239,6 +252,13 @@ public class PreloadedLayoutEditorScreen extends LayoutEditorScreen {
 					this.overlayMessageLayoutElement = new OverlayMessageLayoutElement(new OverlayMessageCustomizationItem(this.ingameHud.overlayMessageElement, sec, false), this);
 					vanillaCon.add(this.overlayMessageLayoutElement);
 					overlayMessageSet = true;
+				}
+				
+				/** SIDEBAR **/
+				if (action.equalsIgnoreCase("editsidebar")) {
+					this.sidebarLayoutElement = new SidebarLayoutElement(new SidebarCustomizationItem(this.ingameHud.sidebarElement, sec, false), this);
+					vanillaCon.add(this.sidebarLayoutElement);
+					sidebarSet = true;
 				}
 				
 				/** ########################### CUSTOM VANILLA ELEMENT HANDLING ########################### **/
@@ -382,6 +402,26 @@ public class PreloadedLayoutEditorScreen extends LayoutEditorScreen {
 					con.add(new LayoutSplashText(new SplashTextCustomizationItem(sec), this));
 				}
 				
+				if (action.equalsIgnoreCase("addcustomhealthbar")) {
+					con.add(new LayoutCustomHealthBar(new CustomHealthBarCustomizationItem(sec), this));
+				}
+				
+				if (action.equalsIgnoreCase("addcustomfoodbar")) {
+					con.add(new LayoutCustomFoodBar(new CustomFoodBarCustomizationItem(sec), this));
+				}
+				
+				if (action.equalsIgnoreCase("addcustomarmorbar")) {
+					con.add(new LayoutCustomArmorBar(new CustomArmorBarCustomizationItem(sec), this));
+				}
+				
+				if (action.equalsIgnoreCase("addcustomairbar")) {
+					con.add(new LayoutCustomAirBar(new CustomAirBarCustomizationItem(sec), this));
+				}
+				
+				if (action.equalsIgnoreCase("addcustomexpbar")) {
+					con.add(new LayoutCustomExpBar(new CustomExpBarCustomizationItem(sec), this));
+				}
+				
 				/** ########################### CUSTOM ITEM HANDLING ########################### **/
 				
 				if (action.startsWith("add_")) {
@@ -447,6 +487,10 @@ public class PreloadedLayoutEditorScreen extends LayoutEditorScreen {
 		if (!overlayMessageSet) {
 			this.overlayMessageLayoutElement = new OverlayMessageLayoutElement(new OverlayMessageCustomizationItem(this.ingameHud.overlayMessageElement, dummySec, false), this);
 			vanillaCon.add(this.overlayMessageLayoutElement);
+		}
+		if (!sidebarSet) {
+			this.sidebarLayoutElement = new SidebarLayoutElement(new SidebarCustomizationItem(this.ingameHud.sidebarElement, dummySec, false), this);
+			vanillaCon.add(this.sidebarLayoutElement);
 		}
 		
 		for (Map.Entry<String, HudElementContainer> m : customElementContainers.entrySet()) {

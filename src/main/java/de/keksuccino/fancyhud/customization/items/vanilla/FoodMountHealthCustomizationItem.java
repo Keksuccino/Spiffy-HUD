@@ -8,6 +8,8 @@ import de.keksuccino.konkrete.properties.PropertiesSection;
 
 public class FoodMountHealthCustomizationItem extends VanillaCustomizationItem {
 	
+	public boolean hideWhenFull = false;
+	
 	public BarAlignment barAlignment = BarAlignment.RIGHT;
 
 	public FoodMountHealthCustomizationItem(FoodMountHealthHudElement element, PropertiesSection props, boolean isSecondItemOfThisType) {
@@ -25,13 +27,24 @@ public class FoodMountHealthCustomizationItem extends VanillaCustomizationItem {
 			}
 		}
 		
+		String hideFull = props.getEntryValue("hidewhenfull");
+		if ((hideFull != null) && hideFull.equalsIgnoreCase("true")) {
+			this.hideWhenFull = true;
+		}
+		
 	}
 	
 	@Override
 	public void render(MatrixStack matrix) {
 
+		FoodMountHealthHudElement he = ((FoodMountHealthHudElement)this.element);
+		
+		if (this.hideWhenFull || !this.isSecondItemOfThisType) {
+			he.hideWhenFull = this.hideWhenFull;
+		}
+		
 		if (this.isOriginalOrientation) {
-			((FoodMountHealthHudElement)this.element).isDefaultPos = true;
+			he.isDefaultPos = true;
 		}
 		
 		if (!this.orientation.equals("bottom-centered")) {

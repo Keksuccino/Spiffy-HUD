@@ -9,6 +9,8 @@ import de.keksuccino.konkrete.properties.PropertiesSection;
 
 public class ArmorBarCustomizationItem extends VanillaCustomizationItem {
 
+	public boolean hideWhenEmpty = false;
+	
 	protected boolean isDefaultPos = false;
 	
 	public BarAlignment barAlignment = BarAlignment.LEFT;
@@ -28,12 +30,21 @@ public class ArmorBarCustomizationItem extends VanillaCustomizationItem {
 			}
 		}
 		
+		String hideEmpty = props.getEntryValue("hidewhenempty");
+		if ((hideEmpty != null) && hideEmpty.equalsIgnoreCase("true")) {
+			this.hideWhenEmpty = true;
+		}
+		
 	}
 	
 	@Override
 	public void render(MatrixStack matrix) {
 		
 		ArmorBarHudElement he = (ArmorBarHudElement) this.element;
+		
+		if (this.hideWhenEmpty || !this.isSecondItemOfThisType) {
+			he.hideWhenEmpty = this.hideWhenEmpty;
+		}
 
 		if (this.isOriginalOrientation) {
 			this.isDefaultPos = true;

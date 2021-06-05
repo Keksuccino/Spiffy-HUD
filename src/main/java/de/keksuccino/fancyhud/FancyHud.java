@@ -9,7 +9,9 @@ import de.keksuccino.fancyhud.api.IngameHud;
 import de.keksuccino.fancyhud.api.hud.HudElementRegistry;
 import de.keksuccino.fancyhud.api.item.CustomizationItemRegistry;
 import de.keksuccino.fancyhud.customization.CustomizationHandler;
+import de.keksuccino.fancyhud.customization.dynamicvalues.DynamicValueHelper;
 import de.keksuccino.fancyhud.customization.helper.CustomizationHelper;
+import de.keksuccino.fancyhud.customization.rendering.slideshow.SlideshowHandler;
 import de.keksuccino.fancyhud.keybinding.Keybinding;
 import de.keksuccino.fancyhud.logger.Logging;
 import de.keksuccino.konkrete.Konkrete;
@@ -24,10 +26,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
 
+
 @Mod("fancyhud")
 public class FancyHud {
 	
-	public static final String VERSION = "1.0.0";
+	public static final String VERSION = "1.2.0";
 	
 	public static final File HOME_DIR = new File("config/fancyhud");
 	public static final File CUSTOMIZATION_DIR = new File(HOME_DIR.getPath() + "/customization");
@@ -50,6 +53,9 @@ public class FancyHud {
 			if (!CUSTOMIZATION_DIR.exists()) {
 				CUSTOMIZATION_DIR.mkdirs();
 			}
+			if (!SLIDESHOW_DIR.exists()) {
+				SLIDESHOW_DIR.mkdirs();
+			}
 
 			if (ModList.get().isLoaded("fancymenu")) {
 				System.out.println("[FANCYHUD] FancyMenu found!");
@@ -59,6 +65,8 @@ public class FancyHud {
 			updateConfig();
 			
 			Logging.init();
+			
+			SlideshowHandler.init();
 
 			CustomizationHandler.init();
 			
@@ -89,6 +97,8 @@ public class FancyHud {
                 System.out.println("[FANCYHUD] Optifine found!");
             }
             catch (ClassNotFoundException e) {}
+        	
+        	DynamicValueHelper.init();
         	
 //        	HudElementRegistry.getInstance().register(new ExampleCustomVanillaElementContainer());
         	

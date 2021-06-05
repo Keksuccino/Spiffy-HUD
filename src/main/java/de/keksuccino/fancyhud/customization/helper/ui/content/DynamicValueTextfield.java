@@ -113,6 +113,18 @@ public class DynamicValueTextfield extends AdvancedTextField {
 		UIBase.colorizeButton(posZ);
 		playerMenu.addContent(posZ);
 		
+		AdvancedButton direction = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.direction"), true, (press) -> {
+			this.writeText("%direction%");
+		});
+		UIBase.colorizeButton(direction);
+		playerMenu.addContent(direction);
+		
+		AdvancedButton biome = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.biome"), true, (press) -> {
+			this.writeText("%biome%");
+		});
+		UIBase.colorizeButton(biome);
+		playerMenu.addContent(biome);
+		
 		playerMenu.addSeparator();
 		
 		AdvancedButton experience = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.experience"), true, (press) -> {
@@ -173,6 +185,14 @@ public class DynamicValueTextfield extends AdvancedTextField {
 		});
 		UIBase.colorizeButton(playerCategoryButton);
 		variableMenu.addContent(playerCategoryButton);
+		
+		playerMenu.addSeparator();
+		
+		AdvancedButton targettedBlock = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.targetblock"), true, (press) -> {
+			this.writeText("%targetblock%");
+		});
+		UIBase.colorizeButton(targettedBlock);
+		playerMenu.addContent(targettedBlock);
 		
 		/** SERVER CATEGORY **/
 		FHContextMenu serverMenu = new FHContextMenu();
@@ -327,6 +347,52 @@ public class DynamicValueTextfield extends AdvancedTextField {
 		loadedMods.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.loadedmods.desc"), "%n%"));
 		UIBase.colorizeButton(loadedMods);
 		otherMenu.addContent(loadedMods);
+		
+		AdvancedButton fps = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.fps"), true, (press) -> {
+			this.writeText("%fps%");
+		});
+		UIBase.colorizeButton(fps);
+		otherMenu.addContent(fps);
+		
+		otherMenu.addSeparator();
+		
+		AdvancedButton cps = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.cps"), true, (press) -> {
+			this.writeText("%cps%");
+		});
+		UIBase.colorizeButton(cps);
+		otherMenu.addContent(cps);
+		
+		AdvancedButton bps = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.bps"), true, (press) -> {
+			this.writeText("%bps%");
+		});
+		UIBase.colorizeButton(bps);
+		otherMenu.addContent(bps);
+		
+		AdvancedButton tps = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.tps"), true, (press) -> {
+			this.writeText("%tps%");
+		});
+		UIBase.colorizeButton(tps);
+		otherMenu.addContent(tps);
+		
+		otherMenu.addSeparator();
+		
+		AdvancedButton percentRam = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.percentram"), true, (press) -> {
+			this.writeText("%percentram%");
+		});
+		UIBase.colorizeButton(percentRam);
+		otherMenu.addContent(percentRam);
+		
+		AdvancedButton usedRam = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.usedram"), true, (press) -> {
+			this.writeText("%usedram%");
+		});
+		UIBase.colorizeButton(usedRam);
+		otherMenu.addContent(usedRam);
+		
+		AdvancedButton maxRam = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.dynamicvariabletextfield.variables.maxram"), true, (press) -> {
+			this.writeText("%maxram%");
+		});
+		UIBase.colorizeButton(maxRam);
+		otherMenu.addContent(maxRam);
 		
 		otherMenu.addSeparator();
 		

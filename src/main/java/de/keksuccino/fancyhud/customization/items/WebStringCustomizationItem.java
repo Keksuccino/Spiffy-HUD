@@ -11,7 +11,7 @@ import java.util.Map;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import de.keksuccino.fancyhud.customization.DynamicValueHelper;
+import de.keksuccino.fancyhud.customization.dynamicvalues.DynamicValueHelper;
 import de.keksuccino.konkrete.input.StringUtils;
 import de.keksuccino.konkrete.localization.Locals;
 import de.keksuccino.konkrete.math.MathUtils;
@@ -19,6 +19,8 @@ import de.keksuccino.konkrete.properties.PropertiesSection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.math.MathHelper;
+
+import de.keksuccino.fancyhud.customization.items.CustomizationItemBase.Alignment;
 
 public class WebStringCustomizationItem extends CustomizationItemBase {
 
