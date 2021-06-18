@@ -125,7 +125,7 @@ public class LayoutEditorUI extends UIBase {
 			
 			CustomizationButton layoutTab = new CustomizationButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.editor.ui.layout"), true, (press) -> {
 				layoutMenu.setParentButton((AdvancedButton) press);
-				layoutMenu.openMenuAt(press.x, press.y + press.getHeightRealms());
+				layoutMenu.openMenuAt(press.x, press.y + press.getHeight());
 			});
 			bar.addElement(layoutTab, "fm.editor.ui.tab.layout", ElementAlignment.LEFT, false);
 			
@@ -168,7 +168,7 @@ public class LayoutEditorUI extends UIBase {
 			
 			CustomizationButton editTab = new CustomizationButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.editor.ui.edit"), true, (press) -> {
 				editMenu.setParentButton((AdvancedButton) press);
-				editMenu.openMenuAt(press.x, press.y + press.getHeightRealms());
+				editMenu.openMenuAt(press.x, press.y + press.getHeight());
 			});
 			bar.addElement(editTab, "fm.editor.ui.tab.edit", ElementAlignment.LEFT, false);
 			
@@ -199,7 +199,7 @@ public class LayoutEditorUI extends UIBase {
 			
 			CustomizationButton elementTab = new CustomizationButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.editor.ui.element"), true, (press) -> {
 				elementMenu.setParentButton((AdvancedButton) press);
-				elementMenu.openMenuAt(press.x, press.y + press.getHeightRealms());
+				elementMenu.openMenuAt(press.x, press.y + press.getHeight());
 			});
 			bar.addElement(elementTab, "fm.editor.ui.tab.element", ElementAlignment.LEFT, false);
 			
@@ -692,7 +692,7 @@ public class LayoutEditorUI extends UIBase {
 			for (String s : SlideshowHandler.getSlideshowNames()) {
 				String name = s;
 				if (Minecraft.getInstance().fontRenderer.getStringWidth(name) > 90) {
-					name = Minecraft.getInstance().fontRenderer.func_238412_a_(name, 90) + "..";
+					name = Minecraft.getInstance().fontRenderer.trimStringToWidth(name, 90) + "..";
 				}
 				
 				AdvancedButton slideshowB = new AdvancedButton(0, 0, 0, 20, name, true, (press) -> {

@@ -71,7 +71,7 @@ public class TitleHudElement extends IngameHudElement {
 				int l = opacity << 24 & -16777216;
 				if (!this.isSubtitle) {
 					//(float)(-this.mc.fontRenderer.getStringPropertyWidth(this.handler.getCurrentTitle()) / 2)
-					this.mc.fontRenderer.func_238407_a_(matrix, this.handler.getCurrentTitle().func_241878_f(), this.x / 4, this.y / 4, 16777215 | l); //y = -10.0F
+					this.mc.fontRenderer.drawTextWithShadow(matrix, this.handler.getCurrentTitle().func_241878_f(), this.x / 4, this.y / 4, 16777215 | l); //y = -10.0F
 				}
 				RenderSystem.popMatrix();
 				if (this.isSubtitle) {
@@ -79,7 +79,7 @@ public class TitleHudElement extends IngameHudElement {
 						RenderSystem.pushMatrix();
 						RenderSystem.scalef(2.0F, 2.0F, 2.0F);
 						//(float)(-this.mc.fontRenderer.getStringPropertyWidth(this.handler.getCurrentSubTitle()) / 2)
-						this.mc.fontRenderer.func_238407_a_(matrix, this.handler.getCurrentSubTitle().func_241878_f(), this.x / 2, this.y / 2, 16777215 | l); //y = 5.0F
+						this.mc.fontRenderer.drawTextWithShadow(matrix, this.handler.getCurrentSubTitle().func_241878_f(), this.x / 2, this.y / 2, 16777215 | l); //y = 5.0F
 						RenderSystem.popMatrix();
 					}
 				}

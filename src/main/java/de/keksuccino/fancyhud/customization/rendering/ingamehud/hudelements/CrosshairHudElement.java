@@ -41,7 +41,7 @@ public class CrosshairHudElement extends IngameHudElement {
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
 		if (this.fireEvents) {
-			if (this.handler.pre(ElementType.CROSSHAIRS, matrix, false)) return;
+			if (this.handler.pre(ElementType.CROSSHAIRS, matrix)) return;
 		}
 		
         if (this.visible) {
@@ -51,7 +51,7 @@ public class CrosshairHudElement extends IngameHudElement {
         }
         
         if (this.fireEvents) {
-        	this.handler.post(ElementType.CROSSHAIRS, matrix, false);
+        	this.handler.post(ElementType.CROSSHAIRS, matrix);
         }
 
 	}
@@ -103,9 +103,8 @@ public class CrosshairHudElement extends IngameHudElement {
 						}
 						this.blit(matrix, this.x, this.y, 0, 0, 15, 15);
 						this.renderAttackIndicator(matrix);
-						RenderSystem.disableAlphaTest();
-						
-		            } else {
+
+					} else {
 		            	
 		            	if (this.invertCrosshairColors) {
 							RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
@@ -116,9 +115,9 @@ public class CrosshairHudElement extends IngameHudElement {
 		            	RenderSystem.enableAlphaTest();
 		            	this.renderAttackIndicator(matrix);
 		            	this.renderCustomCrosshair(matrix);
-		            	RenderSystem.disableAlphaTest();
-		            	
-		            }
+
+					}
+					RenderSystem.disableAlphaTest();
 				}
 			}
 		}

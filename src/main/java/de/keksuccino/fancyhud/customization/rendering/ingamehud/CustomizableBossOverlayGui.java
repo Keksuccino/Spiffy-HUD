@@ -58,7 +58,7 @@ public class CustomizableBossOverlayGui extends BossOverlayGui {
 					int l = mc.fontRenderer.getStringPropertyWidth(itextcomponent);
 					int i1 = (this.handler.bossBarElement.x + 91) - (l / 2);
 					int j1 = posY - 9;
-					mc.fontRenderer.func_243246_a(matrix, itextcomponent, (float)i1, (float)j1, 16777215);
+					mc.fontRenderer.drawTextWithShadow(matrix, itextcomponent, (float)i1, (float)j1, 16777215);
 				}
 				posY += event.getIncrement();
 				ForgeHooksClient.bossBarRenderPost(matrix, mc.getMainWindow());
@@ -89,7 +89,7 @@ public class CustomizableBossOverlayGui extends BossOverlayGui {
 	
 	public Map<UUID, ClientBossInfo> getBossInfoMap() {
 		try {
-			Field f = ObfuscationReflectionHelper.findField(BossOverlayGui.class, "mapBossInfos");
+			Field f = ObfuscationReflectionHelper.findField(BossOverlayGui.class, "field_184060_g");
 			return (Map<UUID, ClientBossInfo>) f.get(this);
 		} catch (Exception e) {
 			e.printStackTrace();

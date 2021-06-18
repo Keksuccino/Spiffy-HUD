@@ -2,6 +2,7 @@ package de.keksuccino.fancyhud;
 
 import java.io.File;
 
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.lang3.tuple.Pair;
 
 import de.keksuccino.fancyhud.api.DynamicValueRegistry;
@@ -30,7 +31,7 @@ import net.minecraftforge.fml.network.FMLNetworkConstants;
 @Mod("fancyhud")
 public class FancyHud {
 	
-	public static final String VERSION = "1.2.0";
+	public static final String VERSION = "1.2.1";
 	
 	public static final File HOME_DIR = new File("config/fancyhud");
 	public static final File CUSTOMIZATION_DIR = new File(HOME_DIR.getPath() + "/customization");
@@ -79,6 +80,9 @@ public class FancyHud {
 			Konkrete.addPostLoadingEvent("fancyhud", this::onClientSetup);
 			
 //			ExampleCustomDynamicVariables.registerDynamicValues();
+
+			//TODO remove debug
+//			MinecraftForge.EVENT_BUS.register(new Test());
 
 		} else {
 			System.out.println("## WARNING ## 'FancyHud' is a client mod and has no effect when loaded on a server!");

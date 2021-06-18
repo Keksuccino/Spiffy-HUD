@@ -212,7 +212,7 @@ public abstract class LayoutElement extends AbstractGui {
 					label = "Element";
 				} else {
 					if (Minecraft.getInstance().fontRenderer.getStringWidth(label) > 200) {
-						label = Minecraft.getInstance().fontRenderer.func_238412_a_(label, 200) + "..";
+						label = Minecraft.getInstance().fontRenderer.trimStringToWidth(label, 200) + "..";
 					}
 				}
 				AdvancedButton btn = new AdvancedButton(0, 0, 0, 0, label, (press2) -> {

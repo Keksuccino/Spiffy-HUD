@@ -57,7 +57,7 @@ public class RainbowText extends AbstractGui {
 			
 			ITextComponent c = TextComponentUtils.getWithGradient(start, this.text, end);
 			if (this.shadow) {
-				font.func_238407_a_(matrix, c.func_241878_f(), x, y, -1);
+				font.drawTextWithShadow(matrix, c.func_241878_f(), x, y, -1);
 			} else {
 				font.func_238422_b_(matrix, c.func_241878_f(), x, y, -1);
 			}

@@ -35,8 +35,6 @@ import net.minecraft.util.ResourceLocation;
 public class CustomizationHelperUI extends UIBase {
 	
 	public static MenuBar bar;
-
-	protected static int tick = 0;
 	
 	public static CustomizationHelperScreen currentHelperScreen;
 	
@@ -108,7 +106,7 @@ public class CustomizationHelperUI extends UIBase {
 			
 			CustomizationButton hudTab = new CustomizationButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.hud"), true, (press) -> {
 				hudMenu.setParentButton((AdvancedButton) press);
-				hudMenu.openMenuAt(press.x, press.y + press.getHeightRealms());
+				hudMenu.openMenuAt(press.x, press.y + press.getHeight());
 			});
 			bar.addElement(hudTab, "fh.ui.tab.hud", ElementAlignment.LEFT, false);
 			
@@ -135,7 +133,7 @@ public class CustomizationHelperUI extends UIBase {
 			
 			CustomizationButton toolsTab = new CustomizationButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.ui.tools"), true, (press) -> {
 				toolsMenu.setParentButton((AdvancedButton) press);
-				toolsMenu.openMenuAt(press.x, press.y + press.getHeightRealms());
+				toolsMenu.openMenuAt(press.x, press.y + press.getHeight());
 			});
 			bar.addElement(toolsTab, "fh.ui.tab.tools", ElementAlignment.LEFT, false);
 			

@@ -63,7 +63,7 @@ public class FoodMountHealthHudElement extends IngameHudElement {
 		if ((tmpMountEntity instanceof LivingEntity) && !this.handler.isEditor()) return;
 		
 		if (this.fireEvents) {
-			if (this.handler.pre(ElementType.FOOD, matrix, false)) return;
+			if (this.handler.pre(ElementType.FOOD, matrix)) return;
 		}
 
 		if (this.visible) {
@@ -133,7 +133,7 @@ public class FoodMountHealthHudElement extends IngameHudElement {
 		}
 
 		if (this.fireEvents) {
-			this.handler.post(ElementType.FOOD, matrix, false);
+			this.handler.post(ElementType.FOOD, matrix);
 		}
 
 	}
@@ -154,7 +154,7 @@ public class FoodMountHealthHudElement extends IngameHudElement {
 		}
 
 		if (this.fireEvents) {
-			if (this.handler.pre(ElementType.HEALTHMOUNT, matrix, false)) return;
+			if (this.handler.pre(ElementType.HEALTHMOUNT, matrix)) return;
 		}
 
 		if (this.visible) {
@@ -223,7 +223,7 @@ public class FoodMountHealthHudElement extends IngameHudElement {
 		}
 
 		if (this.fireEvents) {
-			this.handler.post(ElementType.HEALTHMOUNT, matrix, false);
+			this.handler.post(ElementType.HEALTHMOUNT, matrix);
 		}
 
 	}

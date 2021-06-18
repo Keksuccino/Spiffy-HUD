@@ -43,7 +43,7 @@ public class SelectedItemNameCustomizationItem extends VanillaCustomizationItem 
 			ITextComponent text = null;
 			ItemStack is = this.element.getHandler().getHighlightingItemStack();
 			if (is != null) {
-				IFormattableTextComponent textComp = (new StringTextComponent("")).append(is.getDisplayName()).mergeStyle(is.getRarity().color);
+				IFormattableTextComponent textComp = (new StringTextComponent("")).appendSibling(is.getDisplayName()).mergeStyle(is.getRarity().color);
 				if (is.hasDisplayName()) {
 					textComp.mergeStyle(TextFormatting.ITALIC);
 				}

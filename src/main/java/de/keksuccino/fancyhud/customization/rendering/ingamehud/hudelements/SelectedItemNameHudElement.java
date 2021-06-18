@@ -54,7 +54,7 @@ public class SelectedItemNameHudElement extends IngameHudElement {
 			ITextComponent highlightTip = new StringTextComponent("Selected Item Name");
 			
 			if (!this.handler.isEditor()) {
-				IFormattableTextComponent iformattabletextcomponent = (new StringTextComponent("")).append(this.handler.getHighlightingItemStack().getDisplayName()).mergeStyle(this.handler.getHighlightingItemStack().getRarity().color);
+				IFormattableTextComponent iformattabletextcomponent = (new StringTextComponent("")).appendSibling(this.handler.getHighlightingItemStack().getDisplayName()).mergeStyle(this.handler.getHighlightingItemStack().getRarity().color);
 				if (this.handler.getHighlightingItemStack().hasDisplayName()) {
 					iformattabletextcomponent.mergeStyle(TextFormatting.ITALIC);
 				}
@@ -93,11 +93,11 @@ public class SelectedItemNameHudElement extends IngameHudElement {
 					c = this.color.getRGB();
 				}
 				if (font == null) {
-					this.mc.fontRenderer.func_243246_a(matrix, highlightTip, (float)posX, (float)posY, c + (l << 24));
+					this.mc.fontRenderer.drawTextWithShadow(matrix, highlightTip, (float)posX, (float)posY, c + (l << 24));
 				} else {
 					int i2 = font.getStringPropertyWidth(highlightTip);
 					posX = (scaledWidth - i2) / 2;
-					font.func_243246_a(matrix, highlightTip, (float)posX, (float)posY, c + (l << 24));
+					font.drawTextWithShadow(matrix, highlightTip, (float)posX, (float)posY, c + (l << 24));
 					this.width = i2;
 					this.height = font.FONT_HEIGHT;
 				}

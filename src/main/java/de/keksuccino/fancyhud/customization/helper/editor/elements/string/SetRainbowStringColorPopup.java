@@ -96,13 +96,13 @@ public class SetRainbowStringColorPopup extends Popup {
 			/** FIRST ROW **/
 			this.firstStartColorTextField.setX((renderIn.width / 2) - this.firstStartColorTextField.getWidth() - 10);
 			this.firstStartColorTextField.setY((renderIn.height / 2) - 50);
-			this.firstStartColorTextField.renderButton(matrix, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
+			this.firstStartColorTextField.renderWidget(matrix, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
 			String firstStartString = Locals.localize("fancyhud.helper.editor.elements.string.rainbow.colors.popup.firststartcolor");
 			font.drawStringWithShadow(matrix, firstStartString, this.firstStartColorTextField.getX(), this.firstStartColorTextField.getY() - 10, -1);
 			
 			this.firstEndColorTextField.setX((renderIn.width / 2) + 10);
 			this.firstEndColorTextField.setY((renderIn.height / 2) - 50);
-			this.firstEndColorTextField.renderButton(matrix, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
+			this.firstEndColorTextField.renderWidget(matrix, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
 			String firstEndString = Locals.localize("fancyhud.helper.editor.elements.string.rainbow.colors.popup.firstendcolor");
 			font.drawStringWithShadow(matrix, firstEndString, this.firstEndColorTextField.getX(), this.firstEndColorTextField.getY() - 10, -1);
 			
@@ -120,13 +120,13 @@ public class SetRainbowStringColorPopup extends Popup {
 			/** SECOND ROW **/
 			this.secondStartColorTextField.setX((renderIn.width / 2) - this.secondStartColorTextField.getWidth() - 10);
 			this.secondStartColorTextField.setY((renderIn.height / 2) + 36);
-			this.secondStartColorTextField.renderButton(matrix, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
+			this.secondStartColorTextField.renderWidget(matrix, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
 			String secondStartString = Locals.localize("fancyhud.helper.editor.elements.string.rainbow.colors.popup.secondstartcolor");
 			font.drawStringWithShadow(matrix, secondStartString, this.secondStartColorTextField.getX(), this.secondStartColorTextField.getY() - 10, -1);
 			
 			this.secondEndColorTextField.setX((renderIn.width / 2) + 10);
 			this.secondEndColorTextField.setY((renderIn.height / 2) + 36);
-			this.secondEndColorTextField.renderButton(matrix, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
+			this.secondEndColorTextField.renderWidget(matrix, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
 			String secondEndString = Locals.localize("fancyhud.helper.editor.elements.string.rainbow.colors.popup.secondendcolor");
 			font.drawStringWithShadow(matrix, secondEndString, this.secondEndColorTextField.getX(), this.secondEndColorTextField.getY() - 10, -1);
 			

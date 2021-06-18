@@ -29,7 +29,7 @@ public class AirBarHudElement extends IngameHudElement {
 		this.height = (int) (9 * this.scale);
 
 		if (this.fireEvents) {
-			if (this.handler.pre(ElementType.AIR, matrix, false)) return;
+			if (this.handler.pre(ElementType.AIR, matrix)) return;
 		}
 		
 		if (this.visible) {
@@ -37,7 +37,7 @@ public class AirBarHudElement extends IngameHudElement {
 		}
 		
 		if (this.fireEvents) {
-			this.handler.post(ElementType.AIR, matrix, false);
+			this.handler.post(ElementType.AIR, matrix);
 		}
 		
 	}

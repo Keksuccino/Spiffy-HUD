@@ -182,7 +182,7 @@ public class SidebarHudElement extends IngameHudElement {
 				int stringPosXRight = posX + scoreboardWidth - 1;
 				
 				fill(matrix, posX, rowPosY, posX + scoreboardWidth, rowPosY + 9, bodyBackColor);
-				font.func_243248_b(matrix, rowText, (float)stringPosXLeft, (float)rowPosY, nameTextColor);
+				font.drawText(matrix, rowText, (float)stringPosXLeft, (float)rowPosY, nameTextColor);
 				font.drawString(matrix, rowScore, (float)(stringPosXRight - font.getStringWidth(rowScore)), (float)rowPosY, scoreTextColor);
 				
 				boolean b = (row == collection.size());
@@ -192,7 +192,7 @@ public class SidebarHudElement extends IngameHudElement {
 				if (b) {
 					fill(matrix, posX, rowPosY - 9 - 1, posX + scoreboardWidth, rowPosY - 1, headlineBackColor);
 					fill(matrix, posX, rowPosY - 1, posX + scoreboardWidth, rowPosY, bodyBackColor);
-					font.func_243248_b(matrix, scoreboardHeadlineText, (float)(posX + scoreboardWidth / 2 - scoreboardHeadlineWidth / 2), (float)(rowPosY - 9), headlineTextColor);
+					font.drawText(matrix, scoreboardHeadlineText, (float)(posX + scoreboardWidth / 2 - scoreboardHeadlineWidth / 2), (float)(rowPosY - 9), headlineTextColor);
 				}
 				
 			}

@@ -20,7 +20,7 @@ public class BossBarHudElement extends IngameHudElement {
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
 		if (this.fireEvents) {
-        	if (this.handler.pre(ElementType.BOSSHEALTH, matrix, false)) return;
+        	if (this.handler.pre(ElementType.BOSSHEALTH, matrix)) return;
         }
 		
         if (this.visible) {
@@ -38,7 +38,7 @@ public class BossBarHudElement extends IngameHudElement {
         }
         
         if (this.fireEvents) {
-        	this.handler.post(ElementType.BOSSHEALTH, matrix, false);
+        	this.handler.post(ElementType.BOSSHEALTH, matrix);
         }
 
 	}

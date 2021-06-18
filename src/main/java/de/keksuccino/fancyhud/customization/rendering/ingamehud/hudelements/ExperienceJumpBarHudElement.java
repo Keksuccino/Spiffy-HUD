@@ -42,7 +42,7 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 			}
 			
 			if (this.fireEvents) {
-				if (this.handler.pre(ElementType.EXPERIENCE, matrix, false)) return;
+				if (this.handler.pre(ElementType.EXPERIENCE, matrix)) return;
 			}
 			
 			if (this.visible) {
@@ -60,7 +60,7 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 			}
 			
 			if (this.fireEvents) {
-				this.handler.post(ElementType.EXPERIENCE, matrix, false);
+				this.handler.post(ElementType.EXPERIENCE, matrix);
 			}
 			
 		} else if (CustomizableIngameGui.renderJumpBar) {
@@ -70,7 +70,7 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 			}
 			
 			if (this.fireEvents) {
-				if (this.handler.pre(ElementType.JUMPBAR, matrix, false)) return;
+				if (this.handler.pre(ElementType.JUMPBAR, matrix)) return;
 			}
 			
 			if (this.visible) {
@@ -87,7 +87,7 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 			}
 			
 			if (this.fireEvents) {
-				this.handler.post(ElementType.JUMPBAR, matrix, false);
+				this.handler.post(ElementType.JUMPBAR, matrix);
 			}
 			
 		}

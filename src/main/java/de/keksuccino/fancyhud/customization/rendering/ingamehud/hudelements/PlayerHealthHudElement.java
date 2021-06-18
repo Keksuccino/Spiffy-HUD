@@ -55,7 +55,7 @@ public class PlayerHealthHudElement extends IngameHudElement {
 		}
 		
 		if (this.fireEvents) {
-			if (this.handler.pre(ElementType.HEALTH, matrix, false)) return;
+			if (this.handler.pre(ElementType.HEALTH, matrix)) return;
 		}
 		
 		if (this.visible) {
@@ -179,7 +179,7 @@ public class PlayerHealthHudElement extends IngameHudElement {
 		}
 		
 		if (this.fireEvents) {
-			this.handler.post(ElementType.HEALTH, matrix, false);
+			this.handler.post(ElementType.HEALTH, matrix);
 		}
 
 	}

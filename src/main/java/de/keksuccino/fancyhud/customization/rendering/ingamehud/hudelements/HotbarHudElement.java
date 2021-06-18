@@ -31,14 +31,10 @@ public class HotbarHudElement extends IngameHudElement {
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
 		if (this.fireEvents) {
-			if (this.handler.pre(ElementType.HOTBAR, matrix, false)) return;
+			if (this.handler.pre(ElementType.HOTBAR, matrix)) return;
 		}
 
 		if (this.visible) {
-
-			if (this.fireEvents) {
-				if (this.handler.pre(ElementType.HOTBAR, matrix, true)) return;
-			}
 
 			if (mc.playerController.getCurrentGameType() == GameType.SPECTATOR) {
 				this.spectatorGui.func_238528_a_(matrix, partialTicks);
@@ -46,14 +42,10 @@ public class HotbarHudElement extends IngameHudElement {
 				this.renderHotbarRaw(matrix, scaledWidth, scaledHeight, partialTicks);
 			}
 
-			if (this.fireEvents) {
-				this.handler.post(ElementType.HOTBAR, matrix, true);
-			}
-
 		}
 
 		if (this.fireEvents) {
-			this.handler.post(ElementType.HOTBAR, matrix, false);
+			this.handler.post(ElementType.HOTBAR, matrix);
 		}
 
 	}

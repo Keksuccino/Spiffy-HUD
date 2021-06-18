@@ -27,7 +27,7 @@ public class ArmorBarHudElement extends IngameHudElement {
 		this.height = (int) (9 * this.scale);
 
 		if (this.fireEvents) {
-			if (this.handler.pre(ElementType.ARMOR, matrix, false)) return;
+			if (this.handler.pre(ElementType.ARMOR, matrix)) return;
 		}
 		
 		if (this.visible) {
@@ -35,7 +35,7 @@ public class ArmorBarHudElement extends IngameHudElement {
 		}
 		
 		if (this.fireEvents) {
-			this.handler.post(ElementType.ARMOR, matrix, false);
+			this.handler.post(ElementType.ARMOR, matrix);
 		}
 		
 	}

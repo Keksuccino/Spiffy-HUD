@@ -30,7 +30,7 @@ public class PotionIconsHudElement extends IngameHudElement {
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
 		if (this.fireEvents) {
-			if (this.handler.pre(ElementType.POTION_ICONS, matrix, false)) return;
+			if (this.handler.pre(ElementType.POTION_ICONS, matrix)) return;
 		}
 
 		if (this.visible) {
@@ -40,7 +40,7 @@ public class PotionIconsHudElement extends IngameHudElement {
 		}
 
 		if (this.fireEvents) {
-			this.handler.post(ElementType.POTION_ICONS, matrix, false);
+			this.handler.post(ElementType.POTION_ICONS, matrix);
 		}
 
 	}

@@ -153,12 +153,12 @@ public class TextComponentUtils {
 			StringTextComponent charComp = new StringTextComponent("" + c);
 
 			Style s = charComp.getStyle();
-			net.minecraft.util.text.Color textColor = net.minecraft.util.text.Color.fromHex(toHexString(red, green, blue));
+			Color textColor = Color.fromHex(toHexString(red, green, blue));
 			Style colored = s.setColor(textColor);
 
 			charComp.setStyle(colored);
 
-			sc.append(charComp);
+			sc.appendSibling(charComp);
 			
 			i++;
 

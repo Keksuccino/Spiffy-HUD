@@ -124,18 +124,18 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 
 		if (!this.isEditor()) {
 			MinecraftForge.EVENT_BUS.register(this);
-			this.reloadHud(Minecraft.getInstance().getMainWindow().getScaledWidth(), Minecraft.getInstance().getMainWindow().getScaledHeight());
+			this.reloadHud();
 		}
 	}
 
 	@SubscribeEvent
 	public void onWindowResized(WindowResizedEvent e) {
-		this.reloadHud(e.getScaledWidth(), e.getScaledHeight());
+		this.reloadHud();
 	}
 
 	@SubscribeEvent
 	public void onSystemReloaded(CustomizationSystemReloadedEvent e) {
-		this.reloadHud(Minecraft.getInstance().getMainWindow().getScaledWidth(), Minecraft.getInstance().getMainWindow().getScaledHeight());
+		this.reloadHud();
 	}
 
 	@SubscribeEvent
@@ -143,19 +143,19 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 		if ((Minecraft.getInstance() != null)) {
 
 			if ((Minecraft.getInstance().world == null) != this.prevTickWorldNull) {
-				this.reloadHud(Minecraft.getInstance().getMainWindow().getScaledWidth(), Minecraft.getInstance().getMainWindow().getScaledHeight());
+				this.reloadHud();
 			}
 			this.prevTickWorldNull = (Minecraft.getInstance().world == null);
 
 			if (Minecraft.getInstance().isSingleplayer() != this.prevTickIsSingleplayer) {
-				this.reloadHud(Minecraft.getInstance().getMainWindow().getScaledWidth(), Minecraft.getInstance().getMainWindow().getScaledHeight());
+				this.reloadHud();
 			}
 			this.prevTickIsSingleplayer = Minecraft.getInstance().isSingleplayer();
 
 		}
 	}
 
-	public void reloadHud(int scaledWidth, int scaledHeight) {
+	public void reloadHud() {
 
 		try {
 
@@ -322,10 +322,7 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 
 							String id = action.split("[_]", 2)[1];
 							HudElementContainer c = this.customElements.get(id);
-							boolean isSecond = false;
-							if (customElementsSet.contains(id)) {
-								isSecond = true;
-							}
+							boolean isSecond = customElementsSet.contains(id);
 
 							if (c != null) {
 
@@ -598,7 +595,7 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 
 	//Render Crosshair
 	@Override
-	protected void func_238456_d_(MatrixStack matrix) {
+	protected void renderCrosshair(MatrixStack matrix) {
 
 		this.crosshairElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
 
@@ -718,7 +715,7 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 
 	//renderSelectedItemName
 	@Override
-	public void func_238453_b_(MatrixStack matrix) {
+	public void renderItemName(MatrixStack matrix) {
 
 		this.selectedItemNameElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
 
@@ -769,9 +766,9 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 		this.subtitleElement.render(matrix, width, height, partialTicks);
 
 	}
-	
+
 	@Override
-	protected void func_238447_a_(MatrixStack matrix, ScoreObjective objective) {
+	protected void renderScoreboard(MatrixStack matrix, ScoreObjective objective) {
 		
 		this.sidebarElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
 		
@@ -782,13 +779,7 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 		return this.bossGui;
 	}
 
-	public boolean pre(ElementType type, MatrixStack matrix, boolean isInsideCustomization) {
-		if (isInsideCustomization && !FancyHud.config.getOrDefault("customizeforgehooks", true)) {
-			return false;
-		}
-		if (!isInsideCustomization && FancyHud.config.getOrDefault("customizeforgehooks", true)) {
-			return false;
-		}
+	public boolean pre(ElementType type, MatrixStack matrix) {
 		try {
 			Method m = ForgeIngameGui.class.getDeclaredMethod("pre", ElementType.class, MatrixStack.class);
 			m.setAccessible(true);
@@ -799,13 +790,7 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 		return false;
 	}
 
-	public void post(ElementType type, MatrixStack matrix, boolean isInsideCustomization) {
-		if (isInsideCustomization && !FancyHud.config.getOrDefault("customizeforgehooks", true)) {
-			return;
-		}
-		if (!isInsideCustomization && FancyHud.config.getOrDefault("customizeforgehooks", true)) {
-			return;
-		}
+	public void post(ElementType type, MatrixStack matrix) {
 		try {
 			Method m = ForgeIngameGui.class.getDeclaredMethod("post", ElementType.class, MatrixStack.class);
 			m.setAccessible(true);
@@ -865,11 +850,6 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 
 	public boolean getAnimateOverlayMessageColor() {
 		return this.animateOverlayMessageColor;
-	}
-
-	@Override
-	public void func_238448_a_(MatrixStack matrix, FontRenderer p_238448_2_, int p_238448_3_, int p_238448_4_, int p_238448_5_) {
-		super.func_238448_a_(matrix, p_238448_2_, p_238448_3_, p_238448_4_, p_238448_5_);
 	}
 
 	public void onClose() {

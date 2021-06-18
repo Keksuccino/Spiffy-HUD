@@ -459,13 +459,13 @@ public class DynamicValueTextfield extends AdvancedTextField {
 	}
 	
 	@Override
-	public void renderButton(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		if (this.variableButton != null) {
 			
 			this.variableButton.setWidth(this.height);
 			this.variableButton.setHeight(this.height);
 			
-			super.renderButton(matrix, mouseX, mouseY, partialTicks);
+			super.renderWidget(matrix, mouseX, mouseY, partialTicks);
 			
 			this.variableButton.setX(this.x + this.width + 5);
 			this.variableButton.setY(this.y);
