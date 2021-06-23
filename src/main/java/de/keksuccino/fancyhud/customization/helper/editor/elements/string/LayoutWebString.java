@@ -1,9 +1,10 @@
-package de.keksuccino.fancyhud.customization.helper.editor.elements;
+package de.keksuccino.fancyhud.customization.helper.editor.elements.string;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutElement;
 import de.keksuccino.konkrete.localization.Locals;
 import de.keksuccino.fancyhud.customization.helper.editor.LayoutEditorScreen;
 import de.keksuccino.fancyhud.customization.helper.ui.content.FHContextMenu;
@@ -219,6 +220,9 @@ public class LayoutWebString extends LayoutElement {
 		p1.addEntry("shadow", "" + this.getObject().shadow);
 		p1.addEntry("multiline", "" + this.getObject().multiline);
 		p1.addEntry("alignment", this.getObject().alignment.key);
+
+		this.addVisibilityPropertiesTo(p1);
+
 		l.add(p1);
 		
 		return l;

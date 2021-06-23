@@ -12,19 +12,10 @@ import de.keksuccino.fancyhud.api.item.CustomizationItem;
 import de.keksuccino.fancyhud.api.item.CustomizationItemContainer;
 import de.keksuccino.fancyhud.api.item.CustomizationItemLayoutElement;
 import de.keksuccino.fancyhud.api.item.CustomizationItemRegistry;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutElement;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutShape;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutSlideshow;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutSplashText;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutTexture;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutWebString;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutWebTexture;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomAirBar;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomArmorBar;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomExpBar;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomFoodBar;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomHealthBar;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.*;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.*;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.string.LayoutString;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.string.LayoutWebString;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.AirBarLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.ArmorBarLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.BossBarLayoutElement;
@@ -37,13 +28,9 @@ import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.Playe
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.SidebarLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.SelectedItemNameLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.TitleLayoutElement;
-import de.keksuccino.fancyhud.customization.items.ShapeCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.*;
 import de.keksuccino.fancyhud.customization.items.ShapeCustomizationItem.Shape;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomAirBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomArmorBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomExpBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomFoodBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomHealthBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.*;
 import de.keksuccino.fancyhud.customization.items.vanilla.AirBarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.ArmorBarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.BossBarCustomizationItem;
@@ -56,12 +43,6 @@ import de.keksuccino.fancyhud.customization.items.vanilla.PlayerHealthBarCustomi
 import de.keksuccino.fancyhud.customization.items.vanilla.SidebarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.SelectedItemNameCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.TitleCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.SlideshowCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.SplashTextCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.StringCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.TextureCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.WebStringCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.WebTextureCustomizationItem;
 import de.keksuccino.fancyhud.customization.rendering.slideshow.SlideshowHandler;
 import de.keksuccino.konkrete.math.MathUtils;
 import de.keksuccino.konkrete.properties.PropertiesSection;
@@ -398,6 +379,14 @@ public class PreloadedLayoutEditorScreen extends LayoutEditorScreen {
 					}
 				}
 
+				if (action.equalsIgnoreCase("additemstack")) {
+					con.add(new LayoutItemStack(new ItemStackCustomizationItem(sec), this));
+				}
+
+				if (action.equalsIgnoreCase("addmirroredplayer")) {
+					con.add(new LayoutMirroredPlayer(new MirroredPlayerCustomizationItem(sec), this));
+				}
+
 				if (action.equalsIgnoreCase("addsplash")) {
 					con.add(new LayoutSplashText(new SplashTextCustomizationItem(sec), this));
 				}
@@ -420,6 +409,14 @@ public class PreloadedLayoutEditorScreen extends LayoutEditorScreen {
 				
 				if (action.equalsIgnoreCase("addcustomexpbar")) {
 					con.add(new LayoutCustomExpBar(new CustomExpBarCustomizationItem(sec), this));
+				}
+
+				if (action.equalsIgnoreCase("addcustommounthealthbar")) {
+					con.add(new LayoutCustomMountHealthBar(new CustomMountHealthBarCustomizationItem(sec), this));
+				}
+
+				if (action.equalsIgnoreCase("addcustommountjumpbar")) {
+					con.add(new LayoutCustomMountJumpBar(new CustomMountJumpBarCustomizationItem(sec), this));
 				}
 				
 				/** ########################### CUSTOM ITEM HANDLING ########################### **/

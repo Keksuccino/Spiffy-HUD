@@ -29,6 +29,7 @@ public class SlideshowCustomizationItem extends CustomizationItemBase {
 	}
 
 	public void render(MatrixStack matrix) {
+
 		if (!this.shouldRender()) {
 			return;
 		}

@@ -577,10 +577,84 @@ fancyhud.helper.creator.add.customairbar = Custom Air Bar
 
 fancyhud.helper.creator.add.customexpbar = Custom EXP Bar
 
+fancyhud.helper.creator.add.custommounthealthbar = Custom Mount Health Bar
 
+fancyhud.helper.creator.add.custommountjumpbar = Custom Mount Jump Bar
 
+fancyhud.helper.creator.items.itemstack = Item Stack
+fancyhud.helper.creator.items.itemstack.setitem = Set Item
+fancyhud.helper.creator.items.itemstack.setitem.btn.desc = Set the displayed item.
+fancyhud.helper.creator.items.itemstack.setitem.byid = By Item Name
+fancyhud.helper.creator.items.itemstack.setitem.byid.btn.desc = Will set the item by the given item name.%n%%n%§cItem names should look like: §nminecraft:itemname
+fancyhud.helper.creator.items.itemstack.setitem.byslot = By Inventory Slot
+fancyhud.helper.creator.items.itemstack.setitem.byslot.btn.desc = Will set the item to the given%n%slot of the player inventory.%n%%n%The item §nupdates itself §rand will%n%always show the §ncurrent slot content§r.%n%%n%§cSlot items are placeholders in the editor!%n%%n%§cNOTE:%n%Set the slot to §n-1§r to show%n%the current §nmain hand item§r.
+fancyhud.helper.creator.items.itemstack.showstacksize.on = Stack Size: §aOn
+fancyhud.helper.creator.items.itemstack.showstacksize.off = Stack Size: §cOff
+fancyhud.helper.creator.items.itemstack.showdurability.on = Durability: §aOn
+fancyhud.helper.creator.items.itemstack.showdurability.off = Durability: §cOff
 
+fancyhud.helper.creator.items.visibilityrequirements = Visibility Requirements
+fancyhud.helper.creator.items.visibilityrequirements.btn.desc = Set requirements for the element to be visible.
+fancyhud.helper.creator.items.visibilityrequirements.enabled = {}: §aEnabled
+fancyhud.helper.creator.items.visibilityrequirements.disabled = {}: §cDisabled
+fancyhud.helper.creator.items.visibilityrequirements.toggle.btn.desc = §oLeftclick to toggle requirement.
+fancyhud.helper.creator.items.visibilityrequirements.showif = Show If
+fancyhud.helper.creator.items.visibilityrequirements.showif.btn.desc = Show element if condition is met.
+fancyhud.helper.creator.items.visibilityrequirements.showifnot = Show If Not
+fancyhud.helper.creator.items.visibilityrequirements.showifnot.btn.desc = Show element if condition is NOT met.
+fancyhud.helper.creator.items.visibilityrequirements.requirement = Requirement
 
+fancyhud.helper.creator.items.visibilityrequirements.activeslot = Is Current Hotbar Slot
+fancyhud.helper.creator.items.visibilityrequirements.activeslot.desc = Check for the hotbar slot of%n%the current item.
+fancyhud.helper.creator.items.visibilityrequirements.activeslot.valuename = Slot (0-8)
 
+fancyhud.helper.creator.items.visibilityrequirements.iteminmainhand = Is Item In Main Hand
+fancyhud.helper.creator.items.visibilityrequirements.iteminmainhand.desc = Check if the player has an%n%item in its main hand.
 
+fancyhud.helper.creator.items.visibilityrequirements.iteminoffhand = Is Item In Off Hand
+fancyhud.helper.creator.items.visibilityrequirements.iteminoffhand.desc = Check if the player has an%n%item in its off hand.
 
+fancyhud.helper.creator.items.visibilityrequirements.activeitemtype = Is Active Item Type
+fancyhud.helper.creator.items.visibilityrequirements.activeitemtype.desc = PLACEHOLDER
+
+fancyhud.helper.creator.items.visibilityrequirements.activeitemname = Is Main Hand Item Name
+fancyhud.helper.creator.items.visibilityrequirements.activeitemname.desc = Check if the current main hand item%n%has a specific name.
+fancyhud.helper.creator.items.visibilityrequirements.activeitemname.valuename = Item Name (minecraft:itemname)
+
+fancyhud.helper.creator.items.visibilityrequirements.singleplayer = Is Singleplayer
+fancyhud.helper.creator.items.visibilityrequirements.singleplayer.desc = Check if the user is in singleplayer.
+
+fancyhud.helper.creator.items.visibilityrequirements.multiplayer = Is Multiplayer
+fancyhud.helper.creator.items.visibilityrequirements.multiplayer.desc = Check if the user is in multiplayer.
+
+fancyhud.helper.creator.items.visibilityrequirements.playeronground = Is Player On Ground
+fancyhud.helper.creator.items.visibilityrequirements.playeronground.desc = Check if the player stands on ground.
+
+fancyhud.helper.creator.items.visibilityrequirements.playerunderwater = Is Player Underwater
+fancyhud.helper.creator.items.visibilityrequirements.playerunderwater.desc = Check if the player is fully underwater.
+
+fancyhud.helper.creator.items.visibilityrequirements.playerisridinghorse = Is Player Riding Horse
+fancyhud.helper.creator.items.visibilityrequirements.playerisridinghorse.desc = Check if the player is riding a horse.
+
+fancyhud.helper.creator.items.visibilityrequirements.playerisridingentity = Is Player Riding Entity
+fancyhud.helper.creator.items.visibilityrequirements.playerisridingentity.desc = Check if the player is riding an entity.%n%This can also be a horse.
+
+fancyhud.helper.creator.items.visibilityrequirements.playerisinwater = Is Player In Water
+fancyhud.helper.creator.items.visibilityrequirements.playerisinwater.desc = Check if the player is in water.
+
+fancyhud.helper.creator.items.visibilityrequirements.playerisrunning = Is Player Running
+fancyhud.helper.creator.items.visibilityrequirements.playerisrunning.desc = Check if the player is running.
+
+fancyhud.helper.creator.items.visibilityrequirements.debugopen = Is Debug Overlay Open
+fancyhud.helper.creator.items.visibilityrequirements.debugopen.desc = Check if the debug overlay (F3) is open.
+
+fancyhud.helper.creator.items.visibilityrequirements.gamepaused = Is Game Paused
+fancyhud.helper.creator.items.visibilityrequirements.gamepaused.desc = Check if the game is paused.
+
+fancyhud.helper.creator.items.visibilityrequirements.slotitemname = Is Slot Item Name
+fancyhud.helper.creator.items.visibilityrequirements.slotitemname.desc = Check if the item in a specific slot%n%has a specific name.
+fancyhud.helper.creator.items.visibilityrequirements.slotitemname.valuename = Item Slot & Name (slot:minecraft:itemname)
+
+fancyhud.helper.creator.items.mirroredplayer = Mirrored Player
+fancyhud.helper.creator.items.mirroredplayer.rotateplayer.on = Rotate Player: §aOn
+fancyhud.helper.creator.items.mirroredplayer.rotateplayer.off = Rotate Player: §cOff

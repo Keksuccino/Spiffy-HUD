@@ -30,6 +30,7 @@ public abstract class VanillaLayoutElement extends LayoutElement {
 	
 	@Override
 	public void init() {
+		this.enableVisibilityRequirements = false;
 		super.init();
 		
 		/** RESET ELEMENT **/

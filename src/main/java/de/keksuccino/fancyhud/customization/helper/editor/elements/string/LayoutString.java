@@ -359,6 +359,8 @@ public class LayoutString extends LayoutElement {
 			p1.addEntry("rainbowstartcolor2", this.getObject().rainbowStartColorHex2);
 			p1.addEntry("rainbowendcolor2", this.getObject().rainbowEndColorHex2);
 		}
+
+		this.addVisibilityPropertiesTo(p1);
 		
 		l.add(p1);
 		

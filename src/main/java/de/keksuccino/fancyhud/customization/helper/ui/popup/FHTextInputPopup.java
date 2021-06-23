@@ -17,8 +17,8 @@ public class FHTextInputPopup extends TextInputPopup {
 	public FHTextInputPopup(Color color, String title, CharacterFilter filter, int backgroundAlpha) {
 		super(color, title, filter, backgroundAlpha);
 	}
-	
-	@Override
+
+    @Override
 	protected void colorizePopupButton(AdvancedButton b) {
 		UIBase.colorizeButton(b);
 	}

@@ -36,6 +36,7 @@ public class ShapeCustomizationItem extends CustomizationItemBase {
 
 	@Override
 	public void render(MatrixStack matrix) {
+
 		if (this.shouldRender()) {
 			if (this.shape != null) {
 				

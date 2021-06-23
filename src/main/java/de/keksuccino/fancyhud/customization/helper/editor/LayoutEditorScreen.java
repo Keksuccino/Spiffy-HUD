@@ -28,7 +28,7 @@ import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutShape;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutSlideshow;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutSplashText;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutTexture;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutWebString;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.string.LayoutWebString;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutWebTexture;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.string.LayoutString;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.AirBarLayoutElement;
@@ -606,7 +606,7 @@ public class LayoutEditorScreen extends Screen {
 
 	/**
 	 * Returns the LayoutObject the object was moved behind.<br>
-	 * Will <b>NOT</b> move behind {@link LayoutVanillaButton}s, but will return the vanilla button the object would have been moved under.
+	 * Will <b>NOT</b> move behind {@link VanillaLayoutElement}s, but will return the vanilla button the object would have been moved under.
 	 */
 	public LayoutElement moveDown(LayoutElement o) {
 		LayoutElement movedBehind = null;
@@ -949,6 +949,11 @@ public class LayoutEditorScreen extends Screen {
 
 	public void pasteElements() {
 		if (!LayoutEditorScreen.COPIED_ELEMENT_CACHE.isEmpty()) {
+
+			for (PropertiesSection s : COPIED_ELEMENT_CACHE) {
+				s.removeEntry("actionid");
+				s.addEntry("actionid", CustomizationHandler.generateRandomActionId());
+			}
 
 			PropertiesSet set = new PropertiesSet("hud");
 			for (PropertiesSection s : LayoutEditorScreen.COPIED_ELEMENT_CACHE) {

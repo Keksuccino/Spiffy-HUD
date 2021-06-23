@@ -52,6 +52,10 @@ public class CustomArmorBarCustomizationItem extends CustomBarCustomizationItemB
 	
 	@Override
 	public void render(MatrixStack matrix) {
+
+		if (!this.shouldRender()) {
+			return;
+		}
 		
 		ClientPlayerEntity p = Minecraft.getInstance().player;
 		

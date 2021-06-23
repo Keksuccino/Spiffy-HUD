@@ -2,6 +2,7 @@ package de.keksuccino.fancyhud;
 
 import java.io.File;
 
+import de.keksuccino.fancyhud.customization.items.visibilityrequirements.VisibilityRequirementHandler;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -31,7 +32,7 @@ import net.minecraftforge.fml.network.FMLNetworkConstants;
 @Mod("fancyhud")
 public class FancyHud {
 	
-	public static final String VERSION = "1.2.1";
+	public static final String VERSION = "1.3.0";
 	
 	public static final File HOME_DIR = new File("config/fancyhud");
 	public static final File CUSTOMIZATION_DIR = new File(HOME_DIR.getPath() + "/customization");
@@ -72,6 +73,8 @@ public class FancyHud {
 			CustomizationHandler.init();
 			
 			CustomizationHelper.init();
+
+			VisibilityRequirementHandler.init();
 			
 			if (config.getOrDefault("enablekeybinds", true)) {
         		Keybinding.init();

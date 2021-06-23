@@ -15,11 +15,9 @@ import de.keksuccino.fancyhud.customization.CustomizationHandler;
 import de.keksuccino.fancyhud.customization.CustomizationPropertiesHandler;
 import de.keksuccino.fancyhud.customization.helper.CustomizationHelperScreen;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutElement;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomAirBar;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomArmorBar;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomExpBar;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomFoodBar;
-import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.LayoutCustomHealthBar;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutItemStack;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.LayoutMirroredPlayer;
+import de.keksuccino.fancyhud.customization.helper.editor.elements.custombars.*;
 import de.keksuccino.fancyhud.customization.helper.editor.elements.vanilla.VanillaLayoutElement;
 import de.keksuccino.fancyhud.customization.helper.ui.UIBase;
 import de.keksuccino.fancyhud.customization.helper.ui.content.CustomizationButton;
@@ -29,11 +27,9 @@ import de.keksuccino.fancyhud.customization.helper.ui.content.MenuBar.ElementAli
 import de.keksuccino.fancyhud.customization.helper.ui.popup.ChooseFilePopup;
 import de.keksuccino.fancyhud.customization.helper.ui.popup.DynamicValueInputPopup;
 import de.keksuccino.fancyhud.customization.helper.ui.popup.FHYesNoPopup;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomAirBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomArmorBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomExpBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomFoodBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomHealthBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.ItemStackCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.MirroredPlayerCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.custombars.*;
 import de.keksuccino.fancyhud.customization.items.ShapeCustomizationItem.Shape;
 import de.keksuccino.fancyhud.customization.rendering.slideshow.SlideshowHandler;
 import de.keksuccino.konkrete.gui.content.AdvancedButton;
@@ -724,6 +720,34 @@ public class LayoutEditorUI extends UIBase {
 				shapesMenu.openMenuAt(0, press.y, screenWidth, screenHeight);
 			});
 			this.addContent(shapesButton);
+
+			/** ITEM STACK **/
+			AdvancedButton itemStackButton = new AdvancedButton(0, 0, 0, 20, Locals.localize("fancyhud.helper.creator.items.itemstack"), (press) -> {
+				this.parent.history.saveSnapshot(this.parent.history.createSnapshot());
+
+				PropertiesSection sec = new PropertiesSection("customization");
+				sec.addEntry("action", "additemstack");
+				sec.addEntry("x", "0");
+				sec.addEntry("y", "" + (int)(this.parent.ui.bar.getHeight() * UIBase.getUIScale()));
+
+				ItemStackCustomizationItem i = new ItemStackCustomizationItem(sec);
+				this.parent.addContent(new LayoutItemStack(i, this.parent));
+			});
+			this.addContent(itemStackButton);
+
+			/** MIRRORED PLAYER **/
+			AdvancedButton mirroredPlayerButton = new AdvancedButton(0, 0, 0, 20, Locals.localize("fancyhud.helper.creator.items.mirroredplayer"), (press) -> {
+				this.parent.history.saveSnapshot(this.parent.history.createSnapshot());
+
+				PropertiesSection sec = new PropertiesSection("customization");
+				sec.addEntry("action", "addmirroredplayer");
+				sec.addEntry("x", "0");
+				sec.addEntry("y", "" + (int)(this.parent.ui.bar.getHeight() * UIBase.getUIScale()));
+
+				MirroredPlayerCustomizationItem i = new MirroredPlayerCustomizationItem(sec);
+				this.parent.addContent(new LayoutMirroredPlayer(i, this.parent));
+			});
+			this.addContent(mirroredPlayerButton);
 			
 			this.addSeparator();
 			
@@ -806,7 +830,39 @@ public class LayoutEditorUI extends UIBase {
 				this.parent.addContent(new LayoutCustomExpBar(i, this.parent));
 			});
 			this.addContent(customExpButton);
-			
+
+			/** CUSTOM MOUNT HEALTH BAR **/
+			AdvancedButton customMountHealthButton = new AdvancedButton(0, 0, 0, 20, Locals.localize("fancyhud.helper.creator.add.custommounthealthbar"), (press) -> {
+				this.parent.history.saveSnapshot(this.parent.history.createSnapshot());
+
+				PropertiesSection sec = new PropertiesSection("customization");
+				sec.addEntry("action", "addcustommounthealthbar");
+				sec.addEntry("width", "100");
+				sec.addEntry("height", "20");
+				sec.addEntry("x", "0");
+				sec.addEntry("y", "" + (int)(this.parent.ui.bar.getHeight() * UIBase.getUIScale()));
+
+				CustomMountHealthBarCustomizationItem i = new CustomMountHealthBarCustomizationItem(sec);
+				this.parent.addContent(new LayoutCustomMountHealthBar(i, this.parent));
+			});
+			this.addContent(customMountHealthButton);
+
+			/** CUSTOM MOUNT JUMP BAR **/
+			AdvancedButton customMountJumpButton = new AdvancedButton(0, 0, 0, 20, Locals.localize("fancyhud.helper.creator.add.custommountjumpbar"), (press) -> {
+				this.parent.history.saveSnapshot(this.parent.history.createSnapshot());
+
+				PropertiesSection sec = new PropertiesSection("customization");
+				sec.addEntry("action", "addcustommountjumpbar");
+				sec.addEntry("width", "100");
+				sec.addEntry("height", "20");
+				sec.addEntry("x", "0");
+				sec.addEntry("y", "" + (int)(this.parent.ui.bar.getHeight() * UIBase.getUIScale()));
+
+				CustomMountJumpBarCustomizationItem i = new CustomMountJumpBarCustomizationItem(sec);
+				this.parent.addContent(new LayoutCustomMountJumpBar(i, this.parent));
+			});
+			this.addContent(customMountJumpButton);
+
 			this.addSeparator();
 			
 			/** CUSTOM ITEMS **/

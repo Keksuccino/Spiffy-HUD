@@ -205,6 +205,8 @@ public class LayoutCustomBarBase extends LayoutElement {
 		if (this.getObject().backgroundTexturePath != null) {
 			s.addEntry("backgroundtexture", this.getObject().backgroundTexturePath);
 		}
+
+		this.addVisibilityPropertiesTo(s);
 		
 		return s;
 		

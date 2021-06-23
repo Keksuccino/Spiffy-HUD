@@ -20,19 +20,8 @@ import de.keksuccino.fancyhud.api.item.CustomizationItemContainer;
 import de.keksuccino.fancyhud.api.item.CustomizationItemRegistry;
 import de.keksuccino.fancyhud.customization.CustomizationHandler;
 import de.keksuccino.fancyhud.customization.CustomizationPropertiesHandler;
-import de.keksuccino.fancyhud.customization.items.CustomizationItemBase;
-import de.keksuccino.fancyhud.customization.items.ShapeCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.SlideshowCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.SplashTextCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.StringCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.TextureCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.WebStringCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.WebTextureCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomAirBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomArmorBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomExpBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomFoodBarCustomizationItem;
-import de.keksuccino.fancyhud.customization.items.custombars.CustomHealthBarCustomizationItem;
+import de.keksuccino.fancyhud.customization.items.*;
+import de.keksuccino.fancyhud.customization.items.custombars.*;
 import de.keksuccino.fancyhud.customization.items.vanilla.AirBarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.ArmorBarCustomizationItem;
 import de.keksuccino.fancyhud.customization.items.vanilla.BossBarCustomizationItem;
@@ -415,6 +404,24 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 
 							}
 						}
+
+						/** ITEM STACK **/
+						if (action.equalsIgnoreCase("additemstack")) {
+							if (renderInBackground) {
+								backgroundElements.add(new ItemStackCustomizationItem(sec));
+							} else {
+								foregroundElements.add(new ItemStackCustomizationItem(sec));
+							}
+						}
+
+						/** MIRRORED PLAYER **/
+						if (action.equalsIgnoreCase("addmirroredplayer")) {
+							if (renderInBackground) {
+								backgroundElements.add(new MirroredPlayerCustomizationItem(sec));
+							} else {
+								foregroundElements.add(new MirroredPlayerCustomizationItem(sec));
+							}
+						}
 						
 						/** CUSTOM HEALTH BAR **/
 						if (action.equalsIgnoreCase("addcustomhealthbar")) {
@@ -458,6 +465,24 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 								backgroundElements.add(new CustomExpBarCustomizationItem(sec));
 							} else {
 								foregroundElements.add(new CustomExpBarCustomizationItem(sec));
+							}
+						}
+
+						/** CUSTOM MOUNT HEALTH BAR **/
+						if (action.equalsIgnoreCase("addcustommounthealthbar")) {
+							if (renderInBackground) {
+								backgroundElements.add(new CustomMountHealthBarCustomizationItem(sec));
+							} else {
+								foregroundElements.add(new CustomMountHealthBarCustomizationItem(sec));
+							}
+						}
+
+						/** CUSTOM MOUNT JUMP BAR **/
+						if (action.equalsIgnoreCase("addcustommountjumpbar")) {
+							if (renderInBackground) {
+								backgroundElements.add(new CustomMountJumpBarCustomizationItem(sec));
+							} else {
+								foregroundElements.add(new CustomMountJumpBarCustomizationItem(sec));
 							}
 						}
 

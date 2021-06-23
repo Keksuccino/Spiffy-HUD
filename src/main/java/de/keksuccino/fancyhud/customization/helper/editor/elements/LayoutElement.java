@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
+import de.keksuccino.fancyhud.customization.items.visibilityrequirements.VisibilityRequirementContainer;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -78,6 +79,8 @@ public abstract class LayoutElement extends AbstractGui {
 	private static boolean shiftListener = false;
 	
 	private final boolean destroyable;
+	public boolean resizable = true;
+	public boolean enableVisibilityRequirements = true;
 
 	/** Only for internal use. Not to confuse with the action ID of {@link CustomizationItemBase}'s. */
 	public final String objectId = UUID.randomUUID().toString();
@@ -121,6 +124,39 @@ public abstract class LayoutElement extends AbstractGui {
 		
 		this.rightclickMenu = new FHContextMenu();
 		this.rightclickMenu.setAlwaysOnTop(true);
+
+		/** LAYERS **/
+		FHContextMenu layersMenu = new FHContextMenu();
+		layersMenu.setAutoclose(true);
+		this.rightclickMenu.addChild(layersMenu);
+
+		AdvancedButton layersButton = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.creator.items.chooselayer"), true, (press) -> {
+
+			layersMenu.getContent().clear();
+
+			for (LayoutElement o : this.hoveredLayers) {
+				String label = o.object.value;
+				if (label == null) {
+					label = "Element";
+				} else {
+					if (Minecraft.getInstance().fontRenderer.getStringWidth(label) > 200) {
+						label = Minecraft.getInstance().fontRenderer.trimStringToWidth(label, 200) + "..";
+					}
+				}
+				AdvancedButton btn = new AdvancedButton(0, 0, 0, 0, label, (press2) -> {
+					this.handler.clearFocusedObjects();
+					this.handler.setObjectFocused(o, true, true);
+				});
+				layersMenu.addContent(btn);
+			}
+
+			layersMenu.setParentButton((AdvancedButton) press);
+			layersMenu.openMenuAt(0, press.y);
+
+		});
+		this.rightclickMenu.addContent(layersButton);
+
+		this.rightclickMenu.addSeparator();
 		
 		/** ORIENTATION **/
 		FHContextMenu orientationMenu = new FHContextMenu();
@@ -197,37 +233,6 @@ public abstract class LayoutElement extends AbstractGui {
 		orientationButton.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.creator.items.orientation.btndesc"), "%n%"));
 		this.rightclickMenu.addContent(orientationButton);
 
-		/** LAYERS **/
-		FHContextMenu layersMenu = new FHContextMenu();
-		layersMenu.setAutoclose(true);
-		this.rightclickMenu.addChild(layersMenu);
-		
-		AdvancedButton layersButton = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.creator.items.chooselayer"), true, (press) -> {
-			
-			layersMenu.getContent().clear();
-			
-			for (LayoutElement o : this.hoveredLayers) {
-				String label = o.object.value;
-				if (label == null) {
-					label = "Element";
-				} else {
-					if (Minecraft.getInstance().fontRenderer.getStringWidth(label) > 200) {
-						label = Minecraft.getInstance().fontRenderer.trimStringToWidth(label, 200) + "..";
-					}
-				}
-				AdvancedButton btn = new AdvancedButton(0, 0, 0, 0, label, (press2) -> {
-					this.handler.clearFocusedObjects();
-					this.handler.setObjectFocused(o, true, true);
-				});
-				layersMenu.addContent(btn);
-			}
-			
-			layersMenu.setParentButton((AdvancedButton) press);
-			layersMenu.openMenuAt(0, press.y);
-			
-		});
-		this.rightclickMenu.addContent(layersButton);
-
 		/** STRETCH **/
 		FHContextMenu stretchMenu = new FHContextMenu();
 		stretchMenu.setAutoclose(true);
@@ -286,6 +291,15 @@ public abstract class LayoutElement extends AbstractGui {
 		if (this.orderable) {
 			this.rightclickMenu.addContent(moveDownButton);
 		}
+
+		/** VISIBILITY REQUIREMENTS **/
+		AdvancedButton visibilityRequirementsButton = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.creator.items.visibilityrequirements"), (press) -> {
+			PopupHandler.displayPopup(new VisibilityRequirementsPopup(this.object));
+		});
+		visibilityRequirementsButton.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.btn.desc", ""), "%n%"));
+		if (this.enableVisibilityRequirements) {
+			this.rightclickMenu.addContent(visibilityRequirementsButton);
+		}
 		
 		/** COPY **/
 		AdvancedButton copyButton = new AdvancedButton(0, 0, 0, 0, Locals.localize("fancyhud.helper.editor.ui.edit.copy"), (press) -> {
@@ -309,44 +323,6 @@ public abstract class LayoutElement extends AbstractGui {
 	
 	protected void setOrientation(String pos) {
 		this.handler.history.saveSnapshot(this.handler.history.createSnapshot());
-
-//		if (pos.equals("mid-left")) {
-//			this.object.orientation = pos;
-//			this.object.posX = 0;
-//			this.object.posY = -(this.object.height / 2);
-//		} else if (pos.equals("bottom-left")) {
-//			this.object.orientation = pos;
-//			this.object.posX = 0;
-//			this.object.posY = -this.object.height;
-//		} else if (pos.equals("top-centered")) {
-//			this.object.orientation = pos;
-//			this.object.posX = -(this.object.width / 2);
-//			this.object.posY = 0;
-//		} else if (pos.equals("mid-centered")) {
-//			this.object.orientation = pos;
-//			this.object.posX = -(this.object.width / 2);
-//			this.object.posY = -(this.object.height / 2);
-//		} else if (pos.equals("bottom-centered")) {
-//			this.object.orientation = pos;
-//			this.object.posX = -(this.object.width / 2);
-//			this.object.posY = -this.object.height;
-//		} else if (pos.equals("top-right")) {
-//			this.object.orientation = pos;
-//			this.object.posX = -this.object.width;
-//			this.object.posY = 0;
-//		} else if (pos.equals("mid-right")) {
-//			this.object.orientation = pos;
-//			this.object.posX = -this.object.width;
-//			this.object.posY = -(this.object.height / 2);
-//		} else if (pos.equals("bottom-right")) {
-//			this.object.orientation = pos;
-//			this.object.posX = -this.object.width;
-//			this.object.posY = -this.object.height;
-//		} else {
-//			this.object.orientation = pos;
-//			this.object.posX = 0;
-//			this.object.posY = 0;
-//		}
 		
 		if (pos.startsWith("top-")) {
 			this.object.orientation = pos;
@@ -652,13 +628,13 @@ public abstract class LayoutElement extends AbstractGui {
 		int yVerticalTop = this.object.getPosY() - (h / 2);
 		int yVerticalBottom = this.object.getPosY() + this.object.height - (h / 2);
 
-		if (!this.stretchX) {
+		if (!this.stretchX && this.resizable) {
 			//grabber left
 			AbstractGui.fill(matrix, xHorizontalLeft, yHorizontal, xHorizontalLeft + w, yHorizontal + h, Color.BLUE.getRGB());
 			//grabber right
 			AbstractGui.fill(matrix, xHorizontalRight, yHorizontal, xHorizontalRight + w, yHorizontal + h, Color.BLUE.getRGB());
 		}
-		if (!this.stretchY) {
+		if (!this.stretchY && this.resizable) {
 			//grabber top
 			AbstractGui.fill(matrix, xVertical, yVerticalTop, xVertical + w, yVerticalTop + h, Color.BLUE.getRGB());
 			//grabber bottom
@@ -667,28 +643,28 @@ public abstract class LayoutElement extends AbstractGui {
 
 		//Update cursor and active grabber when grabber is hovered
 		if ((mouseX >= xHorizontalLeft) && (mouseX <= xHorizontalLeft + w) && (mouseY >= yHorizontal) && (mouseY <= yHorizontal + h)) {
-			if (!this.stretchX) {
+			if (!this.stretchX && this.resizable) {
 				GLFW.glfwSetCursor(Minecraft.getInstance().getMainWindow().getHandle(), H_RESIZE_CURSOR);
 				this.activeGrabber = 0;
 			} else {
 				this.activeGrabber = -1;
 			}
 		} else if ((mouseX >= xHorizontalRight) && (mouseX <= xHorizontalRight + w) && (mouseY >= yHorizontal) && (mouseY <= yHorizontal + h)) {
-			if (!this.stretchX) {
+			if (!this.stretchX && this.resizable) {
 				GLFW.glfwSetCursor(Minecraft.getInstance().getMainWindow().getHandle(), H_RESIZE_CURSOR);
 				this.activeGrabber = 1;
 			} else {
 				this.activeGrabber = -1;
 			}
 		} else if ((mouseX >= xVertical) && (mouseX <= xVertical + w) && (mouseY >= yVerticalTop) && (mouseY <= yVerticalTop + h)) {
-			if (!this.stretchY) {
+			if (!this.stretchY && this.resizable) {
 				GLFW.glfwSetCursor(Minecraft.getInstance().getMainWindow().getHandle(), V_RESIZE_CURSOR);
 				this.activeGrabber = 2;
 			} else {
 				this.activeGrabber = -1;
 			}
 		} else if ((mouseX >= xVertical) && (mouseX <= xVertical + w) && (mouseY >= yVerticalBottom) && (mouseY <= yVerticalBottom + h)) {
-			if (!this.stretchY) {
+			if (!this.stretchY && this.resizable) {
 				GLFW.glfwSetCursor(Minecraft.getInstance().getMainWindow().getHandle(), V_RESIZE_CURSOR);
 				this.activeGrabber = 3;
 			} else {
@@ -1165,5 +1141,64 @@ public abstract class LayoutElement extends AbstractGui {
 	}
 
 	public abstract List<PropertiesSection> getProperties();
+
+	protected void addVisibilityPropertiesTo(PropertiesSection sec) {
+
+		VisibilityRequirementContainer c = this.object.visibilityRequirementContainer;
+
+		if (c.vrCheckForActiveSlot) {
+			sec.addEntry("vr:showif:activeslot", "" + c.vrShowIfActiveSlot);
+			sec.addEntry("vr:value:activeslot", "" + c.vrActiveSlot);
+		}
+		if (c.vrCheckForItemInMainHand) {
+			sec.addEntry("vr:showif:iteminmainhand", "" + c.vrShowIfItemInMainHand);
+		}
+		if (c.vrCheckForItemInOffHand) {
+			sec.addEntry("vr:showif:iteminoffhand", "" + c.vrShowIfItemInOffHand);
+		}
+		if (c.vrCheckForActiveItemType) {
+			sec.addEntry("vr:showif:activeitemtype", "" + c.vrShowIfActiveItemType);
+			sec.addEntry("vr:value:activeitemtype", "" + c.vrActiveItemType);
+		}
+		if (c.vrCheckForActiveItemName) {
+			sec.addEntry("vr:showif:activeitemname", "" + c.vrShowIfActiveItemName);
+			sec.addEntry("vr:value:activeitemname", "" + c.vrActiveItemName);
+		}
+		if (c.vrCheckForSingleplayer) {
+			sec.addEntry("vr:showif:singleplayer", "" + c.vrShowIfSingleplayer);
+		}
+		if (c.vrCheckForMultiplayer) {
+			sec.addEntry("vr:showif:multiplayer", "" + c.vrShowIfMultiplayer);
+		}
+		if (c.vrCheckForPlayerOnGround) {
+			sec.addEntry("vr:showif:playeronground", "" + c.vrShowIfPlayerOnGround);
+		}
+		if (c.vrCheckForPlayerUnderwater) {
+			sec.addEntry("vr:showif:playerunderwater", "" + c.vrShowIfPlayerUnderwater);
+		}
+		if (c.vrCheckForPlayerIsRidingHorse) {
+			sec.addEntry("vr:showif:playerisridinghorse", "" + c.vrShowIfPlayerIsRidingHorse);
+		}
+		if (c.vrCheckForPlayerIsRidingEntity) {
+			sec.addEntry("vr:showif:playerisridingentity", "" + c.vrShowIfPlayerIsRidingEntity);
+		}
+		if (c.vrCheckForPlayerIsInWater) {
+			sec.addEntry("vr:showif:playerisinwater", "" + c.vrShowIfPlayerIsInWater);
+		}
+		if (c.vrCheckForPlayerIsRunning) {
+			sec.addEntry("vr:showif:playerisrunning", "" + c.vrShowIfPlayerIsRunning);
+		}
+		if (c.vrCheckForSlotItemName) {
+			sec.addEntry("vr:showif:slotitemname", "" + c.vrShowIfSlotItemName);
+			sec.addEntry("vr:value:slotitemname", c.vrSlotItemNameSlot + ":" + c.vrSlotItemName);
+		}
+		if (c.vrCheckForDebugOpen) {
+			sec.addEntry("vr:showif:debugopen", "" + c.vrShowIfDebugOpen);
+		}
+		if (c.vrCheckForGamePaused) {
+			sec.addEntry("vr:showif:gamepaused", "" + c.vrShowIfGamePaused);
+		}
+
+	}
 
 }

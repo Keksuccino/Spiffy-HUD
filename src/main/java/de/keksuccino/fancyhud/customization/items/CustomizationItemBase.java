@@ -5,6 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import de.keksuccino.fancyhud.customization.CustomizationHandler;
 import de.keksuccino.fancyhud.customization.dynamicvalues.DynamicValueHelper;
 import de.keksuccino.fancyhud.customization.helper.editor.LayoutEditorScreen;
+import de.keksuccino.fancyhud.customization.items.visibilityrequirements.VisibilityRequirementContainer;
 import de.keksuccino.konkrete.math.MathUtils;
 import de.keksuccino.konkrete.properties.PropertiesSection;
 import net.minecraft.client.Minecraft;
@@ -38,8 +39,10 @@ public abstract class CustomizationItemBase extends AbstractGui {
 	public volatile float fadeInSpeed = 1.0F;
 	public volatile float opacity = 1.0F;
 
+	public VisibilityRequirementContainer visibilityRequirementContainer;
+
 	protected String actionId;
-	
+
 	public CustomizationItemBase(PropertiesSection properties) {
 		
 		this.action = properties.getEntryValue("action");
@@ -93,6 +96,9 @@ public abstract class CustomizationItemBase extends AbstractGui {
 				this.height = 0;
 			}
 		}
+
+		this.visibilityRequirementContainer = new VisibilityRequirementContainer(properties, this);
+
 	}
 
 	public abstract void render(MatrixStack matrix);
@@ -129,33 +135,6 @@ public abstract class CustomizationItemBase extends AbstractGui {
 		return x;
 	}
 	
-//	protected int getPosXEditor() {
-//		int w = Minecraft.getInstance().getMainWindow().getScaledWidth();
-//		int x = this.posX;
-//
-//		if (orientation.equalsIgnoreCase("top-centered")) {
-//			x += (w / 2);
-//		}
-//		if (orientation.equalsIgnoreCase("mid-centered")) {
-//			x += (w / 2);
-//		}
-//		if (orientation.equalsIgnoreCase("bottom-centered")) {
-//			x += (w / 2);
-//		}
-//		//-----------------------------
-//		if (orientation.equalsIgnoreCase("top-right")) {
-//			x += w;
-//		}
-//		if (orientation.equalsIgnoreCase("mid-right")) {
-//			x += w;
-//		}
-//		if (orientation.equalsIgnoreCase("bottom-right")) {
-//			x += w;
-//		}
-//		
-//		return x;
-//	}
-	
 	/**
 	 * Should be used to get the REAL and final Y-position of this item.<br>
 	 * NOT similar to {@code MenuCustomizationItem.posY}! 
@@ -189,39 +168,13 @@ public abstract class CustomizationItemBase extends AbstractGui {
 		return y;
 	}
 	
-//	protected int getPosYEditor() {
-//		int h = Minecraft.getInstance().getMainWindow().getScaledHeight();
-//		int y = this.posY;
-//
-//		if (orientation.equalsIgnoreCase("mid-left")) {
-//			y += (h / 2);
-//		}
-//		if (orientation.equalsIgnoreCase("bottom-left")) {
-//			y += h;
-//		}
-//		//----------------------------
-//		if (orientation.equalsIgnoreCase("mid-centered")) {
-//			y += (h / 2);
-//		}
-//		if (orientation.equalsIgnoreCase("bottom-centered")) {
-//			y += h;
-//		}
-//		//-----------------------------
-//		if (orientation.equalsIgnoreCase("mid-right")) {
-//			y += (h / 2);
-//		}
-//		if (orientation.equalsIgnoreCase("bottom-right")) {
-//			y += h;
-//		}
-//		
-//		return y;
-//	}
-	
 	public boolean shouldRender() {
 		if (this.value == null) {
 			return false;
 		}
-		
+		if (!this.visibilityRequirementsMet()) {
+			return false;
+		}
 		return this.visible;
 	}
 
@@ -230,7 +183,14 @@ public abstract class CustomizationItemBase extends AbstractGui {
 	}
 
 	protected static boolean isEditorActive() {
-		return LayoutEditorScreen.isActive;
+		return (Minecraft.getInstance().currentScreen instanceof LayoutEditorScreen);
+	}
+
+	protected boolean visibilityRequirementsMet() {
+		if (isEditorActive()) {
+			return true;
+		}
+		return this.visibilityRequirementContainer.isVisible();
 	}
 
 	public static enum Alignment {

@@ -41,10 +41,6 @@ public class DynamicValueHelper {
 	public static String convertFromRaw(String in) {
 		Minecraft mc = Minecraft.getInstance();
 		Entity entity = mc.getRenderViewEntity();
-		BlockPos blockpos = null;
-		if (entity != null) {
-			blockpos = entity.getPosition();
-		}
 		
 		String playername = mc.getSession().getUsername();
 		String playeruuid = mc.getSession().getPlayerID();
@@ -182,51 +178,67 @@ public class DynamicValueHelper {
 		} else {
 			in = in.replace("%servermods%", "0");
 		}
-		
-		Calendar c = Calendar.getInstance();
-		
-		in = in.replace("%realtimeyear%", "" + c.get(Calendar.YEAR));
-		
-		in = in.replace("%realtimemonth%", formatToFancyDateTime(c.get(Calendar.MONTH) + 1));
-		
-		in = in.replace("%realtimeday%", formatToFancyDateTime(c.get(Calendar.DAY_OF_MONTH)));
-		
-		in = in.replace("%realtimehour%", formatToFancyDateTime(c.get(Calendar.HOUR_OF_DAY)));
-		
-		in = in.replace("%realtimeminute%", formatToFancyDateTime(c.get(Calendar.MINUTE)));
-		
-		in = in.replace("%realtimesecond%", formatToFancyDateTime(c.get(Calendar.SECOND)));
-		
-		if (blockpos != null) {
-			in = in.replace("%biome%", "" + mc.world.func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(mc.world.getBiome(blockpos)));
+
+		if (in.contains("%realtime")) {
+
+			Calendar c = Calendar.getInstance();
+
+			in = in.replace("%realtimeyear%", "" + c.get(Calendar.YEAR));
+
+			in = in.replace("%realtimemonth%", formatToFancyDateTime(c.get(Calendar.MONTH) + 1));
+
+			in = in.replace("%realtimeday%", formatToFancyDateTime(c.get(Calendar.DAY_OF_MONTH)));
+
+			in = in.replace("%realtimehour%", formatToFancyDateTime(c.get(Calendar.HOUR_OF_DAY)));
+
+			in = in.replace("%realtimeminute%", formatToFancyDateTime(c.get(Calendar.MINUTE)));
+
+			in = in.replace("%realtimesecond%", formatToFancyDateTime(c.get(Calendar.SECOND)));
+
+		}
+
+		if (in.contains("%biome%")) {
+			BlockPos blockpos = null;
+			if (entity != null) {
+				blockpos = entity.getPosition();
+			}
+			if (blockpos != null) {
+				in = in.replace("%biome%", "" + mc.world.func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(mc.world.getBiome(blockpos)));
+			}
 		}
 		
 		if (entity != null) {
 			in = in.replace("%direction%", "" + entity.getHorizontalFacing());
 		}
 		
-		in = in.replace("%fps%", mc.debug.split("[ ]", 2)[0]);
+		if (in.contains("%fps%")) {
+			in = in.replace("%fps%", mc.debug.split("[ ]", 2)[0]);
+		}
 		
-		long i = Runtime.getRuntime().maxMemory();
-		long j = Runtime.getRuntime().totalMemory();
-		long k = Runtime.getRuntime().freeMemory();
-		long l = j - k;
-	      
-		in = in.replace("%percentram%", (l * 100L / i) + "%");
+		if (in.contains("ram%")) {
+			long i = Runtime.getRuntime().maxMemory();
+			long j = Runtime.getRuntime().totalMemory();
+			long k = Runtime.getRuntime().freeMemory();
+			long l = j - k;
+
+			in = in.replace("%percentram%", (l * 100L / i) + "%");
+
+			in = in.replace("%usedram%", "" + bytesToMb(l));
+
+			in = in.replace("%maxram%", "" + bytesToMb(i));
+		}
 		
-		in = in.replace("%usedram%", "" + bytesToMb(l));
-		
-		in = in.replace("%maxram%", "" + bytesToMb(i));
-		
-		if (entity != null) {
-			RayTraceResult lookingAt = entity.pick(20.0D, 0.0F, false);
-			if ((lookingAt != null) && (lookingAt.getType() == RayTraceResult.Type.BLOCK)) {
-				BlockPos blockpos2 = ((BlockRayTraceResult)lookingAt).getPos();
-	            BlockState blockstate = mc.world.getBlockState(blockpos2);
-	            
-				in = in.replace("%targetblock%", String.valueOf((Object)Registry.BLOCK.getKey(blockstate.getBlock())));
-			} else {
-				in = in.replace("%targetblock%", "none");
+		if (in.contains("%targetblock%")) {
+			if (entity != null) {
+				RayTraceResult lookingAt = entity.pick(20.0D, 0.0F, false);
+				if ((lookingAt != null) && (lookingAt.getType() == RayTraceResult.Type.BLOCK)) {
+					BlockPos blockpos2 = ((BlockRayTraceResult)lookingAt).getPos();
+					BlockState blockstate = mc.world.getBlockState(blockpos2);
+
+					in = in.replace("%targetblock%", String.valueOf((Object)Registry.BLOCK.getKey(blockstate.getBlock())));
+				} else {
+					in = in.replace("%targetblock%", "none");
+				}
 			}
 		}
 		
