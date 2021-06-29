@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.keksuccino.fancyhud.customization.helper.editor.LayoutEditorScreen;
+import de.keksuccino.fancyhud.customization.helper.ui.content.FHContextMenu;
 import de.keksuccino.fancyhud.customization.helper.ui.popup.FHTextInputPopup;
 import de.keksuccino.fancyhud.customization.items.MirroredPlayerCustomizationItem;
 import de.keksuccino.konkrete.gui.content.AdvancedButton;
@@ -54,20 +56,70 @@ public class LayoutMirroredPlayer extends LayoutElement {
         scaleButton.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.editor.elements.scale.btn.desc"), "%n%"));
         this.rightclickMenu.addContent(scaleButton);
 
-        String rotatePlayerLabel = Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotateplayer.on");
-        if (!this.getObject().rotatePlayer) {
-            rotatePlayerLabel = Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotateplayer.off");
-        }
-        AdvancedButton rotatePlayerButton = new AdvancedButton(0, 0, 0, 16, rotatePlayerLabel, true, (press) -> {
-            if (this.getObject().rotatePlayer) {
-                ((AdvancedButton)press).setMessage(Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotateplayer.off"));
-                this.getObject().rotatePlayer = false;
-            } else {
-                ((AdvancedButton)press).setMessage(Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotateplayer.on"));
-                this.getObject().rotatePlayer = true;
-            }
+//        String rotatePlayerLabel = Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotateplayer.on");
+//        if (!this.getObject().autoRotatePlayer) {
+//            rotatePlayerLabel = Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotateplayer.off");
+//        }
+//        AdvancedButton rotatePlayerButton = new AdvancedButton(0, 0, 0, 16, rotatePlayerLabel, true, (press) -> {
+//            if (this.getObject().autoRotatePlayer) {
+//                ((AdvancedButton)press).setMessage(Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotateplayer.off"));
+//                this.getObject().autoRotatePlayer = false;
+//            } else {
+//                ((AdvancedButton)press).setMessage(Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotateplayer.on"));
+//                this.getObject().autoRotatePlayer = true;
+//            }
+//        });
+//        this.rightclickMenu.addContent(rotatePlayerButton);
+
+        FHContextMenu rotationPopup = new FHContextMenu();
+        this.rightclickMenu.addChild(rotationPopup);
+
+        AdvancedButton rotationB = new AdvancedButton(0, 0, 0, 16, Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotation"), true, (press) -> {
+            rotationPopup.setParentButton((AdvancedButton) press);
+            rotationPopup.openMenuAt(0, press.y);
         });
-        this.rightclickMenu.addContent(rotatePlayerButton);
+        rotationB.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotation.btn.desc"), "%n%"));
+        this.rightclickMenu.addContent(rotationB);
+
+        AdvancedButton autoRotationB = new AdvancedButton(0, 0, 0, 16, Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotation.auto"), true, (press) -> {
+            if (!this.getObject().autoRotatePlayer) {
+                this.handler.history.saveSnapshot(this.handler.history.createSnapshot());
+            }
+            this.getObject().autoRotatePlayer = true;
+            this.rightclickMenu.closeMenu();
+        }) {
+            @Override
+            public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+                if (getObject().autoRotatePlayer) {
+                    this.setMessage("§a" + Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotation.auto"));
+                } else {
+                    this.setMessage(Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotation.auto"));
+                }
+                super.render(matrixStack, mouseX, mouseY, partialTicks);
+            }
+        };
+        autoRotationB.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotation.auto.btn.desc"), "%n%"));
+        rotationPopup.addContent(autoRotationB);
+
+        AdvancedButton customRotationB = new AdvancedButton(0, 0, 0, 16, Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotation.custom"), true, (press) -> {
+            if (this.getObject().autoRotatePlayer) {
+                this.handler.history.saveSnapshot(this.handler.history.createSnapshot());
+            }
+            this.getObject().autoRotatePlayer = false;
+            PopupHandler.displayPopup(new PlayerEntityRotationPopup(this.handler, this));
+        }) {
+            @Override
+            public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+                if (getObject().autoRotatePlayer) {
+                    this.setMessage(Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotation.custom"));
+                } else {
+                    this.setMessage("§a" + Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotation.custom"));
+                }
+                super.render(matrixStack, mouseX, mouseY, partialTicks);
+            }
+        };
+        customRotationB.setDescription(StringUtils.splitLines(Locals.localize("fancyhud.helper.creator.items.mirroredplayer.rotation.custom.btn.desc"), "%n%"));
+        rotationPopup.addContent(customRotationB);
 
     }
 
@@ -84,7 +136,11 @@ public class LayoutMirroredPlayer extends LayoutElement {
         s.addEntry("y", "" + this.object.posY);
 
         s.addEntry("scale", "" + this.getObject().scale);
-        s.addEntry("rotateplayer", "" + this.getObject().rotatePlayer);
+        s.addEntry("rotateplayer", "" + this.getObject().autoRotatePlayer);
+        s.addEntry("bodyrotationx", "" + this.getObject().bodyRotationX);
+        s.addEntry("bodyrotationy", "" + this.getObject().bodyRotationY);
+        s.addEntry("headrotationx", "" + this.getObject().headRotationX);
+        s.addEntry("headrotationy", "" + this.getObject().headRotationY);
 
         this.addVisibilityPropertiesTo(s);
 

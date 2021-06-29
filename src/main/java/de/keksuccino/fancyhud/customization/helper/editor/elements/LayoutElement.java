@@ -952,7 +952,7 @@ public abstract class LayoutElement extends AbstractGui {
 		if (!this.stretchX) {
 			if (g == 0) { //left
 				int w = this.startWidth + this.getOpponentInt(diffX);
-				if (w >= 5) {
+				if (w >= 1) {
 					
 					//ori
 					this.object.posX = newX;
@@ -960,7 +960,7 @@ public abstract class LayoutElement extends AbstractGui {
 					this.object.width = w;
 					if (isShiftPressed) {
 						int h = this.getAspectHeight(this.startWidth, this.startHeight, w);
-						if (h >= 5) {
+						if (h >= 1) {
 							this.object.height = h;
 						}
 					}
@@ -968,14 +968,14 @@ public abstract class LayoutElement extends AbstractGui {
 			}
 			if (g == 1) { //right
 				int w = this.object.width + (diffX - this.object.width);
-				if (w >= 5) {
+				if (w >= 1) {
 					
 					this.object.posX = newX;
 					
 					this.object.width = w;
 					if (isShiftPressed) {
 						int h = this.getAspectHeight(this.startWidth, this.startHeight, w);
-						if (h >= 5) {
+						if (h >= 1) {
 							this.object.height = h;
 						}
 					}
@@ -986,7 +986,7 @@ public abstract class LayoutElement extends AbstractGui {
 		if (!this.stretchY) {
 			if (g == 2) { //top
 				int h = this.startHeight + this.getOpponentInt(diffY);
-				if (h >= 5) {
+				if (h >= 1) {
 					
 					//ori
 					this.object.posY = newY;
@@ -994,7 +994,7 @@ public abstract class LayoutElement extends AbstractGui {
 					this.object.height = h;
 					if (isShiftPressed) {
 						int w = this.getAspectWidth(this.startWidth, this.startHeight, h);
-						if (w >= 5) {
+						if (w >= 1) {
 							this.object.width = w;
 						}
 					}
@@ -1002,14 +1002,14 @@ public abstract class LayoutElement extends AbstractGui {
 			}
 			if (g == 3) { //bottom
 				int h = this.object.height + (diffY - this.object.height);
-				if (h >= 5) {
+				if (h >= 1) {
 					
 					this.object.posY = newY;
 					
 					this.object.height = h;
 					if (isShiftPressed) {
 						int w = this.getAspectWidth(this.startWidth, this.startHeight, h);
-						if (w >= 5) {
+						if (w >= 1) {
 							this.object.width = w;
 						}
 					}
@@ -1197,6 +1197,119 @@ public abstract class LayoutElement extends AbstractGui {
 		}
 		if (c.vrCheckForGamePaused) {
 			sec.addEntry("vr:showif:gamepaused", "" + c.vrShowIfGamePaused);
+		}
+		if (c.vrCheckForRaining) {
+			sec.addEntry("vr:showif:raining", "" + c.vrShowIfRaining);
+		}
+		if (c.vrCheckForThundering) {
+			sec.addEntry("vr:showif:thundering", "" + c.vrShowIfThundering);
+		}
+		if (c.vrCheckForHealthLowerThan) {
+			sec.addEntry("vr:showif:healthlowerthan", "" + c.vrShowIfHealthLowerThan);
+			sec.addEntry("vr:value:healthlowerthan", "" + c.vrHealthLowerThan);
+		}
+		if (c.vrCheckForHealthLowerThanPercent) {
+			sec.addEntry("vr:showif:healthlowerthanpercent", "" + c.vrShowIfHealthLowerThanPercent);
+			sec.addEntry("vr:value:healthlowerthanpercent", "" + c.vrHealthLowerThanPercent);
+		}
+		if (c.vrCheckForFoodLowerThan) {
+			sec.addEntry("vr:showif:foodlowerthan", "" + c.vrShowIfFoodLowerThan);
+			sec.addEntry("vr:value:foodlowerthan", "" + c.vrFoodLowerThan);
+		}
+		if (c.vrCheckForFoodLowerThanPercent) {
+			sec.addEntry("vr:showif:foodlowerthanpercent", "" + c.vrShowIfFoodLowerThanPercent);
+			sec.addEntry("vr:value:foodlowerthanpercent", "" + c.vrFoodLowerThanPercent);
+		}
+		if (c.vrCheckForWithered) {
+			sec.addEntry("vr:showif:withered", "" + c.vrShowIfWithered);
+		}
+		if (c.vrCheckForSurvival) {
+			sec.addEntry("vr:showif:survival", "" + c.vrShowIfSurvival);
+		}
+		if (c.vrCheckForCreative) {
+			sec.addEntry("vr:showif:creative", "" + c.vrShowIfCreative);
+		}
+		if (c.vrCheckForAdventure) {
+			sec.addEntry("vr:showif:adventure", "" + c.vrShowIfAdventure);
+		}
+		if (c.vrCheckForSpectator) {
+			sec.addEntry("vr:showif:spectator", "" + c.vrShowIfSpectator);
+		}
+		if (c.vrCheckForPoisoned) {
+			sec.addEntry("vr:showif:poisoned", "" + c.vrShowIfPoisoned);
+		}
+		if (c.vrCheckForBadStomach) {
+			sec.addEntry("vr:showif:badstomach", "" + c.vrShowIfBadStomach);
+		}
+		if (c.vrCheckForWorldTimeHour) {
+			sec.addEntry("vr:showif:worldtimehour", "" + c.vrShowIfWorldTimeHour);
+			String worldTimeHourVal = "";
+			for (int i : c.vrWorldTimeHour) {
+				worldTimeHourVal += i + ",";
+			}
+			if (worldTimeHourVal.length() > 0) {
+				worldTimeHourVal = worldTimeHourVal.substring(0, worldTimeHourVal.length() -1);
+			}
+			if (worldTimeHourVal.length() > 0) {
+				sec.addEntry("vr:showif:worldtimehour", "" + c.vrShowIfWorldTimeHour);
+				sec.addEntry("vr:value:worldtimehour", worldTimeHourVal);
+			}
+		}
+		if (c.vrCheckForWorldTimeMinute) {
+			sec.addEntry("vr:showif:worldtimeminute", "" + c.vrShowIfWorldTimeMinute);
+			String worldTimeMinuteVal = "";
+			for (int i : c.vrWorldTimeMinute) {
+				worldTimeMinuteVal += i + ",";
+			}
+			if (worldTimeMinuteVal.length() > 0) {
+				worldTimeMinuteVal = worldTimeMinuteVal.substring(0, worldTimeMinuteVal.length() -1);
+			}
+			if (worldTimeMinuteVal.length() > 0) {
+				sec.addEntry("vr:showif:worldtimeminute", "" + c.vrShowIfWorldTimeMinute);
+				sec.addEntry("vr:value:worldtimeminute", worldTimeMinuteVal);
+			}
+		}
+		if (c.vrCheckForRealTimeHour) {
+			sec.addEntry("vr:showif:realtimehour", "" + c.vrShowIfRealTimeHour);
+			String val = "";
+			for (int i : c.vrRealTimeHour) {
+				val += i + ",";
+			}
+			if (val.length() > 0) {
+				val = val.substring(0, val.length() -1);
+			}
+			if (val.length() > 0) {
+				sec.addEntry("vr:showif:realtimehour", "" + c.vrShowIfRealTimeHour);
+				sec.addEntry("vr:value:realtimehour", val);
+			}
+		}
+		if (c.vrCheckForRealTimeMinute) {
+			sec.addEntry("vr:showif:realtimeminute", "" + c.vrShowIfRealTimeMinute);
+			String val = "";
+			for (int i : c.vrRealTimeMinute) {
+				val += i + ",";
+			}
+			if (val.length() > 0) {
+				val = val.substring(0, val.length() -1);
+			}
+			if (val.length() > 0) {
+				sec.addEntry("vr:showif:realtimeminute", "" + c.vrShowIfRealTimeMinute);
+				sec.addEntry("vr:value:realtimeminute", val);
+			}
+		}
+		if (c.vrCheckForRealTimeSecond) {
+			sec.addEntry("vr:showif:realtimesecond", "" + c.vrShowIfRealTimeSecond);
+			String val = "";
+			for (int i : c.vrRealTimeSecond) {
+				val += i + ",";
+			}
+			if (val.length() > 0) {
+				val = val.substring(0, val.length() -1);
+			}
+			if (val.length() > 0) {
+				sec.addEntry("vr:showif:realtimesecond", "" + c.vrShowIfRealTimeSecond);
+				sec.addEntry("vr:value:realtimesecond", val);
+			}
 		}
 
 	}

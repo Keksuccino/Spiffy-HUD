@@ -465,8 +465,8 @@ fancyhud.helper.ui.dynamicvariabletextfield.variables.currenthealth = Current He
 fancyhud.helper.ui.dynamicvariabletextfield.variables.maxhealth = Max Health
 fancyhud.helper.ui.dynamicvariabletextfield.variables.currentfood = Current Food
 fancyhud.helper.ui.dynamicvariabletextfield.variables.currentscore = Current Score
-fancyhud.helper.ui.dynamicvariabletextfield.variables.daytimehours = Game Day Hours
-fancyhud.helper.ui.dynamicvariabletextfield.variables.daytimeminutes = Game Day Minutes
+fancyhud.helper.ui.dynamicvariabletextfield.variables.daytimehours = World Time Hour
+fancyhud.helper.ui.dynamicvariabletextfield.variables.daytimeminutes = World Time Minute
 fancyhud.helper.ui.dynamicvariabletextfield.variables.serverip = Server IP
 fancyhud.helper.ui.dynamicvariabletextfield.variables.servermotd = Server MOTD
 fancyhud.helper.ui.dynamicvariabletextfield.variables.serverping = Server PING
@@ -572,6 +572,7 @@ fancyhud.helper.creator.add.customfoodbar = Custom Food Bar
 fancyhud.helper.creator.add.customfoodbar.maxfood = Max Food
 
 fancyhud.helper.creator.add.customarmorbar = Custom Armor Bar
+fancyhud.helper.creator.add.customarmorbar.maxarmor = Max Armor
 
 fancyhud.helper.creator.add.customairbar = Custom Air Bar
 
@@ -651,10 +652,81 @@ fancyhud.helper.creator.items.visibilityrequirements.debugopen.desc = Check if t
 fancyhud.helper.creator.items.visibilityrequirements.gamepaused = Is Game Paused
 fancyhud.helper.creator.items.visibilityrequirements.gamepaused.desc = Check if the game is paused.
 
+fancyhud.helper.creator.items.visibilityrequirements.raining = Is Raining
+fancyhud.helper.creator.items.visibilityrequirements.raining.desc = Check if it's raining.
+
+fancyhud.helper.creator.items.visibilityrequirements.thundering = Is Thundering
+fancyhud.helper.creator.items.visibilityrequirements.thundering.desc = Check if it's thundering.
+
 fancyhud.helper.creator.items.visibilityrequirements.slotitemname = Is Slot Item Name
 fancyhud.helper.creator.items.visibilityrequirements.slotitemname.desc = Check if the item in a specific slot%n%has a specific name.
 fancyhud.helper.creator.items.visibilityrequirements.slotitemname.valuename = Item Slot & Name (slot:minecraft:itemname)
 
+fancyhud.helper.creator.items.visibilityrequirements.healthlowerthan = Is Player Health Lower Than
+fancyhud.helper.creator.items.visibilityrequirements.healthlowerthan.desc = Check if the player's health is lower than X.
+fancyhud.helper.creator.items.visibilityrequirements.healthlowerthan.valuename = Player Health (Decimal value support)
+
+fancyhud.helper.creator.items.visibilityrequirements.healthlowerthanpercent = Is Player Health Lower Than Percent
+fancyhud.helper.creator.items.visibilityrequirements.healthlowerthanpercent.desc = Check if the player's health is%n%lower than X percent.
+fancyhud.helper.creator.items.visibilityrequirements.healthlowerthanpercent.valuename = Player Health Percent (Decimal value support)
+
+fancyhud.helper.creator.items.visibilityrequirements.foodlowerthan = Is Player Food Lower Than
+fancyhud.helper.creator.items.visibilityrequirements.foodlowerthan.desc = Check if the player's food is lower than X.
+fancyhud.helper.creator.items.visibilityrequirements.foodlowerthan.valuename = Player Food
+
+fancyhud.helper.creator.items.visibilityrequirements.foodlowerthanpercent = Is Player Food Lower Than Percent
+fancyhud.helper.creator.items.visibilityrequirements.foodlowerthanpercent.desc = Check if the player's food is%n%lower than X percent.
+fancyhud.helper.creator.items.visibilityrequirements.foodlowerthanpercent.valuename = Player Food Percent (Decimal value support)
+
+fancyhud.helper.creator.items.visibilityrequirements.withered = Is Player Withered
+fancyhud.helper.creator.items.visibilityrequirements.withered.desc = Check if the player has the wither effect.
+
+fancyhud.helper.creator.items.visibilityrequirements.survival = Is Survival Mode
+fancyhud.helper.creator.items.visibilityrequirements.survival.desc = Check if the game mode is survival.
+
+fancyhud.helper.creator.items.visibilityrequirements.creative = Is Creative Mode
+fancyhud.helper.creator.items.visibilityrequirements.creative.desc = Check if the game mode is creative.
+
+fancyhud.helper.creator.items.visibilityrequirements.adventure = Is Adventure Mode
+fancyhud.helper.creator.items.visibilityrequirements.adventure.desc = Check if the game mode is adventure.
+
+fancyhud.helper.creator.items.visibilityrequirements.spectator = Is Spectator Mode
+fancyhud.helper.creator.items.visibilityrequirements.spectator.desc = Check if the game mode is spectator.
+
+fancyhud.helper.creator.items.visibilityrequirements.poisoned = Is Player Posioned
+fancyhud.helper.creator.items.visibilityrequirements.poisoned.desc = Check if the player is poisoned.
+
+fancyhud.helper.creator.items.visibilityrequirements.badstomach = Has Player Bad Stomach
+fancyhud.helper.creator.items.visibilityrequirements.badstomach.desc = Check if the player has a bad stomach.%n%(Hunger Effect)
+
+fancyhud.helper.creator.items.visibilityrequirements.worldtimehour = Is World Time Hour
+fancyhud.helper.creator.items.visibilityrequirements.worldtimehour.desc = Check if the world time's current hour is X.%n%%n%You can separate multiple values by comma,%n%to check for more than one hour%n%at once.
+fancyhud.helper.creator.items.visibilityrequirements.worldtimehour.valuename = World Time Hour(s) (Separate Values By Comma)
+
+fancyhud.helper.creator.items.visibilityrequirements.worldtimeminute = Is World Time Minute
+fancyhud.helper.creator.items.visibilityrequirements.worldtimeminute.desc = Check if the world time's current minute is X.%n%%n%You can separate multiple values by comma,%n%to check for more than one minute%n%at once.
+fancyhud.helper.creator.items.visibilityrequirements.worldtimeminute.valuename = World Time Minute(s) (Separate Values By Comma)
+
+fancyhud.helper.creator.items.visibilityrequirements.realtimehour = Is Real Time Hour
+fancyhud.helper.creator.items.visibilityrequirements.realtimehour.desc = Check if the real time's current hour is X.%n%%n%You can separate multiple values by comma,%n%to check for more than one hour%n%at once.
+fancyhud.helper.creator.items.visibilityrequirements.realtimehour.valuename = Real Time Hour(s) (Separate Values By Comma)
+
+fancyhud.helper.creator.items.visibilityrequirements.realtimeminute = Is Real Time Minute
+fancyhud.helper.creator.items.visibilityrequirements.realtimeminute.desc = Check if the real time's current minute is X.%n%%n%You can separate multiple values by comma,%n%to check for more than one minute%n%at once.
+fancyhud.helper.creator.items.visibilityrequirements.realtimeminute.valuename = Real Time Minute(s) (Separate Values By Comma)
+
+fancyhud.helper.creator.items.visibilityrequirements.realtimesecond = Is Real Time Second
+fancyhud.helper.creator.items.visibilityrequirements.realtimesecond.desc = Check if the real time's current second is X.%n%%n%You can separate multiple values by comma,%n%to check for more than one second%n%at once.
+fancyhud.helper.creator.items.visibilityrequirements.realtimesecond.valuename = Real Time Second(s) (Separate Values By Comma)
+
 fancyhud.helper.creator.items.mirroredplayer = Mirrored Player
-fancyhud.helper.creator.items.mirroredplayer.rotateplayer.on = Rotate Player: §aOn
-fancyhud.helper.creator.items.mirroredplayer.rotateplayer.off = Rotate Player: §cOff
+fancyhud.helper.creator.items.mirroredplayer.rotation = Rotation
+fancyhud.helper.creator.items.mirroredplayer.rotation.auto = Auto Rotation
+fancyhud.helper.creator.items.mirroredplayer.rotation.custom = Custom Rotation
+fancyhud.helper.creator.items.mirroredplayer.rotation.custom.bodyx = Horizontal Body Rotation
+fancyhud.helper.creator.items.mirroredplayer.rotation.custom.bodyy = Vertical Body Rotation
+fancyhud.helper.creator.items.mirroredplayer.rotation.custom.headx = Horizontal Head Rotation
+fancyhud.helper.creator.items.mirroredplayer.rotation.custom.heady = Vertical Head Rotation
+fancyhud.helper.creator.items.mirroredplayer.rotation.btn.desc = Set the body and head rotation.
+fancyhud.helper.creator.items.mirroredplayer.rotation.auto.btn.desc = Player will follow the mouse cursor.
+fancyhud.helper.creator.items.mirroredplayer.rotation.custom.btn.desc = Set a custom player rotation.

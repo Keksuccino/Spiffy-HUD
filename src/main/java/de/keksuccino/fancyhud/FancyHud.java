@@ -32,7 +32,7 @@ import net.minecraftforge.fml.network.FMLNetworkConstants;
 @Mod("fancyhud")
 public class FancyHud {
 	
-	public static final String VERSION = "1.3.0";
+	public static final String VERSION = "1.4.1";
 	
 	public static final File HOME_DIR = new File("config/fancyhud");
 	public static final File CUSTOMIZATION_DIR = new File(HOME_DIR.getPath() + "/customization");
@@ -84,7 +84,6 @@ public class FancyHud {
 			
 //			ExampleCustomDynamicVariables.registerDynamicValues();
 
-			//TODO remove debug
 //			MinecraftForge.EVENT_BUS.register(new Test());
 
 		} else {

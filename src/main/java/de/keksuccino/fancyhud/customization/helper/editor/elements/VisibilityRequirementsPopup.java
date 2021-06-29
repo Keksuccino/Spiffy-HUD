@@ -251,6 +251,359 @@ public class VisibilityRequirementsPopup extends FHPopup {
         }, null, null, null);
         this.requirements.add(gamePaused);
 
+        /** Is Raining **/
+        String rainingName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.raining");
+        String rainingDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.raining.desc");
+        Requirement raining = new Requirement(this, rainingName, rainingDesc, slotItemNameValueName, c.vrCheckForRaining, c.vrShowIfRaining,
+                (enabledCallback) -> {
+                    c.vrCheckForRaining = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfRaining = showIfCallback;
+        }, null, null, null);
+        this.requirements.add(raining);
+
+        /** Is Thundering **/
+        String thunderingName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.thundering");
+        String thunderingDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.thundering.desc");
+        Requirement thundering = new Requirement(this, thunderingName, thunderingDesc, slotItemNameValueName, c.vrCheckForThundering, c.vrShowIfThundering,
+                (enabledCallback) -> {
+                    c.vrCheckForThundering = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfThundering = showIfCallback;
+        }, null, null, null);
+        this.requirements.add(thundering);
+
+        /** Is Health Lower Than **/
+        String healthLowerThanName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.healthlowerthan");
+        String healthLowerThanDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.healthlowerthan.desc");
+        String healthLowerThanValueName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.healthlowerthan.valuename");
+        Requirement healthLowerThan = new Requirement(this, healthLowerThanName, healthLowerThanDesc, healthLowerThanValueName, c.vrCheckForHealthLowerThan, c.vrShowIfHealthLowerThan,
+                (enabledCallback) -> {
+                    c.vrCheckForHealthLowerThan = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfHealthLowerThan = showIfCallback;
+        }, (valueCallback) -> {
+            if ((valueCallback != null) && MathUtils.isFloat(valueCallback)) {
+                c.vrHealthLowerThan = Float.parseFloat(valueCallback);
+            } else {
+                c.vrHealthLowerThan = 100;
+            }
+        }, CharacterFilter.getDoubleCharacterFiler(), "" + c.vrHealthLowerThan);
+        this.requirements.add(healthLowerThan);
+
+        /** Is Health Lower Than Percent **/
+        String healthLowerThanPercentName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.healthlowerthanpercent");
+        String healthLowerThanPercentDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.healthlowerthanpercent.desc");
+        String healthLowerThanPercentValueName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.healthlowerthanpercent.valuename");
+        Requirement healthLowerThanPercent = new Requirement(this, healthLowerThanPercentName, healthLowerThanPercentDesc, healthLowerThanPercentValueName, c.vrCheckForHealthLowerThanPercent, c.vrShowIfHealthLowerThanPercent,
+                (enabledCallback) -> {
+                    c.vrCheckForHealthLowerThanPercent = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfHealthLowerThanPercent = showIfCallback;
+        }, (valueCallback) -> {
+            if ((valueCallback != null) && MathUtils.isFloat(valueCallback)) {
+                c.vrHealthLowerThanPercent = Float.parseFloat(valueCallback);
+            } else {
+                c.vrHealthLowerThanPercent = 100;
+            }
+        }, CharacterFilter.getDoubleCharacterFiler(), "" + c.vrHealthLowerThanPercent);
+        this.requirements.add(healthLowerThanPercent);
+
+        /** Is Food Lower Than **/
+        String foodLowerThanName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.foodlowerthan");
+        String foodLowerThanDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.foodlowerthan.desc");
+        String foodLowerThanValueName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.foodlowerthan.valuename");
+        Requirement foodLowerThan = new Requirement(this, foodLowerThanName, foodLowerThanDesc, foodLowerThanValueName, c.vrCheckForFoodLowerThan, c.vrShowIfFoodLowerThan,
+                (enabledCallback) -> {
+                    c.vrCheckForFoodLowerThan = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfFoodLowerThan = showIfCallback;
+        }, (valueCallback) -> {
+            if ((valueCallback != null) && MathUtils.isFloat(valueCallback)) {
+                c.vrFoodLowerThan = (int)Float.parseFloat(valueCallback);
+            } else {
+                c.vrFoodLowerThan = 100;
+            }
+        }, CharacterFilter.getIntegerCharacterFiler(), "" + c.vrFoodLowerThan);
+        this.requirements.add(foodLowerThan);
+
+        /** Is Food Lower Than Percent **/
+        String foodLowerThanPercentName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.foodlowerthanpercent");
+        String foodLowerThanPercentDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.foodlowerthanpercent.desc");
+        String foodLowerThanPercentValueName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.foodlowerthanpercent.valuename");
+        Requirement foodLowerThanPercent = new Requirement(this, foodLowerThanPercentName, foodLowerThanPercentDesc, foodLowerThanPercentValueName, c.vrCheckForFoodLowerThanPercent, c.vrShowIfFoodLowerThanPercent,
+                (enabledCallback) -> {
+                    c.vrCheckForFoodLowerThanPercent = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfFoodLowerThanPercent = showIfCallback;
+        }, (valueCallback) -> {
+            if ((valueCallback != null) && MathUtils.isFloat(valueCallback)) {
+                c.vrFoodLowerThanPercent = Float.parseFloat(valueCallback);
+            } else {
+                c.vrFoodLowerThanPercent = 100;
+            }
+        }, CharacterFilter.getDoubleCharacterFiler(), "" + c.vrFoodLowerThanPercent);
+        this.requirements.add(foodLowerThanPercent);
+
+        /** Is Player Withered **/
+        String witheredName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.withered");
+        String witheredDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.withered.desc");
+        Requirement withered = new Requirement(this, witheredName, witheredDesc, slotItemNameValueName, c.vrCheckForWithered, c.vrShowIfWithered,
+                (enabledCallback) -> {
+                    c.vrCheckForWithered = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfWithered = showIfCallback;
+        }, null, null, null);
+        this.requirements.add(withered);
+
+        /** Is Survival **/
+        String survivalName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.survival");
+        String survivalDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.survival.desc");
+        Requirement survival = new Requirement(this, survivalName, survivalDesc, slotItemNameValueName, c.vrCheckForSurvival, c.vrShowIfSurvival,
+                (enabledCallback) -> {
+                    c.vrCheckForSurvival = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfSurvival = showIfCallback;
+        }, null, null, null);
+        this.requirements.add(survival);
+
+        /** Is Creative **/
+        String creativeName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.creative");
+        String creativeDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.creative.desc");
+        Requirement creative = new Requirement(this, creativeName, creativeDesc, slotItemNameValueName, c.vrCheckForCreative, c.vrShowIfCreative,
+                (enabledCallback) -> {
+                    c.vrCheckForCreative = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfCreative = showIfCallback;
+        }, null, null, null);
+        this.requirements.add(creative);
+
+        /** Is Adventure **/
+        String adventureName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.adventure");
+        String adventureDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.adventure.desc");
+        Requirement adventure = new Requirement(this, adventureName, adventureDesc, slotItemNameValueName, c.vrCheckForAdventure, c.vrShowIfAdventure,
+                (enabledCallback) -> {
+                    c.vrCheckForAdventure = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfAdventure = showIfCallback;
+        }, null, null, null);
+        this.requirements.add(adventure);
+
+        /** Is Spectator **/
+        String spectatorName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.spectator");
+        String spectatorDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.spectator.desc");
+        Requirement spectator = new Requirement(this, spectatorName, spectatorDesc, slotItemNameValueName, c.vrCheckForSpectator, c.vrShowIfSpectator,
+                (enabledCallback) -> {
+                    c.vrCheckForSpectator = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfSpectator = showIfCallback;
+        }, null, null, null);
+        this.requirements.add(spectator);
+
+        /** Is Poisoned **/
+        String poisonedName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.poisoned");
+        String poisonedDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.poisoned.desc");
+        Requirement poisoned = new Requirement(this, poisonedName, poisonedDesc, slotItemNameValueName, c.vrCheckForPoisoned, c.vrShowIfPoisoned,
+                (enabledCallback) -> {
+                    c.vrCheckForPoisoned = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfPoisoned = showIfCallback;
+        }, null, null, null);
+        this.requirements.add(poisoned);
+
+        /** Has Bad Stomach **/
+        String badStomachName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.badstomach");
+        String badStomachDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.badstomach.desc");
+        Requirement badStomach = new Requirement(this, badStomachName, badStomachDesc, slotItemNameValueName, c.vrCheckForBadStomach, c.vrShowIfBadStomach,
+                (enabledCallback) -> {
+                    c.vrCheckForBadStomach = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfBadStomach = showIfCallback;
+        }, null, null, null);
+        this.requirements.add(badStomach);
+
+        /** Is World Time Hour **/
+        String worldTimeHourValuePreset = "";
+        for (int i : c.vrWorldTimeHour) {
+            worldTimeHourValuePreset += i + ",";
+        }
+        if (worldTimeHourValuePreset.length() > 0) {
+            worldTimeHourValuePreset = worldTimeHourValuePreset.substring(0, worldTimeHourValuePreset.length() -1);
+        } else {
+            worldTimeHourValuePreset = "1, 4";
+        }
+        CharacterFilter worldTimeHourCharFilter = CharacterFilter.getIntegerCharacterFiler();
+        worldTimeHourCharFilter.addAllowedCharacters(",", " ");
+        String worldTimeHourName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.worldtimehour");
+        String worldTimeHourDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.worldtimehour.desc");
+        String worldTimeHourValueName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.worldtimehour.valuename");
+        Requirement worldTimeHour = new Requirement(this, worldTimeHourName, worldTimeHourDesc, worldTimeHourValueName, c.vrCheckForWorldTimeHour, c.vrShowIfWorldTimeHour,
+                (enabledCallback) -> {
+                    c.vrCheckForWorldTimeHour = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfWorldTimeHour = showIfCallback;
+        }, (valueCallback) -> {
+            if (valueCallback != null) {
+                c.vrWorldTimeHour.clear();
+                if (valueCallback.contains(",")) {
+                    for (String s : valueCallback.replace(" ", "").split("[,]")) {
+                        if (MathUtils.isInteger(s)) {
+                            c.vrWorldTimeHour.add(Integer.parseInt(s));
+                        }
+                    }
+                } else {
+                    if (MathUtils.isInteger(valueCallback.replace(" ", ""))) {
+                        c.vrWorldTimeHour.add(Integer.parseInt(valueCallback.replace(" ", "")));
+                    }
+                }
+            }
+        }, worldTimeHourCharFilter, worldTimeHourValuePreset);
+        this.requirements.add(worldTimeHour);
+
+        /** Is World Time Minute **/
+        String worldTimeMinuteValuePreset = "";
+        for (int i : c.vrWorldTimeMinute) {
+            worldTimeMinuteValuePreset += i + ",";
+        }
+        if (worldTimeMinuteValuePreset.length() > 0) {
+            worldTimeMinuteValuePreset = worldTimeMinuteValuePreset.substring(0, worldTimeMinuteValuePreset.length() -1);
+        } else {
+            worldTimeMinuteValuePreset = "1, 4";
+        }
+        String worldTimeMinuteName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.worldtimeminute");
+        String worldTimeMinuteDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.worldtimeminute.desc");
+        String worldTimeMinuteValueName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.worldtimeminute.valuename");
+        Requirement worldTimeMinute = new Requirement(this, worldTimeMinuteName, worldTimeMinuteDesc, worldTimeMinuteValueName, c.vrCheckForWorldTimeMinute, c.vrShowIfWorldTimeMinute,
+                (enabledCallback) -> {
+                    c.vrCheckForWorldTimeMinute = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfWorldTimeMinute = showIfCallback;
+        }, (valueCallback) -> {
+            if (valueCallback != null) {
+                c.vrWorldTimeMinute.clear();
+                if (valueCallback.contains(",")) {
+                    for (String s : valueCallback.replace(" ", "").split("[,]")) {
+                        if (MathUtils.isInteger(s)) {
+                            c.vrWorldTimeMinute.add(Integer.parseInt(s));
+                        }
+                    }
+                } else {
+                    if (MathUtils.isInteger(valueCallback.replace(" ", ""))) {
+                        c.vrWorldTimeMinute.add(Integer.parseInt(valueCallback.replace(" ", "")));
+                    }
+                }
+            }
+        }, worldTimeHourCharFilter, worldTimeMinuteValuePreset);
+        this.requirements.add(worldTimeMinute);
+
+        /** Is Real Time Hour **/
+        String realTimeHourValuePreset = "";
+        for (int i : c.vrRealTimeHour) {
+            realTimeHourValuePreset += i + ",";
+        }
+        if (realTimeHourValuePreset.length() > 0) {
+            realTimeHourValuePreset = realTimeHourValuePreset.substring(0, realTimeHourValuePreset.length() -1);
+        } else {
+            realTimeHourValuePreset = "1, 4";
+        }
+        String realTimeHourName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.realtimehour");
+        String realTimeHourDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.realtimehour.desc");
+        String realTimeHourValueName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.realtimehour.valuename");
+        Requirement realTimeHour = new Requirement(this, realTimeHourName, realTimeHourDesc, realTimeHourValueName, c.vrCheckForRealTimeHour, c.vrShowIfRealTimeHour,
+                (enabledCallback) -> {
+                    c.vrCheckForRealTimeHour = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfRealTimeHour = showIfCallback;
+        }, (valueCallback) -> {
+            if (valueCallback != null) {
+                c.vrRealTimeHour.clear();
+                if (valueCallback.contains(",")) {
+                    for (String s : valueCallback.replace(" ", "").split("[,]")) {
+                        if (MathUtils.isInteger(s)) {
+                            c.vrRealTimeHour.add(Integer.parseInt(s));
+                        }
+                    }
+                } else {
+                    if (MathUtils.isInteger(valueCallback.replace(" ", ""))) {
+                        c.vrRealTimeHour.add(Integer.parseInt(valueCallback.replace(" ", "")));
+                    }
+                }
+            }
+        }, worldTimeHourCharFilter, realTimeHourValuePreset);
+        this.requirements.add(realTimeHour);
+
+        /** Is Real Time Minute **/
+        String realTimeMinuteValuePreset = "";
+        for (int i : c.vrRealTimeMinute) {
+            realTimeMinuteValuePreset += i + ",";
+        }
+        if (realTimeMinuteValuePreset.length() > 0) {
+            realTimeMinuteValuePreset = realTimeMinuteValuePreset.substring(0, realTimeMinuteValuePreset.length() -1);
+        } else {
+            realTimeMinuteValuePreset = "1, 4";
+        }
+        String realTimeMinuteName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.realtimeminute");
+        String realTimeMinuteDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.realtimeminute.desc");
+        String realTimeMinuteValueName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.realtimeminute.valuename");
+        Requirement realTimeMinute = new Requirement(this, realTimeMinuteName, realTimeMinuteDesc, realTimeMinuteValueName, c.vrCheckForRealTimeMinute, c.vrShowIfRealTimeMinute,
+                (enabledCallback) -> {
+                    c.vrCheckForRealTimeMinute = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfRealTimeMinute = showIfCallback;
+        }, (valueCallback) -> {
+            if (valueCallback != null) {
+                c.vrRealTimeMinute.clear();
+                if (valueCallback.contains(",")) {
+                    for (String s : valueCallback.replace(" ", "").split("[,]")) {
+                        if (MathUtils.isInteger(s)) {
+                            c.vrRealTimeMinute.add(Integer.parseInt(s));
+                        }
+                    }
+                } else {
+                    if (MathUtils.isInteger(valueCallback.replace(" ", ""))) {
+                        c.vrRealTimeMinute.add(Integer.parseInt(valueCallback.replace(" ", "")));
+                    }
+                }
+            }
+        }, worldTimeHourCharFilter, realTimeMinuteValuePreset);
+        this.requirements.add(realTimeMinute);
+
+        /** Is Real Time Second **/
+        String realTimeSecondValuePreset = "";
+        for (int i : c.vrRealTimeSecond) {
+            realTimeSecondValuePreset += i + ",";
+        }
+        if (realTimeSecondValuePreset.length() > 0) {
+            realTimeSecondValuePreset = realTimeSecondValuePreset.substring(0, realTimeSecondValuePreset.length() -1);
+        } else {
+            realTimeSecondValuePreset = "1, 4";
+        }
+        String realTimeSecondName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.realtimesecond");
+        String realTimeSecondDesc = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.realtimesecond.desc");
+        String realTimeSecondValueName = Locals.localize("fancyhud.helper.creator.items.visibilityrequirements.realtimesecond.valuename");
+        Requirement realTimeSecond = new Requirement(this, realTimeSecondName, realTimeSecondDesc, realTimeSecondValueName, c.vrCheckForRealTimeSecond, c.vrShowIfRealTimeSecond,
+                (enabledCallback) -> {
+                    c.vrCheckForRealTimeSecond = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfRealTimeSecond = showIfCallback;
+        }, (valueCallback) -> {
+            if (valueCallback != null) {
+                c.vrRealTimeSecond.clear();
+                if (valueCallback.contains(",")) {
+                    for (String s : valueCallback.replace(" ", "").split("[,]")) {
+                        if (MathUtils.isInteger(s)) {
+                            c.vrRealTimeSecond.add(Integer.parseInt(s));
+                        }
+                    }
+                } else {
+                    if (MathUtils.isInteger(valueCallback.replace(" ", ""))) {
+                        c.vrRealTimeSecond.add(Integer.parseInt(valueCallback.replace(" ", "")));
+                    }
+                }
+            }
+        }, worldTimeHourCharFilter, realTimeSecondValuePreset);
+        this.requirements.add(realTimeSecond);
+
     }
 
     @Override

@@ -48,6 +48,11 @@ public class DynamicValueHelper {
 		
 		//Convert &-formatcodes to real ones
 		in = StringUtils.convertFormatCodes(in, "&", "§");
+
+		//Only for internal use
+		in = in.replace("%guiwidth%", "" + Minecraft.getInstance().getMainWindow().getScaledWidth());
+		in = in.replace("%guiheight%", "" + Minecraft.getInstance().getMainWindow().getScaledHeight());
+		//-------------
 		
 		//Replace player name and uuid placeholders
 		in = in.replace("%playername%", playername);

@@ -3,6 +3,7 @@ package de.keksuccino.fancyhud.customization.items.custombars;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import de.keksuccino.konkrete.math.MathUtils;
 import de.keksuccino.konkrete.properties.PropertiesSection;
 import de.keksuccino.konkrete.rendering.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -13,14 +14,22 @@ import de.keksuccino.fancyhud.customization.items.custombars.CustomBarCustomizat
 public class CustomArmorBarCustomizationItem extends CustomBarCustomizationItemBase {
 	
 	protected int currentPercentWidthHeight = 0;
-	
+
+	public int maxArmor = 20;
 	public boolean hideWhenEmpty = false;
 
 	public CustomArmorBarCustomizationItem(PropertiesSection item) {
 		super(item);
 		
 		this.value = "Custom Armor Bar";
-		
+
+		String maxArmorString = item.getEntryValue("maxarmor");
+		if (maxArmorString != null) {
+			if (MathUtils.isInteger(maxArmorString)) {
+				this.maxArmor = Integer.parseInt(maxArmorString);
+			}
+		}
+
 		String hideEmptyString = item.getEntryValue("hidewhenempty");
 		if (hideEmptyString != null) {
 			if (hideEmptyString.equalsIgnoreCase("true")) {
@@ -60,8 +69,8 @@ public class CustomArmorBarCustomizationItem extends CustomBarCustomizationItemB
 		ClientPlayerEntity p = Minecraft.getInstance().player;
 		
 		if (p != null) {
-			
-			float armorPercent = p.getArmorCoverPercentage() * 100.0F;
+
+			float armorPercent = ((float)p.getTotalArmorValue() / (float)this.maxArmor) * 100.0F;
 			if (this.isEditor()) {
 				armorPercent = 50.0F;
 			}
@@ -69,6 +78,10 @@ public class CustomArmorBarCustomizationItem extends CustomBarCustomizationItemB
 				if (this.hideWhenEmpty) {
 					return;
 				}
+				armorPercent = 0;
+			}
+			if (armorPercent > 100) {
+				armorPercent = 100;
 			}
 			if ((this.direction == BarDirection.LEFT) || (this.direction == BarDirection.RIGHT)) {
 				this.currentPercentWidthHeight = (int)((((float)this.width) / 100.0F) * armorPercent);

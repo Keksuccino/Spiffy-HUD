@@ -392,31 +392,115 @@ public class PreloadedLayoutEditorScreen extends LayoutEditorScreen {
 				}
 				
 				if (action.equalsIgnoreCase("addcustomhealthbar")) {
-					con.add(new LayoutCustomHealthBar(new CustomHealthBarCustomizationItem(sec), this));
+					LayoutCustomHealthBar o = new LayoutCustomHealthBar(new CustomHealthBarCustomizationItem(sec), this);
+					int i = isObjectStretched(sec);
+					if (i == 3) {
+						o.setStretchedX(true, false);
+						o.setStretchedY(true, false);
+					}
+					if (i == 2) {
+						o.setStretchedY(true, false);
+					}
+					if (i == 1) {
+						o.setStretchedX(true, false);
+					}
+					con.add(o);
 				}
 				
 				if (action.equalsIgnoreCase("addcustomfoodbar")) {
-					con.add(new LayoutCustomFoodBar(new CustomFoodBarCustomizationItem(sec), this));
+					LayoutCustomFoodBar o = new LayoutCustomFoodBar(new CustomFoodBarCustomizationItem(sec), this);
+					int i = isObjectStretched(sec);
+					if (i == 3) {
+						o.setStretchedX(true, false);
+						o.setStretchedY(true, false);
+					}
+					if (i == 2) {
+						o.setStretchedY(true, false);
+					}
+					if (i == 1) {
+						o.setStretchedX(true, false);
+					}
+					con.add(o);
 				}
 				
 				if (action.equalsIgnoreCase("addcustomarmorbar")) {
-					con.add(new LayoutCustomArmorBar(new CustomArmorBarCustomizationItem(sec), this));
+					LayoutCustomArmorBar o = new LayoutCustomArmorBar(new CustomArmorBarCustomizationItem(sec), this);
+					int i = isObjectStretched(sec);
+					if (i == 3) {
+						o.setStretchedX(true, false);
+						o.setStretchedY(true, false);
+					}
+					if (i == 2) {
+						o.setStretchedY(true, false);
+					}
+					if (i == 1) {
+						o.setStretchedX(true, false);
+					}
+					con.add(o);
 				}
 				
 				if (action.equalsIgnoreCase("addcustomairbar")) {
-					con.add(new LayoutCustomAirBar(new CustomAirBarCustomizationItem(sec), this));
+					LayoutCustomAirBar o = new LayoutCustomAirBar(new CustomAirBarCustomizationItem(sec), this);
+					int i = isObjectStretched(sec);
+					if (i == 3) {
+						o.setStretchedX(true, false);
+						o.setStretchedY(true, false);
+					}
+					if (i == 2) {
+						o.setStretchedY(true, false);
+					}
+					if (i == 1) {
+						o.setStretchedX(true, false);
+					}
+					con.add(o);
 				}
 				
 				if (action.equalsIgnoreCase("addcustomexpbar")) {
-					con.add(new LayoutCustomExpBar(new CustomExpBarCustomizationItem(sec), this));
+					LayoutCustomExpBar o = new LayoutCustomExpBar(new CustomExpBarCustomizationItem(sec), this);
+					int i = isObjectStretched(sec);
+					if (i == 3) {
+						o.setStretchedX(true, false);
+						o.setStretchedY(true, false);
+					}
+					if (i == 2) {
+						o.setStretchedY(true, false);
+					}
+					if (i == 1) {
+						o.setStretchedX(true, false);
+					}
+					con.add(o);
 				}
 
 				if (action.equalsIgnoreCase("addcustommounthealthbar")) {
-					con.add(new LayoutCustomMountHealthBar(new CustomMountHealthBarCustomizationItem(sec), this));
+					LayoutCustomMountHealthBar o = new LayoutCustomMountHealthBar(new CustomMountHealthBarCustomizationItem(sec), this);
+					int i = isObjectStretched(sec);
+					if (i == 3) {
+						o.setStretchedX(true, false);
+						o.setStretchedY(true, false);
+					}
+					if (i == 2) {
+						o.setStretchedY(true, false);
+					}
+					if (i == 1) {
+						o.setStretchedX(true, false);
+					}
+					con.add(o);
 				}
 
 				if (action.equalsIgnoreCase("addcustommountjumpbar")) {
-					con.add(new LayoutCustomMountJumpBar(new CustomMountJumpBarCustomizationItem(sec), this));
+					LayoutCustomMountJumpBar o = new LayoutCustomMountJumpBar(new CustomMountJumpBarCustomizationItem(sec), this);
+					int i = isObjectStretched(sec);
+					if (i == 3) {
+						o.setStretchedX(true, false);
+						o.setStretchedY(true, false);
+					}
+					if (i == 2) {
+						o.setStretchedY(true, false);
+					}
+					if (i == 1) {
+						o.setStretchedX(true, false);
+					}
+					con.add(o);
 				}
 				
 				/** ########################### CUSTOM ITEM HANDLING ########################### **/

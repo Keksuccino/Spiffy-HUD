@@ -12,7 +12,7 @@ import de.keksuccino.fancyhud.customization.items.custombars.CustomBarCustomizat
 
 public class CustomHealthBarCustomizationItem extends CustomBarCustomizationItemBase {
 	
-	protected int currentPercentWidthHeight = 0;
+//	protected int currentPercentWidthHeight = 0;
 	
 	public boolean hideWhenFull = false;
 
@@ -85,68 +85,73 @@ public class CustomHealthBarCustomizationItem extends CustomBarCustomizationItem
 		
 	}
 
-	@Override
-	protected void renderBar(MatrixStack matrix) {
-		
-		if (this.barTexture == null) {
-			
-			if (this.direction == BarDirection.RIGHT) {
-				RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.currentPercentWidthHeight, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
-			}
-			if (this.direction == BarDirection.LEFT) {
-				RenderUtils.fill(matrix, this.getPosX() + this.width - this.currentPercentWidthHeight, this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
-			}
-			if (this.direction == BarDirection.UP) {
-				RenderUtils.fill(matrix, this.getPosX(), this.getPosY() + this.height - this.currentPercentWidthHeight, this.getPosX() + this.width, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
-			}
-			if (this.direction == BarDirection.DOWN) {
-				RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.currentPercentWidthHeight, this.barColor.getRGB(), 1.0F);
-			}
-			
-		} else {
-			
-			Minecraft.getInstance().textureManager.bindTexture(this.barTexture);
-			RenderSystem.enableBlend();
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			
-			if (this.direction == BarDirection.RIGHT) {
-				blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, this.currentPercentWidthHeight, this.height, this.width, this.height);
-			}
-			if (this.direction == BarDirection.LEFT) {
-				int i = (this.width - this.currentPercentWidthHeight);
-				blit(matrix, this.getPosX() + i, this.getPosY(), i, 0.0F, this.currentPercentWidthHeight, this.height, this.width, this.height);
-			}
-			if (this.direction == BarDirection.UP) {
-				int i = (this.height - this.currentPercentWidthHeight);
-				blit(matrix, this.getPosX(), this.getPosY() + i, 0.0F, i, this.width, this.currentPercentWidthHeight, this.width, this.height);
-			}
-			if (this.direction == BarDirection.DOWN) {
-				blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, this.width, this.currentPercentWidthHeight, this.width, this.height);
-			}
-			
-			RenderSystem.disableBlend();
-			
-		}
-		
-	}
-
-	@Override
-	protected void renderBarBackground(MatrixStack matrix) {
-		
-		if (this.backgroundTexture == null) {
-			
-			RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.height, this.backgroundColor.getRGB(), 1.0F);
-		
-		} else {
-			
-			Minecraft.getInstance().textureManager.bindTexture(this.backgroundTexture);
-			RenderSystem.enableBlend();
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, this.width, this.height, this.width, this.height);
-			RenderSystem.disableBlend();
-			
-		}
-		
-	}
+//	@Override
+//	protected void renderBar(MatrixStack matrix) {
+//
+//		if (this.barTexture == null) {
+//
+//			if (this.direction == BarDirection.RIGHT) {
+//				RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.currentPercentWidthHeight, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
+//			}
+//			if (this.direction == BarDirection.LEFT) {
+//				RenderUtils.fill(matrix, this.getPosX() + this.width - this.currentPercentWidthHeight, this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
+//			}
+//			if (this.direction == BarDirection.UP) {
+//				RenderUtils.fill(matrix, this.getPosX(), this.getPosY() + this.height - this.currentPercentWidthHeight, this.getPosX() + this.width, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
+//			}
+//			if (this.direction == BarDirection.DOWN) {
+//				RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.currentPercentWidthHeight, this.barColor.getRGB(), 1.0F);
+//			}
+//
+//		} else {
+//
+//			int mainTextureWidth = this.width;
+//			if (this.barEndTexture != null) {
+//				mainTextureWidth -= this.barEndTextureWidth;
+//			}
+//
+//			Minecraft.getInstance().textureManager.bindTexture(this.barTexture);
+//			RenderSystem.enableBlend();
+//			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+//
+//			if (this.direction == BarDirection.RIGHT) {
+//				blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, this.currentPercentWidthHeight, this.height, mainTextureWidth, this.height);
+//			}
+//			if (this.direction == BarDirection.LEFT) {
+//				int i = (mainTextureWidth - this.currentPercentWidthHeight);
+//				blit(matrix, this.getPosX() + i, this.getPosY(), i, 0.0F, this.currentPercentWidthHeight, this.height, mainTextureWidth, this.height);
+//			}
+//			if (this.direction == BarDirection.UP) {
+//				int i = (this.height - this.currentPercentWidthHeight);
+//				blit(matrix, this.getPosX(), this.getPosY() + i, 0.0F, i, mainTextureWidth, this.currentPercentWidthHeight, mainTextureWidth, this.height);
+//			}
+//			if (this.direction == BarDirection.DOWN) {
+//				blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, mainTextureWidth, this.currentPercentWidthHeight, mainTextureWidth, this.height);
+//			}
+//
+//			RenderSystem.disableBlend();
+//
+//		}
+//
+//	}
+//
+//	@Override
+//	protected void renderBarBackground(MatrixStack matrix) {
+//
+//		if (this.backgroundTexture == null) {
+//
+//			RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.height, this.backgroundColor.getRGB(), 1.0F);
+//
+//		} else {
+//
+//			Minecraft.getInstance().textureManager.bindTexture(this.backgroundTexture);
+//			RenderSystem.enableBlend();
+//			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+//			blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, this.width, this.height, this.width, this.height);
+//			RenderSystem.disableBlend();
+//
+//		}
+//
+//	}
 
 }

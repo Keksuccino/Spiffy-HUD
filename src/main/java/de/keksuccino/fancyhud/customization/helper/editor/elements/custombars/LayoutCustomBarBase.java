@@ -184,11 +184,21 @@ public class LayoutCustomBarBase extends LayoutElement {
 	protected PropertiesSection getPropertiesRaw() {
 		
 		PropertiesSection s = new PropertiesSection("customization");
-		
-		s.addEntry("width", "" + this.getObject().width);
-		s.addEntry("height", "" + this.getObject().height);
-		s.addEntry("x", "" + this.getObject().posX);
-		s.addEntry("y", "" + this.getObject().posY);
+
+		if (this.stretchX) {
+			s.addEntry("x", "0");
+			s.addEntry("width", "%guiwidth%");
+		} else {
+			s.addEntry("x", "" + this.object.posX);
+			s.addEntry("width", "" + this.object.width);
+		}
+		if (this.stretchY) {
+			s.addEntry("y", "0");
+			s.addEntry("height", "%guiheight%");
+		} else {
+			s.addEntry("y", "" + this.object.posY);
+			s.addEntry("height", "" + this.object.height);
+		}
 		s.addEntry("orientation", this.getObject().orientation);
 		
 		s.addEntry("direction", this.getObject().direction.getName());
@@ -204,6 +214,11 @@ public class LayoutCustomBarBase extends LayoutElement {
 		}
 		if (this.getObject().backgroundTexturePath != null) {
 			s.addEntry("backgroundtexture", this.getObject().backgroundTexturePath);
+		}
+		if (this.getObject().barEndTexturePath != null) {
+			s.addEntry("barendtexture", this.getObject().barEndTexturePath);
+			s.addEntry("barendtexturewidth", "" + this.getObject().barEndTextureWidth);
+			s.addEntry("barendtextureheight", "" + this.getObject().barEndTextureHeight);
 		}
 
 		this.addVisibilityPropertiesTo(s);

@@ -5,8 +5,10 @@ import java.io.File;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancyhud.customization.helper.editor.LayoutEditorScreen;
 import de.keksuccino.fancyhud.customization.items.CustomizationItemBase;
+import de.keksuccino.konkrete.math.MathUtils;
 import de.keksuccino.konkrete.properties.PropertiesSection;
 import de.keksuccino.konkrete.rendering.RenderUtils;
 import de.keksuccino.konkrete.resources.ExternalTextureResourceLocation;
@@ -23,11 +25,17 @@ public abstract class CustomBarCustomizationItemBase extends CustomizationItemBa
 	
 	public ResourceLocation barTexture = null;
 	public ResourceLocation backgroundTexture = null;
+	public ResourceLocation barEndTexture = null;
+	public int barEndTextureWidth = 10;
+	public int barEndTextureHeight = 10;
 	
 	public String barColorHex = null;
 	public String backgroundColorHex = null;
 	public String barTexturePath = null;
 	public String backgroundTexturePath = null;
+	public String barEndTexturePath = null;
+
+	protected int currentPercentWidthHeight = 0;
 	
 	public CustomBarCustomizationItemBase(PropertiesSection item) {
 		super(item);
@@ -40,6 +48,17 @@ public abstract class CustomBarCustomizationItemBase extends CustomizationItemBa
 		this.backgroundColorHex = item.getEntryValue("backgroundcolor");
 		this.barTexturePath = item.getEntryValue("bartexture");
 		this.backgroundTexturePath = item.getEntryValue("backgroundtexture");
+		this.barEndTexturePath = item.getEntryValue("barendtexture");
+
+		String barEndWidthString = item.getEntryValue("barendtexturewidth");
+		if ((barEndWidthString != null) && MathUtils.isInteger(barEndWidthString)) {
+			this.barEndTextureWidth = Integer.parseInt(barEndWidthString);
+		}
+
+		String barEndHeightString = item.getEntryValue("barendtextureheight");
+		if ((barEndHeightString != null) && MathUtils.isInteger(barEndHeightString)) {
+			this.barEndTextureHeight = Integer.parseInt(barEndHeightString);
+		}
 		
 		String barDirec = item.getEntryValue("direction");
 		if (barDirec != null) {
@@ -49,10 +68,96 @@ public abstract class CustomBarCustomizationItemBase extends CustomizationItemBa
 		this.updateItem();
 		
 	}
-	
-	protected abstract void renderBar(MatrixStack matrix);
-	
-	protected abstract void renderBarBackground(MatrixStack matrix);
+
+	//TODO renderBar und renderBackground methoden aus anderen Bar Klassen entfernen, da jetzt in Hauptklasse
+
+	protected void renderBar(MatrixStack matrix) {
+
+		if (this.barTexture == null) {
+
+			if (this.direction == BarDirection.RIGHT) {
+				RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.currentPercentWidthHeight, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
+			}
+			if (this.direction == BarDirection.LEFT) {
+				RenderUtils.fill(matrix, this.getPosX() + this.width - this.currentPercentWidthHeight, this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
+			}
+			if (this.direction == BarDirection.UP) {
+				RenderUtils.fill(matrix, this.getPosX(), this.getPosY() + this.height - this.currentPercentWidthHeight, this.getPosX() + this.width, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
+			}
+			if (this.direction == BarDirection.DOWN) {
+				RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.currentPercentWidthHeight, this.barColor.getRGB(), 1.0F);
+			}
+
+		} else {
+
+			int mainTextureWidth = this.width;
+			if (this.barEndTexture != null) {
+				mainTextureWidth -= this.barEndTextureWidth;
+			}
+
+			Minecraft.getInstance().textureManager.bindTexture(this.barTexture);
+			RenderSystem.enableBlend();
+			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+			if (this.direction == BarDirection.RIGHT) {
+				blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, this.currentPercentWidthHeight, this.height, mainTextureWidth, this.height);
+			}
+			if (this.direction == BarDirection.LEFT) {
+				int i = (mainTextureWidth - this.currentPercentWidthHeight);
+				blit(matrix, this.getPosX() + i, this.getPosY(), i, 0.0F, this.currentPercentWidthHeight, this.height, mainTextureWidth, this.height);
+			}
+			if (this.direction == BarDirection.UP) {
+				int i = (this.height - this.currentPercentWidthHeight);
+				blit(matrix, this.getPosX(), this.getPosY() + i, 0.0F, i, mainTextureWidth, this.currentPercentWidthHeight, mainTextureWidth, this.height);
+			}
+			if (this.direction == BarDirection.DOWN) {
+				blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, mainTextureWidth, this.currentPercentWidthHeight, mainTextureWidth, this.height);
+			}
+
+			//TODO endTexture abschneiden, wenn leben < endTexture size, damit es nicht ins negative leben rendert
+
+			if (this.barEndTexture != null) {
+				Minecraft.getInstance().textureManager.bindTexture(this.barEndTexture);
+
+				if (this.direction == BarDirection.RIGHT) {
+					blit(matrix, this.getPosX() + this.currentPercentWidthHeight, this.getPosY(), 0.0F, 0.0F, this.barEndTextureWidth, this.barEndTextureHeight, this.barEndTextureWidth, this.barEndTextureHeight);
+				}
+				if (this.direction == BarDirection.LEFT) {
+					int i = (mainTextureWidth - this.currentPercentWidthHeight) - this.barEndTextureWidth;
+					blit(matrix, this.getPosX() + i, this.getPosY(), i, 0.0F, this.barEndTextureWidth, this.barEndTextureHeight, this.barEndTextureWidth, this.barEndTextureHeight);
+				}
+				if (this.direction == BarDirection.UP) {
+					int i = (this.height - this.currentPercentWidthHeight) - this.barEndTextureHeight;
+					blit(matrix, this.getPosX(), this.getPosY() + i, 0.0F, i, this.barEndTextureWidth, this.barEndTextureHeight, this.barEndTextureWidth, this.barEndTextureHeight);
+				}
+				if (this.direction == BarDirection.DOWN) {
+					blit(matrix, this.getPosX(), this.getPosY() + this.currentPercentWidthHeight, 0.0F, 0.0F, this.barEndTextureWidth, this.barEndTextureHeight, this.barEndTextureWidth, this.barEndTextureHeight);
+				}
+			}
+
+			RenderSystem.disableBlend();
+
+		}
+
+	}
+
+	protected void renderBarBackground(MatrixStack matrix) {
+
+		if (this.backgroundTexture == null) {
+
+			RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.height, this.backgroundColor.getRGB(), 1.0F);
+
+		} else {
+
+			Minecraft.getInstance().textureManager.bindTexture(this.backgroundTexture);
+			RenderSystem.enableBlend();
+			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+			blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, this.width, this.height, this.width, this.height);
+			RenderSystem.disableBlend();
+
+		}
+
+	}
 	
 	public void updateItem() {
 		
@@ -95,6 +200,19 @@ public abstract class CustomBarCustomizationItemBase extends CustomizationItemBa
 		} else {
 			this.backgroundTexture = null;
 		}
+
+		if (this.barEndTexturePath != null) {
+			File f = new File(this.barEndTexturePath);
+			if (f.exists() && f.isFile() && (f.getPath().toLowerCase().endsWith(".jpg") || f.getPath().toLowerCase().endsWith(".jpeg") || f.getPath().toLowerCase().endsWith(".png"))) {
+				ExternalTextureResourceLocation er = TextureHandler.getResource(this.barEndTexturePath);
+				if (er != null) {
+					er.loadTexture();
+					this.barEndTexture = er.getResourceLocation();
+				}
+			}
+		} else {
+			this.barEndTexture = null;
+		}
 		
 	}
 	
@@ -110,7 +228,7 @@ public abstract class CustomBarCustomizationItemBase extends CustomizationItemBa
 		
 		private String name;
 		
-		private BarDirection(String name) {
+		BarDirection(String name) {
 			this.name = name;
 		}
 		
