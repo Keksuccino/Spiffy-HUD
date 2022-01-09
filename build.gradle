@@ -1,81 +1,78 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }
 		maven { url = 'https://repo.spongepowered.org/maven' }
-		jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
 		classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
 
-version = '1.0'
+version = '1.0.0'
 group = 'de.keksuccino'
-archivesBaseName = 'fancyhud'
+archivesBaseName = 'spiffyhud'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
-
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 compileJava {
-	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 }
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 minecraft {
 
-    mappings channel: 'snapshot', version: '20210309-1.16.5'
-	
+    mappings channel: 'official', version: '1.18'
+
     runs {
         client {
             workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            arg "-mixin.config=fancymenu.general.mixin.json"
+            arg "-mixin.config=spiffyhud.mixin.json"
             mods {
-                fancymenu {
+                spiffyhud {
                     source sourceSets.main
                 }
             }
         }
-
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            arg "-mixin.config=fancyhud.mixin.json"
-            mods {
-                fancymenu {
-                    source sourceSets.main
-                }
-            }
-        }
-
     }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+repositories {
+    // Put repositories for dependencies here
+    // ForgeGradle automatically adds the Forge maven and Maven Central for you
+
+    // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
+    // flatDir {
+    //     dir 'libs'
+    // }
+}
+
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.0'
+    minecraft 'net.minecraftforge:forge:1.18-38.0.17'
 	
-	annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
-	testAnnotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
-	
-	compile fileTree(dir: 'libs', include: ['*.jar'])
+	implementation fileTree('libs') { include '*.jar' }
 
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    testAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+}
+
+mixin {
+    add sourceSets.main, "spiffyhud.mixin-refmap.json"
 }
 
 jar {
     manifest {
         attributes([
-            "Specification-Title": "FancyHud",
+            "Specification-Title": "Spiffy HUD",
             "Specification-Vendor": "Keksuccino",
             "Specification-Version": "1",
             "Implementation-Title": project.name,
@@ -85,12 +82,13 @@ jar {
             "Signing-Fingerprint": project.hasProperty('fingerprint') ? project.property('fingerprint') : 'unsigned',
 			"TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
             "TweakOrder": 0,
-            "MixinConfigs" : "fancyhud.mixin.json"
+            "MixinConfigs" : "spiffyhud.mixin.json"
         ])
     }
-	
-	 rename 'mixin.refmap.json', 'fancyhud.mixin-refmap.json'
-	 
 }
 
-jar.finalizedBy('reobfJar') 
+
+jar.finalizedBy('reobfJar')
+
+
+

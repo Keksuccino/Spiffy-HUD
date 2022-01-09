@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "de.keksuccino.spiffyhud.mixin.client",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "MixinMinecraft",
+    "MixinForgeIngameGui",
+    "MixinScoreboard"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8",
+  "refmap": "spiffyhud.mixin-refmap.json"
+}

@@ -1,0 +1,140 @@
+package de.keksuccino.spiffyhud.customization.items.custombars;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+
+import de.keksuccino.konkrete.properties.PropertiesSection;
+import de.keksuccino.konkrete.rendering.RenderUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+
+public class CustomMountJumpBarCustomizationItem extends CustomBarCustomizationItemBase {
+
+    protected int currentPercentWidthHeight = 0;
+
+    public CustomMountJumpBarCustomizationItem(PropertiesSection item) {
+        super(item);
+
+        this.value = "Custom Mount Jump Bar";
+
+    }
+
+    @Override
+    public void init(PropertiesSection item) {
+
+        super.init(item);
+
+        boolean b = false;
+        if (this.barColorHex == null) {
+            this.barColorHex = "#bd34eb";
+            b = true;
+        }
+        if (this.backgroundColorHex == null) {
+            this.backgroundColorHex = "#5c5c5c80";
+            b = true;
+        }
+        if (b) {
+            this.updateItem();
+        }
+
+    }
+
+    @Override
+    public void render(PoseStack matrix) {
+
+        if (!this.shouldRender()) {
+            return;
+        }
+
+        LocalPlayer p = Minecraft.getInstance().player;
+
+        if (p != null) {
+
+            if (!p.isRidingJumpable() && !this.isEditor()) {
+                return;
+            }
+
+            float jumpPowerPercent = p.getJumpRidingScale() * 100.0F;
+            if (this.isEditor()) {
+                jumpPowerPercent = 50.0F;
+            }
+            if ((this.direction == BarDirection.LEFT) || (this.direction == BarDirection.RIGHT)) {
+                this.currentPercentWidthHeight = (int)((((float)this.width) / 100.0F) * jumpPowerPercent);
+            }
+            if ((this.direction == BarDirection.UP) || (this.direction == BarDirection.DOWN)) {
+                this.currentPercentWidthHeight = (int)((((float)this.height) / 100.0F) * jumpPowerPercent);
+            }
+
+            this.renderBarBackground(matrix);
+
+            this.renderBar(matrix);
+
+        }
+
+    }
+
+    @Override
+    protected void renderBar(PoseStack matrix) {
+
+        if (this.barTexture == null) {
+
+            if (this.direction == BarDirection.RIGHT) {
+                RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.currentPercentWidthHeight, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
+            }
+            if (this.direction == BarDirection.LEFT) {
+                RenderUtils.fill(matrix, this.getPosX() + this.width - this.currentPercentWidthHeight, this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
+            }
+            if (this.direction == BarDirection.UP) {
+                RenderUtils.fill(matrix, this.getPosX(), this.getPosY() + this.height - this.currentPercentWidthHeight, this.getPosX() + this.width, this.getPosY() + this.height, this.barColor.getRGB(), 1.0F);
+            }
+            if (this.direction == BarDirection.DOWN) {
+                RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.currentPercentWidthHeight, this.barColor.getRGB(), 1.0F);
+            }
+
+        } else {
+
+            RenderUtils.bindTexture(this.barTexture);
+            RenderSystem.enableBlend();
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+            if (this.direction == BarDirection.RIGHT) {
+                blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, this.currentPercentWidthHeight, this.height, this.width, this.height);
+            }
+            if (this.direction == BarDirection.LEFT) {
+                int i = (this.width - this.currentPercentWidthHeight);
+                blit(matrix, this.getPosX() + i, this.getPosY(), i, 0.0F, this.currentPercentWidthHeight, this.height, this.width, this.height);
+            }
+            if (this.direction == BarDirection.UP) {
+                int i = (this.height - this.currentPercentWidthHeight);
+                blit(matrix, this.getPosX(), this.getPosY() + i, 0.0F, i, this.width, this.currentPercentWidthHeight, this.width, this.height);
+            }
+            if (this.direction == BarDirection.DOWN) {
+                blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, this.width, this.currentPercentWidthHeight, this.width, this.height);
+            }
+
+            RenderSystem.disableBlend();
+
+        }
+
+    }
+
+    @Override
+    protected void renderBarBackground(PoseStack matrix) {
+
+        if (this.backgroundTexture == null) {
+
+            RenderUtils.fill(matrix, this.getPosX(), this.getPosY(), this.getPosX() + this.width, this.getPosY() + this.height, this.backgroundColor.getRGB(), 1.0F);
+
+        } else {
+
+            RenderUtils.bindTexture(this.backgroundTexture);
+            RenderSystem.enableBlend();
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, this.width, this.height, this.width, this.height);
+            RenderSystem.disableBlend();
+
+        }
+
+    }
+
+}
