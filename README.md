@@ -1,16 +1,16 @@
 ## About
 
-Source code for the FancyHud Minecraft mod.
+Source code for the Spiffy HUD Minecraft mod.
 
 ## Download
 
-FancyHud is available on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/fancyhud)!
+Spiffy HUD is available on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/spiffy-hud-forge)!
 
 ## Licensing
 
-FancyHud is licensed under KML (Keksuccino Mod License).<br>
+Spiffy HUD is licensed under DSMSL (DON'T SNATCH MA STUFF LICENSE).<br>
 See LICENSE.md for more information.
 
 ## Copyright
 
-- FancyHud Copyright © 2021 Keksuccino.<br>
+- Spiffy HUD Copyright © 2021-2022 Keksuccino.<br>
