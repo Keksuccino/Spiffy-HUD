@@ -9,6 +9,6 @@ DON'T SNATCH MA STUFF LICENSE (DSMSL)
 5. The end user needs to download the mod from the official download source**. This includes end users using launchers to automatically download mods from said official source.
  
 *: You can ask me for permission via Discord (Keksuccino#0425).
-**: The official download source is: FORGE: https://www.curseforge.com/minecraft/mc-mods/spiffy-hud-forge
+**: The official download source is: FORGE: https://www.curseforge.com/minecraft/mc-mods/spiffy-hud-forge | FABRIC: https://www.curseforge.com/minecraft/mc-mods/spiffy-hud-fabric
 
 ```
