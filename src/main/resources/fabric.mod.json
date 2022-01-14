@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "spiffyhud",
+  "version": "1.4.3",
+  "name": "Spiffy HUD",
+  "description": "The spiffiest HUD in the hood! | Spiffy HUD © Copyright 2020-2022 Keksuccino. Spiffy HUD is licensed under DSMSL (DON'T SNATCH MA STUFF LICENSE). See https://github.com/Keksuccino/Spiffy-HUD/blob/main/LICENSE.md for more information about this license.",
+  "environment": "client",
+  "authors": [
+    "Keksuccino"
+  ],
+  "contributors": [],
+  "contact": {},
+  "license": "DSMSL (DON'T SNATCH MA STUFF LICENSE)",
+  "icon": "assets/spiffyhud/icon.png",
+  "entrypoints": {
+    "main": [
+      "de.keksuccino.spiffyhud.SpiffyHud"
+    ],
+    "client": [],
+    "server": []
+  },
+  "mixins": [
+    "spiffyhud.mixin.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.6",
+    "fabric": "*",
+    "konkrete": ">=1.3.3",
+	"minecraft": "1.18.x",
+    "java": ">=17"
+  }
+}
