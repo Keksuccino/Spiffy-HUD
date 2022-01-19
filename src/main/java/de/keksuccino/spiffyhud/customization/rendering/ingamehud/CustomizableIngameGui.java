@@ -14,6 +14,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.spiffyhud.api.hud.CustomVanillaCustomizationItem;
 import de.keksuccino.spiffyhud.api.hud.HudElementContainer;
 import de.keksuccino.spiffyhud.api.hud.HudElementRegistry;
+import de.keksuccino.spiffyhud.api.hud.v2.SimpleVanillaCustomizationItem;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaHudElementContainer;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaHudElementRegistry;
 import de.keksuccino.spiffyhud.api.item.CustomizationItem;
 import de.keksuccino.spiffyhud.api.item.CustomizationItemContainer;
 import de.keksuccino.spiffyhud.api.item.CustomizationItemRegistry;
@@ -78,8 +81,7 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 	public PlayerHealthHudElement healthElement = new PlayerHealthHudElement(this);
 	public FoodMountHealthHudElement foodMountHealthElement = new FoodMountHealthHudElement(this);
 	public ExperienceJumpBarHudElement experienceJumpBarElement = new ExperienceJumpBarHudElement(this);
-	//TODO implementieren
-	//	public PotionIconsHudElement potionIconsElement = new PotionIconsHudElement(this);
+//	public PotionIconsHudElement potionIconsElement = new PotionIconsHudElement(this);
 	public ArmorBarHudElement armorBarElement = new ArmorBarHudElement(this);
 	public AirBarHudElement airBarElement = new AirBarHudElement(this);
 	public TitleHudElement titleElement = new TitleHudElement(this, false);
@@ -305,6 +307,7 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 
 						/** ################## CUSTOM VANILLA ELEMENTS ################## **/
 
+						//Deprecated (old API)
 						if (action.startsWith("edit_")) {
 
 							String id = action.split("[_]", 2)[1];
@@ -316,6 +319,24 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 								this.backgroundElements.add(new CustomVanillaCustomizationItem(c, sec, isSecond));
 								if (!customElementsSet.contains(id)) {
 									customElementsSet.add(id);
+								}
+
+							}
+
+						}
+
+						//Custom vanilla HUD element handling (new API)
+						if (action.startsWith("custom_vanilla_layout_element:")) {
+
+							String identifier = action.split("[:]", 2)[1];
+							VanillaHudElementContainer c = VanillaHudElementRegistry.getElement(identifier);
+							boolean isSecond = customElementsSet.contains(identifier);
+
+							if (c != null) {
+
+								this.backgroundElements.add(new SimpleVanillaCustomizationItem(c, sec, isSecond));
+								if (!customElementsSet.contains(identifier)) {
+									customElementsSet.add(identifier);
 								}
 
 							}
@@ -486,6 +507,7 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 
 						/** ################## CUSTOM ITEMS ################## **/
 
+						//DEPRECATED (OLD API)
 						if (action.startsWith("add_")) {
 							String id = action.split("[_]", 2)[1];
 							CustomizationItemContainer c = CustomizationItemRegistry.getInstance().getElement(id);
@@ -501,6 +523,21 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 							}
 						}
 
+						//NEW API
+						/** CUSTOM ITEMS (API) **/
+						if (action.startsWith("custom_layout_element:")) {
+							String cusId = action.split("[:]", 2)[1];
+							de.keksuccino.spiffyhud.api.item.v2.CustomizationItemContainer cusItem = de.keksuccino.spiffyhud.api.item.v2.CustomizationItemRegistry.getItem(cusId);
+							if (cusItem != null) {
+								de.keksuccino.spiffyhud.api.item.v2.CustomizationItem cusItemInstance = cusItem.constructCustomizedItemInstance(sec);
+								if (renderInBackground) {
+									backgroundElements.add(cusItemInstance);
+								} else {
+									foregroundElements.add(cusItemInstance);
+								}
+							}
+						}
+
 					}
 
 				}
@@ -512,9 +549,6 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 			if (!crossSet) {
 				this.backgroundElements.add(new CrosshairCustomizationItem(this.crosshairElement, dummySec, false));
 			}
-			//			if (!potionsSet) {
-			//				this.backgroundElements.add(new PotionIconsCustomizationItem(this.potionIconsElement, dummySec));
-			//			}
 			if (!bossSet) {
 				this.backgroundElements.add(new BossBarCustomizationItem(this.bossBarElement, dummySec, false));
 			}
@@ -552,10 +586,18 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 				this.backgroundElements.add(new SidebarCustomizationItem(this.sidebarElement, dummySec, false));
 			}
 
+			//Deprecated (old API)
 			for (Map.Entry<String, HudElementContainer> m : this.customElements.entrySet()) {
 				HudElementContainer c = m.getValue();
 				if (!customElementsSet.contains(c.elementIdentifier)) {
 					this.backgroundElements.add(new CustomVanillaCustomizationItem(c, dummySec, false));
+				}
+			}
+
+			//Custom vanilla HUD element handling (new API)
+			for (VanillaHudElementContainer c : VanillaHudElementRegistry.getElements()) {
+				if (!customElementsSet.contains(c.getIdentifier())) {
+					this.backgroundElements.add(new SimpleVanillaCustomizationItem(c, dummySec, false));
 				}
 			}
 
@@ -604,8 +646,13 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 	}
 
 	public void renderCustomVanillaElements(MatrixStack matrix, float partialTicks) {
+		//Deprecated (old API)
 		for (Map.Entry<String, HudElementContainer> m : this.customElements.entrySet()) {
 			m.getValue().element.render(matrix, scaledWidth, scaledHeight, partialTicks);
+		}
+		//New API
+		for (VanillaHudElementContainer c : VanillaHudElementRegistry.getElements()) {
+			c.element.render(matrix, scaledWidth, scaledHeight, partialTicks);
 		}
 	}
 
@@ -623,28 +670,6 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 		this.crosshairElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
 
 	}
-
-	//TODO editierbar machen
-	//	@Override
-	//    protected void renderPotionIcons(MatrixStack matrix) {
-	//
-	//		if (this.potionIconsElement.fireEvents) {
-	//			if (pre(ElementType.POTION_ICONS, matrix, false)) return;
-	//		}
-	//
-	//		if (this.potionIconsElement.visible) {
-	//
-	//			this.renderPotionIconsRaw(matrix);
-	//
-	//		}
-	//
-	//		if (this.potionIconsElement.fireEvents) {
-	//			post(ElementType.POTION_ICONS, matrix, false);
-	//		}
-	//
-	////		this.potionIconsElement.render(matrix, scaledWidth, scaledHeight, Minecraft.getInstance().getRenderPartialTicks());
-	//        
-	//    }
 
 	protected void renderPotionIconsRaw(MatrixStack matrix) {
 

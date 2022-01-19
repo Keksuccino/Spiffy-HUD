@@ -864,15 +864,29 @@ public class LayoutEditorUI extends UIBase {
 			this.addContent(customMountJumpButton);
 
 			this.addSeparator();
-			
-			/** CUSTOM ITEMS **/
-			for (CustomizationItemContainer c : CustomizationItemRegistry.getInstance().getElements().values()) {
-				
+
+			/** CUSTOM ITEMS **/ //############ DEPRECATED (OLD API)
+			for (de.keksuccino.spiffyhud.api.item.CustomizationItemContainer c : CustomizationItemRegistry.getInstance().getElements().values()) {
+
 				AdvancedButton newCustomItemButton = new AdvancedButton(0, 0, 0, 20, c.displayName, (press) -> {
 					this.parent.addCustomItem(c);
 				});
 				this.addContent(newCustomItemButton);
-				
+
+			}
+
+			/** CUSTOM ITEMS (API) **/ //############ NEW API
+			for (de.keksuccino.spiffyhud.api.item.v2.CustomizationItemContainer c : de.keksuccino.spiffyhud.api.item.v2.CustomizationItemRegistry.getItems()) {
+
+				AdvancedButton cusItemButton = new AdvancedButton(0, 0, 0, 20, c.getDisplayName(), (press) -> {
+					this.parent.addContent(c.constructEditorElementInstance(c.constructDefaultItemInstance(), this.parent));
+				});
+				String[] desc = c.getDescription();
+				if ((desc != null) && (desc.length > 0)) {
+					cusItemButton.setDescription(desc);
+				}
+				this.addContent(cusItemButton);
+
 			}
 			
 			super.openMenuAt(x, y, screenWidth, screenHeight);

@@ -1,20 +1,19 @@
-package de.keksuccino.spiffyhud;
-
-import java.awt.Color;
+package de.keksuccino.spiffyhud.api.hud.v2.example;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-
-import de.keksuccino.spiffyhud.api.IngameHud;
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements.IngameHudElement;
 
-public class ExampleCustomVanillaElement extends IngameHudElement {
+import java.awt.*;
+
+public class ExampleCustomVanillaHudElement extends IngameHudElement {
 
 	//A custom property variable that can be customized
 	public boolean isRedColor = false;
 	
-	public ExampleCustomVanillaElement() {
-		super(IngameHud.getInstance().getGui());
+	public ExampleCustomVanillaHudElement() {
+		super(InGameHudOverlay.getGui());
 	}
 
 	@Override

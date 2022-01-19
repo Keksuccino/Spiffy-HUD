@@ -11,6 +11,8 @@ import de.keksuccino.spiffyhud.api.DynamicValueRegistry;
 import de.keksuccino.spiffyhud.api.DynamicValueRegistry.DynamicValue;
 import de.keksuccino.konkrete.input.StringUtils;
 import de.keksuccino.konkrete.math.MathUtils;
+import de.keksuccino.spiffyhud.api.placeholder.PlaceholderTextContainer;
+import de.keksuccino.spiffyhud.api.placeholder.PlaceholderTextRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -260,9 +262,14 @@ public class DynamicValueHelper {
 
 			in = in.replace("%tps%", "" + TpsHandler.getTps());
 
-			//Apply all custom value
+			//Deprecated old custom placeholder handling (old API)
 			for (DynamicValue v : DynamicValueRegistry.getInstance().getValuesAsList()) {
 				in = in.replace(v.getPlaceholder(), v.get());
+			}
+
+			//Handle all custom placeholders added via the API (new API)
+			for (PlaceholderTextContainer pc : PlaceholderTextRegistry.getPlaceholders()) {
+				in = pc.replacePlaceholders(in);
 			}
 
 		} catch (Exception e) {

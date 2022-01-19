@@ -1,13 +1,13 @@
 package de.keksuccino.spiffyhud.api.hud;
 
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
+import de.keksuccino.konkrete.properties.PropertiesSection;
 import de.keksuccino.spiffyhud.customization.helper.ui.content.FHContextMenu;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements.IngameHudElement;
-import de.keksuccino.konkrete.properties.PropertiesSection;
 
+import javax.annotation.Nullable;
+import java.util.Map;
+
+@Deprecated
 public abstract class HudElementContainer {
 
 	public final String elementIdentifier;
@@ -21,6 +21,7 @@ public abstract class HudElementContainer {
 	public int defaultPosY = 0;
 	public String defaultOrientation = "top-left";
 
+	@Deprecated
 	/**
 	 * This container is used to register a custom HUD element that should act like vanilla elements.<br>
 	 * It will be part of the HUD by default and can't be fully deleted from it (only hidden like normal vanilla elements).
@@ -47,7 +48,8 @@ public abstract class HudElementContainer {
 		element.width = this.defaultWidth;
 		element.height = this.defaultHeight;
 	}
-	
+
+	@Deprecated
 	/**
 	 * Called to reset all custom element variables to it's defaults.<br><br>
 	 * 
@@ -55,7 +57,8 @@ public abstract class HudElementContainer {
 	 * If you don't have any, leave it empty.
 	 */
 	public abstract void onResetElement();
-	
+
+	@Deprecated
 	/**
 	 * Called to apply/update customizations for the element.<br>
 	 * Is called when the screen gets resized or the ingame HUD needs another kind of update.<br><br>
@@ -69,7 +72,8 @@ public abstract class HudElementContainer {
 	 * @param properties All properties from the layout file that need to be applied to the element. Will always contain all serialized properties that were previously written to the layout file via {@link HudElementContainer#getProperties()}.
 	 */
 	public abstract void onUpdateElement(PropertiesSection properties);
-	
+
+	@Deprecated
 	/**
 	 * Called every render tick to update values and do other stuff.<br><br>
 	 * This is the right place to apply customizations from your property cache variables to the actual {@link IngameHudElement}.
@@ -99,16 +103,18 @@ public abstract class HudElementContainer {
 		}
 		
 	}
-	
+
+	@Deprecated
 	/**
 	 * Called when the editor gets updated or initialized.<br>
-	 * Can be used to add custom entries to the rightclick context menu of the element and do other stuff that needs to be done on init.
+	 * Can be used to add custom entries to the right-click context menu of the element and do other stuff that needs to be done on init.
 	 * 
 	 * @param layoutElement Handles everything around the HUD element in the editor and renders the element-related editor UI like the element border when the element is focused.
-	 * @param rightclickContextMenu The context menu that appears when you rightclick the element in the editor. This menu already contains default actions every element needs and is part of the <b>layoutElement</b>.
+	 * @param rightclickContextMenu The context menu that appears when you right-click the element in the editor. This menu already contains default actions every element needs and is part of the <b>layoutElement</b>.
 	 */
 	public abstract void onInitEditor(CustomVanillaLayoutElement layoutElement, FHContextMenu rightclickContextMenu);
-	
+
+	@Deprecated
 	/**
 	 * Returns a {@link Map} with the <b>current</b> properties of the HUD element.<br>
 	 * This is used by the editor to write the element properties to the layout file.<br><br>

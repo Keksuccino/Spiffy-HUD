@@ -8,6 +8,10 @@ import de.keksuccino.spiffyhud.api.hud.CustomVanillaCustomizationItem;
 import de.keksuccino.spiffyhud.api.hud.CustomVanillaLayoutElement;
 import de.keksuccino.spiffyhud.api.hud.HudElementContainer;
 import de.keksuccino.spiffyhud.api.hud.HudElementRegistry;
+import de.keksuccino.spiffyhud.api.hud.v2.SimpleVanillaCustomizationItem;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaHudElementContainer;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaHudElementRegistry;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaLayoutEditorElement;
 import de.keksuccino.spiffyhud.api.item.CustomizationItem;
 import de.keksuccino.spiffyhud.api.item.CustomizationItemContainer;
 import de.keksuccino.spiffyhud.api.item.CustomizationItemLayoutElement;
@@ -243,24 +247,44 @@ public class PreloadedLayoutEditorScreen extends LayoutEditorScreen {
 				}
 				
 				/** ########################### CUSTOM VANILLA ELEMENT HANDLING ########################### **/
-				
+
+				//Deprecated (old API)
 				if (action.startsWith("edit_")) {
-					
+
 					String id = action.split("[_]", 2)[1];
 					HudElementContainer c = customElementContainers.get(id);
-					
+
 					if (c != null) {
-						
+
 						CustomVanillaLayoutElement e = new CustomVanillaLayoutElement(c, new CustomVanillaCustomizationItem(c, sec, false), this);
 						this.customElements.put(id, e);
 						vanillaCon.add(e);
-						
+
 						if (!customElementsSet.contains(id)) {
 							customElementsSet.add(id);
 						}
-						
+
 					}
-					
+
+				}
+
+				//Custom vanilla HUD element handling (new API)
+				if (action.startsWith("custom_vanilla_layout_element:")) {
+
+					String identifier = action.split("[:]", 2)[1];
+					VanillaHudElementContainer c = VanillaHudElementRegistry.getElement(identifier);
+
+					if (c != null) {
+
+						VanillaLayoutEditorElement e = new VanillaLayoutEditorElement(c, new SimpleVanillaCustomizationItem(c, sec, false), this);
+						vanillaCon.add(e);
+
+						if (!customElementsSet.contains(identifier)) {
+							customElementsSet.add(identifier);
+						}
+
+					}
+
 				}
 				
 				/** ########################### ITEM HANDLING ########################### **/
@@ -504,16 +528,28 @@ public class PreloadedLayoutEditorScreen extends LayoutEditorScreen {
 				}
 				
 				/** ########################### CUSTOM ITEM HANDLING ########################### **/
-				
+
+				//DEPRECATED (OLD API)
 				if (action.startsWith("add_")) {
 					String id = action.split("[_]", 2)[1];
 					CustomizationItemContainer c = CustomizationItemRegistry.getInstance().getElement(id);
-					
+
 					if (c != null) {
-						
+
 						CustomizationItem i = c.constructWithProperties(sec);
 						con.add(new CustomizationItemLayoutElement(c, i, this));
-						
+
+					}
+				}
+
+				//NEW API
+				/** CUSTOM ITEMS (API) **/
+				if (action.startsWith("custom_layout_element:")) {
+					String cusId = action.split("[:]", 2)[1];
+					de.keksuccino.spiffyhud.api.item.v2.CustomizationItemContainer cusItem = de.keksuccino.spiffyhud.api.item.v2.CustomizationItemRegistry.getItem(cusId);
+					if (cusItem != null) {
+						de.keksuccino.spiffyhud.api.item.v2.CustomizationItem cusItemInstance = cusItem.constructCustomizedItemInstance(sec);
+						con.add(cusItem.constructEditorElementInstance(cusItemInstance, this));
 					}
 				}
 
@@ -573,16 +609,27 @@ public class PreloadedLayoutEditorScreen extends LayoutEditorScreen {
 			this.sidebarLayoutElement = new SidebarLayoutElement(new SidebarCustomizationItem(this.ingameHud.sidebarElement, dummySec, false), this);
 			vanillaCon.add(this.sidebarLayoutElement);
 		}
-		
+
+		//Deprecated (old API)
 		for (Map.Entry<String, HudElementContainer> m : customElementContainers.entrySet()) {
 			HudElementContainer c = m.getValue();
 			String id = m.getKey();
 			if (!customElementsSet.contains(c.elementIdentifier)) {
-				
+
 				CustomVanillaLayoutElement e = new CustomVanillaLayoutElement(c, new CustomVanillaCustomizationItem(c, dummySec, false), this);
 				this.customElements.put(id, e);
 				vanillaCon.add(e);
-				
+
+			}
+		}
+
+		//Custom vanilla HUD element handling (new API)
+		for (VanillaHudElementContainer c : VanillaHudElementRegistry.getElements()) {
+			if (!customElementsSet.contains(c.getIdentifier())) {
+
+				VanillaLayoutEditorElement e = new VanillaLayoutEditorElement(c, new SimpleVanillaCustomizationItem(c, dummySec, false), this);
+				vanillaCon.add(e);
+
 			}
 		}
 

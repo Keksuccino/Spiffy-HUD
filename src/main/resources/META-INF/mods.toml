@@ -4,7 +4,7 @@ license="DSMSL (DON'T SNATCH MA STUFF LICENSE)"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 modId="spiffyhud" #mandatory
-version="1.4.3" #mandatory
+version="1.4.4" #mandatory
 displayName="Spiffy HUD" #mandatory
 authors="Keksuccino" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/spiffy-hud-forge" #optional
@@ -27,7 +27,7 @@ side="BOTH"
 modId="fancymenu"
 mandatory=false
 ordering="AFTER"
-versionRange="[2.5.0,)"
+versionRange="[2.5.2,)"
 side="BOTH"
 
 [[dependencies.spiffyhud]]
