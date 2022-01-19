@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.keksuccino.spiffyhud.api.hud.v2.SimpleVanillaCustomizationItem;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaHudElementContainer;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaHudElementRegistry;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaLayoutEditorElement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -189,11 +194,19 @@ public class LayoutEditorScreen extends Screen {
 		this.content.add(this.selectedItemNameLayoutElement);
 		this.content.add(this.overlayMessageLayoutElement);
 		this.content.add(this.sidebarLayoutElement);
-		
-		//Custom vanilla elements
+
+		//Deprecated custom vanilla HUD element handling (old API)
 		for (Map.Entry<String, HudElementContainer> m : HudElementRegistry.getInstance().getElements().entrySet()) {
 			CustomVanillaLayoutElement e = new CustomVanillaLayoutElement(m.getValue(), new CustomVanillaCustomizationItem(m.getValue(), sec, false), this);
 			this.customElements.put(m.getKey(), e);
+			this.content.add(e);
+			e.container.onResetElement();
+			e.container.element.setHandler(this.ingameHud);
+		}
+
+		//Custom vanilla element handling (new API)
+		for (VanillaHudElementContainer c : VanillaHudElementRegistry.getElements()) {
+			VanillaLayoutEditorElement e = new VanillaLayoutEditorElement(c, new SimpleVanillaCustomizationItem(c, sec, false), this);
 			this.content.add(e);
 			e.container.onResetElement();
 			e.container.element.setHandler(this.ingameHud);
@@ -467,7 +480,7 @@ public class LayoutEditorScreen extends Screen {
 		
 	}
 
-//	protected void renderVanillaButtons(PoseStack matrix, int mouseX, int mouseY) {
+//	protected void renderVanillaButtons(MatrixStack matrix, int mouseX, int mouseY) {
 //		for (LayoutElement l : this.vanillaButtonContent) {
 //			if (!this.isHidden(l)) {
 //				if (!this.isFocused(l)) {

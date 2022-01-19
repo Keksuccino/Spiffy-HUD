@@ -66,15 +66,15 @@ public class CrosshairHudElement extends IngameHudElement {
 
 					if (this.crosshairTexture == null) {
 						Camera camera = this.mc.gameRenderer.getCamera();
-						MatrixStack posestack = RenderSystem.getModelViewStack();
-						posestack.push();
-						posestack.translate((float)this.x, (float)this.y, (float)this.getZOffset());
-						posestack.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(camera.getPitch()));
-						posestack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(camera.getYaw()));
-						posestack.scale(-1.0F, -1.0F, -1.0F);
+						MatrixStack MatrixStack = RenderSystem.getModelViewStack();
+						MatrixStack.push();
+						MatrixStack.translate((float)this.x, (float)this.y, (float)this.getZOffset());
+						MatrixStack.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(camera.getPitch()));
+						MatrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(camera.getYaw()));
+						MatrixStack.scale(-1.0F, -1.0F, -1.0F);
 						RenderSystem.applyModelViewMatrix();
 						RenderSystem.renderCrosshair(10);
-						posestack.pop();
+						MatrixStack.pop();
 						RenderSystem.applyModelViewMatrix();
 					} else {
 						this.renderCustomCrosshair(matrix);

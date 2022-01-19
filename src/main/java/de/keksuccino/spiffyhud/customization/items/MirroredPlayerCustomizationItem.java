@@ -100,14 +100,14 @@ public class MirroredPlayerCustomizationItem extends CustomizationItemBase {
     public void renderPlayerEntity(int posX, int posY, float scale, float mouseX, float mouseY, LivingEntity player,  MirroredPlayerCustomizationItem item) {
         float f = (float)Math.atan((mouseX / 40.0F));
         float f1 = (float)Math.atan((mouseY / 40.0F));
-        MatrixStack posestack = RenderSystem.getModelViewStack();
-        posestack.push();
-        posestack.translate(posX, posY, 1050.0D);
-        posestack.scale(1.0F, 1.0F, -1.0F);
+        MatrixStack MatrixStack = RenderSystem.getModelViewStack();
+        MatrixStack.push();
+        MatrixStack.translate(posX, posY, 1050.0D);
+        MatrixStack.scale(1.0F, 1.0F, -1.0F);
         RenderSystem.applyModelViewMatrix();
-        MatrixStack posestack1 = new MatrixStack();
-        posestack1.translate(0.0D, 0.0D, 1000.0D);
-        posestack1.scale(scale, scale, scale);
+        MatrixStack MatrixStack1 = new MatrixStack();
+        MatrixStack1.translate(0.0D, 0.0D, 1000.0D);
+        MatrixStack1.scale(scale, scale, scale);
         Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
         Quaternion quaternion1;
         if (item.autoRotatePlayer) {
@@ -116,7 +116,7 @@ public class MirroredPlayerCustomizationItem extends CustomizationItemBase {
             quaternion1 = Vec3f.POSITIVE_X.getDegreesQuaternion(item.bodyRotationY);
         }
         quaternion.hamiltonProduct(quaternion1);
-        posestack1.multiply(quaternion);
+        MatrixStack1.multiply(quaternion);
         float f2 = player.bodyYaw;
         float f3 = player.getYaw();
         float f4 = player.getPitch();
@@ -142,7 +142,7 @@ public class MirroredPlayerCustomizationItem extends CustomizationItemBase {
         entityrenderdispatcher.setRenderShadows(false);
         VertexConsumerProvider.Immediate bufferSource = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
         RenderSystem.runAsFancy(() -> {
-            entityrenderdispatcher.render(player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, posestack1, bufferSource, 15728880);
+            entityrenderdispatcher.render(player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, MatrixStack1, bufferSource, 15728880);
         });
         bufferSource.draw();
         entityrenderdispatcher.setRenderShadows(true);
@@ -151,7 +151,7 @@ public class MirroredPlayerCustomizationItem extends CustomizationItemBase {
         player.setPitch(f4);
         player.prevHeadYaw = f5;
         player.headYaw = f6;
-        posestack.pop();
+        MatrixStack.pop();
         RenderSystem.applyModelViewMatrix();
         DiffuseLighting.enableGuiDepthLighting();
     }

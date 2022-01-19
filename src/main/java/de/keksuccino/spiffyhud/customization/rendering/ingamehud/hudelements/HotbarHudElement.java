@@ -118,21 +118,21 @@ public class HotbarHudElement extends IngameHudElement {
 
 	private void renderSlot(int x, int y, float partial, PlayerEntity player, ItemStack stack, int slot) {
 		if (!stack.isEmpty()) {
-			MatrixStack posestack = RenderSystem.getModelViewStack();
+			MatrixStack MatrixStack = RenderSystem.getModelViewStack();
 			float f = (float)stack.getBobbingAnimationTime() - partial;
 			if (f > 0.0F) {
 				float f1 = 1.0F + f / 5.0F;
-				posestack.push();
-				posestack.translate((x + 8), (y + 12), 0.0D);
-				posestack.scale(1.0F / f1, (f1 + 1.0F) / 2.0F, 1.0F);
-				posestack.translate((-(x + 8)), (-(y + 12)), 0.0D);
+				MatrixStack.push();
+				MatrixStack.translate((x + 8), (y + 12), 0.0D);
+				MatrixStack.scale(1.0F / f1, (f1 + 1.0F) / 2.0F, 1.0F);
+				MatrixStack.translate((-(x + 8)), (-(y + 12)), 0.0D);
 				RenderSystem.applyModelViewMatrix();
 			}
 
 			this.mc.getItemRenderer().renderInGuiWithOverrides(player, stack, x, y, slot);
 			RenderSystem.setShader(GameRenderer::getPositionColorShader);
 			if (f > 0.0F) {
-				posestack.pop();
+				MatrixStack.pop();
 				RenderSystem.applyModelViewMatrix();
 			}
 

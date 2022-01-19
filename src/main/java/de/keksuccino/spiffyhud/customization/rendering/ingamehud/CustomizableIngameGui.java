@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.keksuccino.konkrete.reflection.ReflectionHelper;
+import de.keksuccino.spiffyhud.api.hud.v2.SimpleVanillaCustomizationItem;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaHudElementContainer;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaHudElementRegistry;
 import de.keksuccino.spiffyhud.events.hud.*;
 import de.keksuccino.spiffyhud.mixin.client.IMixinInGameHud;
 import net.minecraft.client.MinecraftClient;
@@ -312,6 +315,7 @@ public class CustomizableIngameGui extends InGameHud {
 
 						/** ################## CUSTOM VANILLA ELEMENTS ################## **/
 
+						//Deprecated (old API)
 						if (action.startsWith("edit_")) {
 
 							String id = action.split("[_]", 2)[1];
@@ -323,6 +327,24 @@ public class CustomizableIngameGui extends InGameHud {
 								this.backgroundElements.add(new CustomVanillaCustomizationItem(c, sec, isSecond));
 								if (!customElementsSet.contains(id)) {
 									customElementsSet.add(id);
+								}
+
+							}
+
+						}
+
+						//Custom vanilla HUD element handling (new API)
+						if (action.startsWith("custom_vanilla_layout_element:")) {
+
+							String identifier = action.split("[:]", 2)[1];
+							VanillaHudElementContainer c = VanillaHudElementRegistry.getElement(identifier);
+							boolean isSecond = customElementsSet.contains(identifier);
+
+							if (c != null) {
+
+								this.backgroundElements.add(new SimpleVanillaCustomizationItem(c, sec, isSecond));
+								if (!customElementsSet.contains(identifier)) {
+									customElementsSet.add(identifier);
 								}
 
 							}
@@ -485,6 +507,7 @@ public class CustomizableIngameGui extends InGameHud {
 
 						/** ################## CUSTOM ITEMS ################## **/
 
+						//DEPRECATED (OLD API)
 						if (action.startsWith("add_")) {
 							String id = action.split("[_]", 2)[1];
 							CustomizationItemContainer c = CustomizationItemRegistry.getInstance().getElement(id);
@@ -497,6 +520,21 @@ public class CustomizableIngameGui extends InGameHud {
 									foregroundElements.add(i);
 								}
 
+							}
+						}
+
+						//NEW API
+						/** CUSTOM ITEMS (API) **/
+						if (action.startsWith("custom_layout_element:")) {
+							String cusId = action.split("[:]", 2)[1];
+							de.keksuccino.spiffyhud.api.item.v2.CustomizationItemContainer cusItem = de.keksuccino.spiffyhud.api.item.v2.CustomizationItemRegistry.getItem(cusId);
+							if (cusItem != null) {
+								de.keksuccino.spiffyhud.api.item.v2.CustomizationItem cusItemInstance = cusItem.constructCustomizedItemInstance(sec);
+								if (renderInBackground) {
+									backgroundElements.add(cusItemInstance);
+								} else {
+									foregroundElements.add(cusItemInstance);
+								}
 							}
 						}
 
@@ -548,10 +586,18 @@ public class CustomizableIngameGui extends InGameHud {
 				this.backgroundElements.add(new SidebarCustomizationItem(this.sidebarElement, dummySec, false));
 			}
 
+			//Deprecated (old API)
 			for (Map.Entry<String, HudElementContainer> m : this.customElements.entrySet()) {
 				HudElementContainer c = m.getValue();
 				if (!customElementsSet.contains(c.elementIdentifier)) {
 					this.backgroundElements.add(new CustomVanillaCustomizationItem(c, dummySec, false));
+				}
+			}
+
+			//Custom vanilla HUD element handling (new API)
+			for (VanillaHudElementContainer c : VanillaHudElementRegistry.getElements()) {
+				if (!customElementsSet.contains(c.getIdentifier())) {
+					this.backgroundElements.add(new SimpleVanillaCustomizationItem(c, dummySec, false));
 				}
 			}
 
@@ -619,8 +665,13 @@ public class CustomizableIngameGui extends InGameHud {
 	}
 
 	public void renderCustomVanillaElements(MatrixStack matrix, float partialTicks) {
+		//Deprecated (old API)
 		for (Map.Entry<String, HudElementContainer> m : this.customElements.entrySet()) {
 			m.getValue().element.render(matrix, hud.getScaledWidth(), hud.getScaledHeight(), partialTicks);
+		}
+		//New API
+		for (VanillaHudElementContainer c : VanillaHudElementRegistry.getElements()) {
+			c.element.render(matrix, hud.getScaledWidth(), hud.getScaledHeight(), partialTicks);
 		}
 	}
 

@@ -37,7 +37,7 @@ public class PotionIconsHudElement extends IngameHudElement {
 
 	}
 
-//	protected void renderPotionIconsRaw(PoseStack matrix) {
+//	protected void renderPotionIconsRaw(MatrixStack matrix) {
 //
 //		Collection<EffectInstance> collection = this.mc.player.getActiveEffects();
 //		if (!collection.isEmpty()) {

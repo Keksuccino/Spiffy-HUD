@@ -10,7 +10,8 @@
     "MixinItemStack",
     "MixinMinecraftServer",
     "MixinMouse",
-    "MixinClientPlayerInteractionManager"
+    "MixinClientPlayerInteractionManager",
+    "MixinDebugHud"
   ],
   "injectors": {
     "defaultRequire": 1

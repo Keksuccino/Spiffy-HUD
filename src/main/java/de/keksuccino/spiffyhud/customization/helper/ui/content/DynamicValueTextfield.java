@@ -1,6 +1,12 @@
 package de.keksuccino.spiffyhud.customization.helper.ui.content;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import de.keksuccino.spiffyhud.api.placeholder.PlaceholderTextContainer;
+import de.keksuccino.spiffyhud.api.placeholder.PlaceholderTextRegistry;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -394,8 +400,8 @@ public class DynamicValueTextfield extends AdvancedTextField {
 		otherMenu.addContent(maxRam);
 		
 		otherMenu.addSeparator();
-		
-		//Custom values without category
+
+		//Deprecated custom placeholder handling (old API)
 		for (DynamicValue v : DynamicValueRegistry.getInstance().getValuesAsList()) {
 			if (v.valueCategory == null) {
 				AdvancedButton customValue = new AdvancedButton(0, 0, 0, 0, v.valueDisplayName, true, (press) -> {
@@ -403,6 +409,20 @@ public class DynamicValueTextfield extends AdvancedTextField {
 				});
 				UIBase.colorizeButton(customValue);
 				otherMenu.addContent(customValue);
+			}
+		}
+
+		//Custom placeholders (API) without category will be added to the Other category (new API)
+		for (PlaceholderTextContainer p : PlaceholderTextRegistry.getPlaceholders()) {
+			if (p.getCategory() == null) {
+				AdvancedButton customPlaceholder = new AdvancedButton(0, 0, 0, 0, p.getDisplayName(), true, (press) -> {
+					this.write(p.getPlaceholder());
+				});
+				String[] desc = p.getDescription();
+				if (desc != null) {
+					customPlaceholder.setDescription(desc);
+				}
+				otherMenu.addContent(customPlaceholder);
 			}
 		}
 		
@@ -414,18 +434,19 @@ public class DynamicValueTextfield extends AdvancedTextField {
 		variableMenu.addContent(otherCategoryButton);
 		
 		variableMenu.addSeparator();
-		
+
+		//Deprecated (old API)
 		/** CUSTOM CATEGORIES **/
 		for (String c : DynamicValueRegistry.getInstance().getCategories()) {
-			
+
 			List<DynamicValue> values = DynamicValueRegistry.getInstance().getValuesForCategory(c);
-			
+
 			if (!values.isEmpty()) {
-				
+
 				FHContextMenu customCategoryMenu = new FHContextMenu();
 				customCategoryMenu.setAutoclose(true);
 				variableMenu.addChild(customCategoryMenu);
-				
+
 				for (DynamicValue v : values) {
 					AdvancedButton customValue = new AdvancedButton(0, 0, 0, 0, v.valueDisplayName, true, (press) -> {
 						this.write(v.getPlaceholder());
@@ -433,16 +454,52 @@ public class DynamicValueTextfield extends AdvancedTextField {
 					UIBase.colorizeButton(customValue);
 					customCategoryMenu.addContent(customValue);
 				}
-				
+
 				AdvancedButton customCategoryButton = new AdvancedButton(0, 0, 0, 0, c, true, (press) -> {
 					customCategoryMenu.setParentButton((AdvancedButton) press);
 					customCategoryMenu.openMenuAt(0, press.y);
 				});
 				UIBase.colorizeButton(customCategoryButton);
 				variableMenu.addContent(customCategoryButton);
-				
+
 			}
-			
+
+		}
+
+		//Custom placeholder handling (new API)
+		/** CUSTOM PLACEHOLDERS WITH CATEGORY (API) **/
+		Map<String, List<PlaceholderTextContainer>> categories = new HashMap<>();
+		for (PlaceholderTextContainer p : PlaceholderTextRegistry.getPlaceholders()) {
+			if (p.getCategory() != null) {
+				List<PlaceholderTextContainer> l = categories.get(p.getCategory());
+				if (l == null) {
+					l = new ArrayList<>();
+					categories.put(p.getCategory(), l);
+				}
+				l.add(p);
+			}
+		}
+		for (Map.Entry<String, List<PlaceholderTextContainer>> m : categories.entrySet()) {
+			FHContextMenu customCategoryMenu = new FHContextMenu();
+			customCategoryMenu.setAutoclose(true);
+			variableMenu.addChild(customCategoryMenu);
+
+			AdvancedButton customCategoryButton = new AdvancedButton(0, 0, 0, 0, m.getKey(), true, (press) -> {
+				customCategoryMenu.setParentButton((AdvancedButton) press);
+				customCategoryMenu.openMenuAt(0, press.y);
+			});
+			variableMenu.addContent(customCategoryButton);
+
+			for (PlaceholderTextContainer p : m.getValue()) {
+				AdvancedButton customPlaceholder = new AdvancedButton(0, 0, 0, 0, p.getDisplayName(), true, (press) -> {
+					this.write(p.getPlaceholder());
+				});
+				String[] desc = p.getDescription();
+				if (desc != null) {
+					customPlaceholder.setDescription(desc);
+				}
+				customCategoryMenu.addContent(customPlaceholder);
+			}
 		}
 
 		/** VARIABLE BUTTON **/

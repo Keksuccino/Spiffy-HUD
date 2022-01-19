@@ -79,7 +79,7 @@ public class CustomHealthBarCustomizationItem extends CustomBarCustomizationItem
 	}
 
 //	@Override
-//	protected void renderBar(PoseStack matrix) {
+//	protected void renderBar(MatrixStack matrix) {
 //
 //		if (this.barTexture == null) {
 //
@@ -129,7 +129,7 @@ public class CustomHealthBarCustomizationItem extends CustomBarCustomizationItem
 //	}
 //
 //	@Override
-//	protected void renderBarBackground(PoseStack matrix) {
+//	protected void renderBarBackground(MatrixStack matrix) {
 //
 //		if (this.backgroundTexture == null) {
 //

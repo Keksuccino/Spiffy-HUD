@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "spiffyhud",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "name": "Spiffy HUD",
   "description": "The spiffiest HUD in the hood! | Spiffy HUD © Copyright 2020-2022 Keksuccino. Spiffy HUD is licensed under DSMSL (DON'T SNATCH MA STUFF LICENSE). See https://github.com/Keksuccino/Spiffy-HUD/blob/main/LICENSE.md for more information about this license.",
   "environment": "client",

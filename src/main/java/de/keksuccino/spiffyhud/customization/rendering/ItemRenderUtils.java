@@ -21,34 +21,45 @@ public class ItemRenderUtils extends DrawableHelper {
 
         if (!stack.isEmpty()) {
 
-            MatrixStack posestack = RenderSystem.getModelViewStack();
+            MatrixStack matrix = RenderSystem.getModelViewStack();
 
+            //-------------------- 1
             //Scale the item element
-            posestack.scale(scale, scale, scale);
+            matrix.push();
+            matrix.scale(scale, scale, scale);
+            RenderSystem.applyModelViewMatrix();
 
             float f = (float)stack.getBobbingAnimationTime() - partial;
             if (f > 0.0F) {
                 float f1 = 1.0F + f / 5.0F;
-                posestack.push();
-                posestack.translate((x + 8), (y + 12), 0.0D);
-                posestack.scale(1.0F / f1, (f1 + 1.0F) / 2.0F, 1.0F);
-                posestack.translate((-(x + 8)), (-(y + 12)), 0.0D);
+                matrix.push();
+                matrix.translate((x + 8), (y + 12), 0.0D);
+                matrix.scale(1.0F / f1, (f1 + 1.0F) / 2.0F, 1.0F);
+                matrix.translate((-(x + 8)), (-(y + 12)), 0.0D);
                 RenderSystem.applyModelViewMatrix();
             }
 
             //Renders the actual item and effects(?)
-            mc.getItemRenderer().renderInGui(stack, x, y);
+            mc.getItemRenderer().renderInGuiWithOverrides(stack, x, y);
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             if (f > 0.0F) {
-                posestack.pop();
+                matrix.pop();
                 RenderSystem.applyModelViewMatrix();
             }
 
+            matrix.pop();
+            RenderSystem.applyModelViewMatrix();
+            //-------------------- 1 end
+
+            //-------------------- 2
             //Renders the stack size and durab bar
-            posestack.push();
-            posestack.scale(scale, scale, scale);
+            matrix.push();
+            matrix.scale(scale, scale, scale);
             mc.getItemRenderer().renderGuiItemOverlay(mc.textRenderer, stack, x, y);
-            posestack.pop();
+            RenderSystem.applyModelViewMatrix();
+            matrix.pop();
+            RenderSystem.applyModelViewMatrix();
+            //-------------------- 2 end
 
         }
 
