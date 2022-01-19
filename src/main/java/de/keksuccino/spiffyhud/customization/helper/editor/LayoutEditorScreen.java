@@ -16,6 +16,10 @@ import de.keksuccino.spiffyhud.api.hud.CustomVanillaCustomizationItem;
 import de.keksuccino.spiffyhud.api.hud.CustomVanillaLayoutElement;
 import de.keksuccino.spiffyhud.api.hud.HudElementContainer;
 import de.keksuccino.spiffyhud.api.hud.HudElementRegistry;
+import de.keksuccino.spiffyhud.api.hud.v2.SimpleVanillaCustomizationItem;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaHudElementContainer;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaHudElementRegistry;
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaLayoutEditorElement;
 import de.keksuccino.spiffyhud.api.item.CustomizationItem;
 import de.keksuccino.spiffyhud.api.item.CustomizationItemContainer;
 import de.keksuccino.spiffyhud.api.item.CustomizationItemLayoutElement;
@@ -146,7 +150,8 @@ public class LayoutEditorScreen extends Screen {
 	protected SelectedItemNameLayoutElement selectedItemNameLayoutElement;
 	protected OverlayMessageLayoutElement overlayMessageLayoutElement;
 	protected SidebarLayoutElement sidebarLayoutElement;
-	
+
+	//Deprecated
 	protected Map<String, CustomVanillaLayoutElement> customElements = new HashMap<String, CustomVanillaLayoutElement>(); 
 	
 	public LayoutEditorScreen() {
@@ -191,10 +196,19 @@ public class LayoutEditorScreen extends Screen {
 		this.content.add(this.overlayMessageLayoutElement);
 		this.content.add(this.sidebarLayoutElement);
 		
-		//Custom vanilla elements
+		//Deprecated custom vanilla HUD element handling (old API)
 		for (Map.Entry<String, HudElementContainer> m : HudElementRegistry.getInstance().getElements().entrySet()) {
 			CustomVanillaLayoutElement e = new CustomVanillaLayoutElement(m.getValue(), new CustomVanillaCustomizationItem(m.getValue(), sec, false), this);
 			this.customElements.put(m.getKey(), e);
+			this.content.add(e);
+			e.container.onResetElement();
+			e.container.element.setHandler(this.ingameHud);
+		}
+
+		//TODO übernehmen
+		//Custom vanilla element handling (new API)
+		for (VanillaHudElementContainer c : VanillaHudElementRegistry.getElements()) {
+			VanillaLayoutEditorElement e = new VanillaLayoutEditorElement(c, new SimpleVanillaCustomizationItem(c, sec, false), this);
 			this.content.add(e);
 			e.container.onResetElement();
 			e.container.element.setHandler(this.ingameHud);

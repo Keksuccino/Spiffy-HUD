@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 import com.google.common.io.Files;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import de.keksuccino.spiffyhud.api.item.CustomizationItemContainer;
 import de.keksuccino.spiffyhud.api.item.CustomizationItemRegistry;
+import de.keksuccino.spiffyhud.api.item.v2.CustomizationItemContainer;
 import de.keksuccino.spiffyhud.customization.CustomizationHandler;
 import de.keksuccino.spiffyhud.customization.CustomizationPropertiesHandler;
 import de.keksuccino.spiffyhud.customization.helper.CustomizationHelperScreen;
@@ -865,14 +865,29 @@ public class LayoutEditorUI extends UIBase {
 
 			this.addSeparator();
 			
-			/** CUSTOM ITEMS **/
-			for (CustomizationItemContainer c : CustomizationItemRegistry.getInstance().getElements().values()) {
+			/** CUSTOM ITEMS **/ //############ DEPRECATED (OLD API)
+			for (de.keksuccino.spiffyhud.api.item.CustomizationItemContainer c : CustomizationItemRegistry.getInstance().getElements().values()) {
 				
 				AdvancedButton newCustomItemButton = new AdvancedButton(0, 0, 0, 20, c.displayName, (press) -> {
 					this.parent.addCustomItem(c);
 				});
 				this.addContent(newCustomItemButton);
 				
+			}
+
+			//TODO übernehmen
+			/** CUSTOM ITEMS (API) **/ //############ NEW API
+			for (CustomizationItemContainer c : de.keksuccino.spiffyhud.api.item.v2.CustomizationItemRegistry.getItems()) {
+
+				AdvancedButton cusItemButton = new AdvancedButton(0, 0, 0, 20, c.getDisplayName(), (press) -> {
+					this.parent.addContent(c.constructEditorElementInstance(c.constructDefaultItemInstance(), this.parent));
+				});
+				String[] desc = c.getDescription();
+				if ((desc != null) && (desc.length > 0)) {
+					cusItemButton.setDescription(desc);
+				}
+				this.addContent(cusItemButton);
+
 			}
 			
 			super.openMenuAt(x, y, screenWidth, screenHeight);

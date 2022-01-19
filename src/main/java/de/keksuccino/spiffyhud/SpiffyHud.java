@@ -2,6 +2,11 @@ package de.keksuccino.spiffyhud;
 
 import java.io.File;
 
+import de.keksuccino.spiffyhud.api.hud.v2.VanillaHudElementRegistry;
+import de.keksuccino.spiffyhud.api.hud.v2.example.ExampleVanillaHudElementContainer;
+import de.keksuccino.spiffyhud.api.item.v2.example.ExampleCustomizationItemContainer;
+import de.keksuccino.spiffyhud.api.placeholder.PlaceholderTextRegistry;
+import de.keksuccino.spiffyhud.api.placeholder.example.ExamplePlaceholderTextContainer;
 import de.keksuccino.spiffyhud.customization.items.visibilityrequirements.VisibilityRequirementHandler;
 import net.minecraft.resources.ResourceLocation;
 
@@ -26,8 +31,9 @@ import org.apache.logging.log4j.Logger;
 
 @Mod("spiffyhud")
 public class SpiffyHud {
-	
-	public static final String VERSION = "1.4.3";
+
+	//TODO übernehmen (+ fm version in meta auf 2.5.2)
+	public static final String VERSION = "1.4.4";
 	
 	public static final File HOME_DIR = new File("config/spiffyhud");
 	public static final File CUSTOMIZATION_DIR = new File(HOME_DIR.getPath() + "/customization");
@@ -73,8 +79,6 @@ public class SpiffyHud {
         	}
 			
 			Konkrete.addPostLoadingEvent("spiffyhud", this::onClientSetup);
-			
-//			ExampleCustomDynamicVariables.registerDynamicValues();
 
 //			MinecraftForge.EVENT_BUS.register(new Test());
 
@@ -90,10 +94,12 @@ public class SpiffyHud {
 			initLocals();
         	
         	DynamicValueHelper.init();
-        	
-//        	HudElementRegistry.getInstance().register(new ExampleCustomVanillaElementContainer());
-        	
-//        	CustomizationItemRegistry.getInstance().register(new ExampleCustomizationItemContainer());
+
+//			PlaceholderTextRegistry.registerPlaceholder(new ExamplePlaceholderTextContainer());
+//
+//			de.keksuccino.spiffyhud.api.item.v2.CustomizationItemRegistry.registerItem(new ExampleCustomizationItemContainer());
+//
+//			VanillaHudElementRegistry.registerElement(new ExampleVanillaHudElementContainer());
 	    	
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -145,43 +151,23 @@ public class SpiffyHud {
 		
 		Locals.getLocalsFromDir(f.getPath());
 	}
-	
-	/**
-	 * Gets the {@link IngameHud} instance from which you can get positions and sizes of all vanilla HUD elements and more.<br>
-	 * Useful for modders who want to override vanilla elements while keeping the ability to customize the element via Spiffy HUD.
-	 */
+
+	@Deprecated
 	public static IngameHud getIngameHud() {
 		return IngameHud.getInstance();
 	}
-	
-	/**
-	 * Gets the {@link DynamicValueRegistry} instance that allows you to register your own dynamic (aka. session-specific values) to the mod.<br>
-	 * These can be used in many text-based HUD elements and items.
-	 */
+
+	@Deprecated
 	public static DynamicValueRegistry getDynamicValueRegistry() {
 		return DynamicValueRegistry.getInstance();
 	}
-	
-	/**
-	 * Gets the {@link HudElementRegistry} instance that allows you to register your own <b>vanilla-like</b> elements to the HUD.<br>
-	 * Vanilla-like elements act like normal vanilla HUD elements. They are part of the HUD by default and can be customized using the editor.<br><br>
-	 * 
-	 * <b>NOTE:</b><br>
-	 * Internally, these are called "elements" and stuff you can add to the HUD, like images, are called "items", but they are both called "elements" in the actual mod.<br>
-	 * This was done to not forget that they are different things in the code, even if they look the same in the HUD.
-	 */
+
+	@Deprecated
 	public static HudElementRegistry getHudElementRegistry() {
 		return HudElementRegistry.getInstance();
 	}
-	
-	/**
-	 * Gets the {@link CustomizationItemRegistry} instance that allows you to register your own <b>customization items</b>.<br>
-	 * Customization items are all elements you can add to the HUD, like images, texts and more.<br><br>
-	 * 
-	 * <b>NOTE:</b><br>
-	 * Internally, these are called "items" and vanilla elements are called "elements", but they are both called "elements" in the actual mod.<br>
-	 * This was done to not forget that they are different things in the code, even if they look the same in the HUD.
-	 */
+
+	@Deprecated
 	public static CustomizationItemRegistry getCustomizationItemRegistry() {
 		return CustomizationItemRegistry.getInstance();
 	}

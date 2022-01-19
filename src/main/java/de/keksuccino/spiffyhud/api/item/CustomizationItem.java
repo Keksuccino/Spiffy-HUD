@@ -8,17 +8,20 @@ import de.keksuccino.spiffyhud.customization.helper.ui.content.FHContextMenu;
 import de.keksuccino.spiffyhud.customization.items.CustomizationItemBase;
 import de.keksuccino.konkrete.properties.PropertiesSection;
 
+@Deprecated
 public abstract class CustomizationItem extends CustomizationItemBase {
 
 	public CustomizationItemContainer container;
-	
+
+	@Deprecated
 	public CustomizationItem(PropertiesSection props, CustomizationItemContainer container) {
 		super(props);
 		this.container = container;
 		
 		this.value = this.container.displayName;
 	}
-	
+
+	@Deprecated
 	/**
 	 * Called when the editor gets updated or initialized.<br>
 	 * Can be used to add custom entries to the rightclick context menu of the element and do other stuff that needs to be done on init.
@@ -27,7 +30,8 @@ public abstract class CustomizationItem extends CustomizationItemBase {
 	 * @param rightclickContextMenu The context menu that appears when you rightclick the item in the editor. This menu already contains default actions every item needs and is part of the <b>layoutElement</b>.
 	 */
 	public abstract void onInitEditor(CustomizationItemLayoutElement layoutElement, FHContextMenu rightclickContextMenu);
-	
+
+	@Deprecated
 	/**
 	 * Returns a {@link Map} with the <b>current</b> properties of the customization item.<br>
 	 * This is used by the editor to write the customization properties to the layout file.<br><br>

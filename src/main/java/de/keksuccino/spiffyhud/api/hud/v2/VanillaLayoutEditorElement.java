@@ -1,26 +1,28 @@
-package de.keksuccino.spiffyhud.api.hud;
+//TODO übernehmen
+package de.keksuccino.spiffyhud.api.hud.v2;
+
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.PoseStack;
+import de.keksuccino.konkrete.properties.PropertiesSection;
+import de.keksuccino.spiffyhud.SpiffyHud;
+import de.keksuccino.spiffyhud.api.IngameHud;
+import de.keksuccino.spiffyhud.customization.helper.editor.LayoutEditorScreen;
+import de.keksuccino.spiffyhud.customization.helper.editor.elements.vanilla.VanillaLayoutElement;
+import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
+/**
+ * Layout editor elements can be seen as a holder for the actual vanilla element in the editor.<br>
+ * It allows the user to edit the element. It contains the right-click context menu when right-clicking an element and handlers to move the element and more.
+ */
+public class VanillaLayoutEditorElement extends VanillaLayoutElement {
 
-import de.keksuccino.spiffyhud.SpiffyHud;
-import de.keksuccino.spiffyhud.api.IngameHud;
-import de.keksuccino.spiffyhud.customization.helper.editor.LayoutEditorScreen;
-import de.keksuccino.spiffyhud.customization.helper.editor.elements.vanilla.VanillaLayoutElement;
-import de.keksuccino.konkrete.properties.PropertiesSection;
-import net.minecraft.client.Minecraft;
-
-@Deprecated
-public class CustomVanillaLayoutElement extends VanillaLayoutElement {
-
-	public HudElementContainer container;
-
-	@Deprecated
-	public CustomVanillaLayoutElement(HudElementContainer container, CustomVanillaCustomizationItem object, LayoutEditorScreen handler) {
+	public VanillaHudElementContainer container;
+	
+	public VanillaLayoutEditorElement(VanillaHudElementContainer container, SimpleVanillaCustomizationItem object, LayoutEditorScreen handler) {
 		super(object, handler);
 		this.container = container;
 		this.container.onInitEditor(this, this.rightclickMenu);
@@ -43,8 +45,8 @@ public class CustomVanillaLayoutElement extends VanillaLayoutElement {
 		
 		List<PropertiesSection> l = new ArrayList<PropertiesSection>();
 		PropertiesSection sec = new PropertiesSection("customization");
-		
-		sec.addEntry("action", "edit_" + this.container.elementIdentifier);
+
+		sec.addEntry("action", "custom_vanilla_layout_element:" + this.container.getIdentifier());
 		
 		if (!this.getVanillaObject().isOriginalOrientation) {
 			sec.addEntry("orientation", this.object.orientation);
@@ -78,14 +80,14 @@ public class CustomVanillaLayoutElement extends VanillaLayoutElement {
 	
 	protected void printPropertiesKeyError(String key) {
 		SpiffyHud.LOGGER.error("[SPIFFY HUD] ERROR: CustomVanillaLayoutElement#getProperties():");
-		SpiffyHud.LOGGER.error("Invalid properties key '" + key + "' found for HUD element '" + this.container.elementIdentifier + "'!");
+		SpiffyHud.LOGGER.error("Invalid properties key '" + key + "' found for HUD element '" + this.container.getIdentifier() + "'!");
 		SpiffyHud.LOGGER.error("This key already exists or is reserved by the system and can't be used!");
 	}
 
 	@Override
 	public void resetElement() {
 		PropertiesSection props = new PropertiesSection("customization");
-		this.object = new CustomVanillaCustomizationItem(this.container, props, false);
+		this.object = new SimpleVanillaCustomizationItem(this.container, props, false);
 		this.container.onResetElement();
 	}
 

@@ -16,35 +16,25 @@ import de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements.Sel
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements.TitleHudElement;
 import net.minecraft.client.Minecraft;
 
+@Deprecated
 public class IngameHud {
 	
 	private static IngameHud instance;
-	
-	/**
-	 * Returns the currently active {@link CustomizableIngameGui} instance.<br>
-	 * The editor uses a different instance than the normal HUD.
-	 */
+
+	@Deprecated
 	public CustomizableIngameGui getGui() {
 		if (Minecraft.getInstance().screen instanceof LayoutEditorScreen) {
 			return ((LayoutEditorScreen)Minecraft.getInstance().screen).ingameHud;
 		}
 		return CustomizationHandler.INGAME_GUI;
 	}
-	
-	/**
-	 * If the customization light mode is enabled.<br>
-	 * When light mode is enabled, the vanilla HUD does not get overridden and all vanilla HUD element customizations are disabled.<br>
-	 * In this mode, you can't customize vanilla elements, it's only possible to add customization items like images, text, etc. to the HUD.<br><br>
-	 * 
-	 * <b>If enabled, you don't need to care about getting customized vanilla element positions, as they are all just the default ones.</b>
-	 */
+
+	@Deprecated
 	public boolean isLightModeEnabled() {
 		return CustomizationHandler.isLightModeEnabled();
 	}
-	
-	/**
-	 * The player air bar.
-	 */
+
+	@Deprecated
 	public AirBarHudElement getAirBar() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -52,10 +42,8 @@ public class IngameHud {
 		}
 		return null;
 	}
-	
-	/**
-	 * The player armor bar.
-	 */
+
+	@Deprecated
 	public ArmorBarHudElement getArmorBar() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -63,10 +51,8 @@ public class IngameHud {
 		}
 		return null;
 	}
-	
-	/**
-	 * The boss bar element with <b>all</b> active boss bars.<br>
-	 */
+
+	@Deprecated
 	public BossBarHudElement getBossBarElement() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -74,10 +60,8 @@ public class IngameHud {
 		}
 		return null;
 	}
-	
-	/**
-	 * The crosshair.
-	 */
+
+	@Deprecated
 	public CrosshairHudElement getCrosshair() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -85,10 +69,8 @@ public class IngameHud {
 		}
 		return null;
 	}
-	
-	/**
-	 * The element that contains the player experience bar and the horse jump bar.
-	 */
+
+	@Deprecated
 	public ExperienceJumpBarHudElement getExperienceJumpBar() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -96,10 +78,8 @@ public class IngameHud {
 		}
 		return null;
 	}
-	
-	/**
-	 * The element that contains the player food bar and the mount health bar.
-	 */
+
+	@Deprecated
 	public FoodMountHealthHudElement getFoodMountHealthBar() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -107,10 +87,8 @@ public class IngameHud {
 		}
 		return null;
 	}
-	
-	/**
-	 * The hotbar.
-	 */
+
+	@Deprecated
 	public HotbarHudElement getHotbar() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -118,11 +96,8 @@ public class IngameHud {
 		}
 		return null;
 	}
-	
-	/**
-	 * The overlay/status message element.<br>
-	 * Used to display the "you can only sleep at night" text and more.
-	 */
+
+	@Deprecated
 	public OverlayMessageHudElement getOverlayMessageElement() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -130,10 +105,8 @@ public class IngameHud {
 		}
 		return null;
 	}
-	
-	/**
-	 * The player health bar.
-	 */
+
+	@Deprecated
 	public PlayerHealthHudElement getPlayerHealthBar() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -141,10 +114,8 @@ public class IngameHud {
 		}
 		return null;
 	}
-	
-	/**
-	 * The element that shows the name of the selected hotbar item when switching it.
-	 */
+
+	@Deprecated
 	public SelectedItemNameHudElement getSelectedItemNameElement() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -152,11 +123,8 @@ public class IngameHud {
 		}
 		return null;
 	}
-	
-	/**
-	 * The big (top) line of the title.<br>
-	 * The title is the big message text rendered in the middle of the screen.
-	 */
+
+	@Deprecated
 	public TitleHudElement getTitleElement() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -164,11 +132,8 @@ public class IngameHud {
 		}
 		return null;
 	}
-	
-	/**
-	 * The smaller (bottom) line of the title.<br>
-	 * The title is the big message text rendered in the middle of the screen.
-	 */
+
+	@Deprecated
 	public TitleHudElement getSubTitleElement() {
 		CustomizableIngameGui h = this.getGui();
 		if (h != null) {
@@ -177,6 +142,7 @@ public class IngameHud {
 		return null;
 	}
 
+	@Deprecated
 	public static IngameHud getInstance() {
 		if (instance == null) {
 			instance = new IngameHud();

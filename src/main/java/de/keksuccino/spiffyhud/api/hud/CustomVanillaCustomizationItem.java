@@ -4,10 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.keksuccino.spiffyhud.customization.items.vanilla.VanillaCustomizationItem;
 import de.keksuccino.konkrete.properties.PropertiesSection;
 
+@Deprecated
 public class CustomVanillaCustomizationItem extends VanillaCustomizationItem {
 	
 	public HudElementContainer container;
-	
+
+	@Deprecated
 	public CustomVanillaCustomizationItem(HudElementContainer container, PropertiesSection properties, boolean isSecondItemOfThisType) {
 		super(container.element, container.displayName, properties, isSecondItemOfThisType);
 		

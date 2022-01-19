@@ -2,22 +2,26 @@ package de.keksuccino.spiffyhud.api.item;
 
 import de.keksuccino.konkrete.properties.PropertiesSection;
 
+@Deprecated
 public abstract class CustomizationItemContainer {
 	
 	public final String elementIdentifier;
 	public String displayName;
-	
+
+	@Deprecated
 	public CustomizationItemContainer(String elementIdentifier, String displayName) {
 		this.elementIdentifier = elementIdentifier;
 		this.displayName = displayName;
 	}
-	
+
+	@Deprecated
 	/**
 	 * Called when the button to create a new instance of this item is pressed.<br>
 	 * This is a blank/not customized instance.
 	 */
 	public abstract CustomizationItem createNew();
-	
+
+	@Deprecated
 	/**
 	 * Called to construct an instance of this item using a {@link PropertiesSection} containing customizations for this item.<br>
 	 * This is used to create the customized instances of items you see in the real/final HUD.

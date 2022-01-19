@@ -9,10 +9,12 @@ import de.keksuccino.spiffyhud.customization.helper.editor.LayoutEditorScreen;
 import de.keksuccino.spiffyhud.customization.helper.editor.elements.LayoutElement;
 import de.keksuccino.konkrete.properties.PropertiesSection;
 
+@Deprecated
 public class CustomizationItemLayoutElement extends LayoutElement {
 
 	public CustomizationItemContainer container;
-	
+
+	@Deprecated
 	public CustomizationItemLayoutElement(CustomizationItemContainer container, CustomizationItem elementInstance, LayoutEditorScreen handler) {
 		super(elementInstance, true, handler);
 		this.container = container;
