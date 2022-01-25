@@ -12,6 +12,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 
 import de.keksuccino.spiffyhud.SpiffyHud;
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import de.keksuccino.konkrete.rendering.RenderUtils;
 import net.minecraft.ChatFormatting;
@@ -43,12 +44,20 @@ public class SidebarHudElement extends IngameHudElement {
 	@Override
 	public void render(PoseStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
+		//TODO übernehmen
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("sidebar");
+		//TODO übernehmen
+		this.elementActive = InGameHudOverlay.isElementActive("sidebar");
+
 		if (this.fireEvents) {
 			if (handler.pre(ForgeIngameGui.SCOREBOARD_ELEMENT, matrix)) return;
 		}
 
-		if (this.visible) {
-			this.renderScoreboard(matrix);
+		//TODO übernehmen
+		if (this.renderElement) {
+			if (this.visible) {
+				this.renderScoreboard(matrix);
+			}
 		}
 
 		if (this.fireEvents) {

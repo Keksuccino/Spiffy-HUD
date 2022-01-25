@@ -5,6 +5,7 @@ import java.awt.Color;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import de.keksuccino.konkrete.rendering.RenderUtils;
 import net.minecraft.ChatFormatting;
@@ -32,6 +33,11 @@ public class SelectedItemNameHudElement extends IngameHudElement {
 	@Override
 	public void render(PoseStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
+		//TODO übernehmen
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("selecteditem");
+		//TODO übernehmen
+		this.elementActive = InGameHudOverlay.isElementActive("selecteditem");
+
 		if (this.fireEvents) {
 			if (handler.pre(ForgeIngameGui.ITEM_NAME_ELEMENT, matrix)) return;
 		}
@@ -57,7 +63,11 @@ public class SelectedItemNameHudElement extends IngameHudElement {
 		
 		this.height = this.mc.font.lineHeight;
 		this.width = 20;
-		
+
+		//TODO übernehmen
+		if (!this.renderElement) {
+			return;
+		}
 		if (!this.visible) {
 			return;
 		}

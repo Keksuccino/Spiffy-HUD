@@ -12,6 +12,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import de.keksuccino.konkrete.localization.Locals;
 import de.keksuccino.spiffyhud.SpiffyHud;
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.api.hud.CustomVanillaCustomizationItem;
 import de.keksuccino.spiffyhud.api.hud.CustomVanillaLayoutElement;
 import de.keksuccino.spiffyhud.api.hud.HudElementContainer;
@@ -180,21 +181,59 @@ public class LayoutEditorScreen extends Screen {
 		this.selectedItemNameLayoutElement = new SelectedItemNameLayoutElement(new SelectedItemNameCustomizationItem(this.ingameHud.selectedItemNameElement, sec, false), this);
 		this.overlayMessageLayoutElement = new OverlayMessageLayoutElement(new OverlayMessageCustomizationItem(this.ingameHud.overlayMessageElement, sec, false), this);
 		this.sidebarLayoutElement = new SidebarLayoutElement(new SidebarCustomizationItem(this.ingameHud.sidebarElement, sec, false), this);
-		
-		this.content.add(this.bossBarLayoutElement);
-		this.content.add(this.crosshairLayoutElement);
-		this.content.add(this.experienceBarLayoutElement);
-		this.content.add(this.foodBarLayoutElement);
-		this.content.add(this.hotbarLayoutElement);
-		this.content.add(this.playerHealthBarLayoutElement);
-		this.content.add(this.armorLayoutElement);
-		this.content.add(this.airLayoutElement);
-//		this.content.add(this.potionIconsLayoutElement);
-		this.content.add(this.titleLayoutElement);
-		this.content.add(this.subtitleLayoutElement);
-		this.content.add(this.selectedItemNameLayoutElement);
-		this.content.add(this.overlayMessageLayoutElement);
-		this.content.add(this.sidebarLayoutElement);
+
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("boss")) {
+			this.content.add(this.bossBarLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("crosshair")) {
+			this.content.add(this.crosshairLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("experience")) {
+			this.content.add(this.experienceBarLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("food")) {
+			this.content.add(this.foodBarLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("hotbar")) {
+			this.content.add(this.hotbarLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("playerhealth")) {
+			this.content.add(this.playerHealthBarLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("armor")) {
+			this.content.add(this.armorLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("air")) {
+			this.content.add(this.airLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("title")) {
+			this.content.add(this.titleLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("subtitle")) {
+			this.content.add(this.subtitleLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("selecteditem")) {
+			this.content.add(this.selectedItemNameLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("overlaymessage")) {
+			this.content.add(this.overlayMessageLayoutElement);
+		}
+		//TODO übernehmen
+		if (InGameHudOverlay.isElementActive("sidebar")) {
+			this.content.add(this.sidebarLayoutElement);
+		}
 		
 		//Deprecated custom vanilla HUD element handling (old API)
 		for (Map.Entry<String, HudElementContainer> m : HudElementRegistry.getInstance().getElements().entrySet()) {
@@ -205,7 +244,6 @@ public class LayoutEditorScreen extends Screen {
 			e.container.element.setHandler(this.ingameHud);
 		}
 
-		//TODO übernehmen
 		//Custom vanilla element handling (new API)
 		for (VanillaHudElementContainer c : VanillaHudElementRegistry.getElements()) {
 			VanillaLayoutEditorElement e = new VanillaLayoutEditorElement(c, new SimpleVanillaCustomizationItem(c, sec, false), this);

@@ -1,4 +1,3 @@
-//TODO übernehmen
 package de.keksuccino.spiffyhud.api.item.v2;
 
 import com.mojang.blaze3d.vertex.PoseStack;

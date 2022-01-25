@@ -51,12 +51,13 @@ public class ItemRenderUtils extends GuiComponent {
             RenderSystem.applyModelViewMatrix();
             //-------------------- 1 end
 
+            //TODO übernehmen (kompletten abschnitt 2)
             //-------------------- 2
             //Renders the stack size and durab bar
             matrix.pushPose();
             matrix.scale(scale, scale, scale);
-            mc.getItemRenderer().renderGuiItemDecorations(mc.font, stack, x, y);
             RenderSystem.applyModelViewMatrix();
+            mc.getItemRenderer().renderGuiItemDecorations(mc.font, stack, x, y);
             matrix.popPose();
             RenderSystem.applyModelViewMatrix();
             //-------------------- 2 end

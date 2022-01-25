@@ -4,6 +4,9 @@ import de.keksuccino.spiffyhud.customization.items.CustomizationItemBase;
 import de.keksuccino.spiffyhud.customization.rendering.ItemRenderUtils;
 import de.keksuccino.konkrete.math.MathUtils;
 import de.keksuccino.konkrete.properties.PropertiesSection;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.AirItem;
 import net.minecraft.world.item.Item;
 
@@ -132,6 +135,14 @@ public class VisibilityRequirementContainer {
     public boolean vrShowIfRealTimeSecond = false;
     public List<Integer> vrRealTimeSecond = new ArrayList<Integer>();
     //---------
+    //TODO übernehmen
+    public boolean vrCheckForAbsorption = false;
+    public boolean vrShowIfAbsorption = false;
+    //---------
+    public boolean vrCheckForFullyFrozen = false;
+    public boolean vrShowIfFullyFrozen = false;
+    //---------
+    //--------------------------
 
     public CustomizationItemBase item;
 
@@ -178,7 +189,6 @@ public class VisibilityRequirementContainer {
             }
             String itemType = properties.getEntryValue("vr:value:activeitemtype");
             if (itemType != null) {
-                //TODO enum for item types
                 if (itemType.equals("weapon") || itemType.equals("tool") || itemType.equals("food") || itemType.equals("block") || itemType.equals("potion")) {
                     this.vrCheckForActiveItemType = true;
                     this.vrActiveItemType = itemType;
@@ -576,6 +586,26 @@ public class VisibilityRequirementContainer {
             }
         }
 
+        //TODO übernehmen
+        //VR: Has Absorption
+        String vrStringShowIfAbsorption = properties.getEntryValue("vr:showif:absorption");
+        if (vrStringShowIfAbsorption != null) {
+            this.vrCheckForAbsorption = true;
+            if (vrStringShowIfAbsorption.equalsIgnoreCase("true")) {
+                this.vrShowIfAbsorption = true;
+            }
+        }
+
+        //TODO übernehmen
+        //VR: Is Fully Frozen
+        String vrStringShowIfFullyFrozen = properties.getEntryValue("vr:showif:fullyfrozen");
+        if (vrStringShowIfFullyFrozen != null) {
+            this.vrCheckForFullyFrozen = true;
+            if (vrStringShowIfFullyFrozen.equalsIgnoreCase("true")) {
+                this.vrShowIfFullyFrozen = true;
+            }
+        }
+
     }
 
     public boolean isVisible() {
@@ -621,10 +651,9 @@ public class VisibilityRequirementContainer {
             }
         }
 
-        //VR: Active Item Type
-        if (this.vrCheckForActiveItemType) {
-            //TODO implementieren
-        }
+//        //VR: Active Item Type
+//        if (this.vrCheckForActiveItemType) {
+//        }
 
         //VR: Active Item Name
         if (this.vrCheckForActiveItemName) {
@@ -1017,6 +1046,45 @@ public class VisibilityRequirementContainer {
                 }
             } else {
                 if (this.vrRealTimeSecond.contains(VisibilityRequirementHandler.realTimeSecond)) {
+                    return false;
+                }
+            }
+        }
+
+        //TODO übernehmen
+        //VR: Has Absorption
+        if (this.vrCheckForAbsorption) {
+            LocalPlayer p = Minecraft.getInstance().player;
+            float absorb = 0.0F;
+            if (p != null) {
+                absorb = Mth.ceil(p.getAbsorptionAmount());
+            }
+            boolean b = absorb > 0.0F;
+            if (this.vrShowIfAbsorption) {
+                if (!b) {
+                    return false;
+                }
+            } else {
+                if (b) {
+                    return false;
+                }
+            }
+        }
+
+        //TODO übernehmen
+        //VR: Is Fully Frozen
+        if (this.vrCheckForFullyFrozen) {
+            LocalPlayer p = Minecraft.getInstance().player;
+            boolean b = false;
+            if (p != null) {
+                b = p.isFullyFrozen();
+            }
+            if (this.vrShowIfFullyFrozen) {
+                if (!b) {
+                    return false;
+                }
+            } else {
+                if (b) {
                     return false;
                 }
             }

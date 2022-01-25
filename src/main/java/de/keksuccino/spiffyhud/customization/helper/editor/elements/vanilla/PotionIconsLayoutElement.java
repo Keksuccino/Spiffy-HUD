@@ -44,7 +44,6 @@ public class PotionIconsLayoutElement extends VanillaLayoutElement {
 	
 	@Override
 	public void resetElement() {
-		//TODO
 	}
 
 }

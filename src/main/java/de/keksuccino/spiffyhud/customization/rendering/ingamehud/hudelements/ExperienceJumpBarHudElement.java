@@ -2,6 +2,7 @@ package de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements;
 
 import java.awt.Color;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import org.lwjgl.opengl.GL11;
 
@@ -28,6 +29,11 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 
 	@Override
 	public void render(PoseStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
+
+		//TODO übernehmen
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("experience");
+		//TODO übernehmen
+		this.elementActive = InGameHudOverlay.isElementActive("experience");
 		
 		if (!this.lastLvlColorHex.equals(this.lvlColorHex)) {
 			this.lvlColor = RenderUtils.getColorFromHexString(this.lvlColorHex);
@@ -35,27 +41,33 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 		this.lastLvlColorHex = this.lvlColorHex;
 
 		if (!this.mc.player.isRidingJumpable() && !this.mc.options.hideGui) {
-			
-			if (this.visible) {
-				this.handler.bind(GUI_ICONS_LOCATION);
+
+			//TODO übernehmen
+			if (this.renderElement) {
+				if (this.visible) {
+					this.handler.bind(GUI_ICONS_LOCATION);
+				}
 			}
 
 			if (this.fireEvents) {
 				if (this.handler.pre(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, matrix)) return;
 			}
-			
-			if (this.visible) {
-				
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-				RenderSystem.disableBlend();
 
-				if (mc.gameMode.hasExperience() || this.handler.isEditor()) {
-					this.renderExperienceRaw(matrix);
+			//TODO übernehmen
+			if (this.renderElement) {
+				if (this.visible) {
+
+					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+					RenderSystem.disableBlend();
+
+					if (mc.gameMode.hasExperience() || this.handler.isEditor()) {
+						this.renderExperienceRaw(matrix);
+					}
+
+					RenderSystem.enableBlend();
+					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
 				}
-				
-				RenderSystem.enableBlend();
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-				
 			}
 
 			if (this.fireEvents) {
@@ -65,26 +77,32 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 		}
 
 		if (this.mc.player.isRidingJumpable() && !this.mc.options.hideGui) {
-			
-			if (this.visible) {
-				this.handler.bind(GUI_ICONS_LOCATION);
+
+			//TODO übernehmen
+			if (this.renderElement) {
+				if (this.visible) {
+					this.handler.bind(GUI_ICONS_LOCATION);
+				}
 			}
 
 			if (this.fireEvents) {
 				if (this.handler.pre(ForgeIngameGui.JUMP_BAR_ELEMENT, matrix)) return;
 			}
-			
-			if (this.visible) {
-				
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-				RenderSystem.disableBlend();
 
-				this.renderHorseJumpBarRaw(matrix);
+			//TODO übernehmen
+			if (this.renderElement) {
+				if (this.visible) {
 
-				RenderSystem.enableBlend();
-				mc.getProfiler().pop();
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-				
+					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+					RenderSystem.disableBlend();
+
+					this.renderHorseJumpBarRaw(matrix);
+
+					RenderSystem.enableBlend();
+					mc.getProfiler().pop();
+					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+				}
 			}
 
 			if (this.fireEvents) {

@@ -45,7 +45,6 @@ public class SplashTextCustomizationItem extends CustomizationItemBase {
 	
 	protected static boolean isNewMenu = false;
 	protected boolean isNewMenuThis = false;
-	//TODO lastScreen logik entfernen (eventuell nur aktualisieren, wenn welt verlassen und neu geladen wird)
 	protected static Screen lastScreen = null;
 	
 	public SplashTextCustomizationItem(PropertiesSection item) {

@@ -3,6 +3,7 @@ package de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.gui.ForgeIngameGui;
@@ -23,12 +24,24 @@ public class TitleHudElement extends IngameHudElement {
 	@Override
 	public void render(PoseStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
+		//TODO übernehmen
+		if (this.isSubtitle) {
+			this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("subtitle");
+			this.elementActive = InGameHudOverlay.isElementActive("subtitle");
+		} else {
+			this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("title");
+			this.elementActive = InGameHudOverlay.isElementActive("title");
+		}
+
 		if (this.fireEvents) {
 			if (handler.pre(ForgeIngameGui.TITLE_TEXT_ELEMENT, matrix)) return;
 		}
 
-		if (this.visible) {
-			this.renderTitleRaw(scaledWidth, scaledHeight, partialTicks, matrix);
+		//TODO übernehmen
+		if (this.renderElement) {
+			if (this.visible) {
+				this.renderTitleRaw(scaledWidth, scaledHeight, partialTicks, matrix);
+			}
 		}
 
 		if (this.fireEvents) {

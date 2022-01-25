@@ -69,8 +69,6 @@ public abstract class CustomBarCustomizationItemBase extends CustomizationItemBa
 		
 	}
 
-	//TODO renderBar und renderBackground methoden aus anderen Bar Klassen entfernen, da jetzt in Hauptklasse
-
 	protected void renderBar(PoseStack matrix) {
 
 		if (this.barTexture == null) {
@@ -113,8 +111,6 @@ public abstract class CustomBarCustomizationItemBase extends CustomizationItemBa
 			if (this.direction == BarDirection.DOWN) {
 				blit(matrix, this.getPosX(), this.getPosY(), 0.0F, 0.0F, mainTextureWidth, this.currentPercentWidthHeight, mainTextureWidth, this.height);
 			}
-
-			//TODO endTexture abschneiden, wenn leben < endTexture size, damit es nicht ins negative leben rendert
 
 			if (this.barEndTexture != null) {
 				RenderUtils.bindTexture(this.barEndTexture);

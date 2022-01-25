@@ -7,6 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Vector3f;
 import de.keksuccino.konkrete.rendering.RenderUtils;
 import de.keksuccino.spiffyhud.SpiffyHud;
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import de.keksuccino.konkrete.resources.ExternalTextureResourceLocation;
 import net.minecraft.client.AttackIndicatorStatus;
@@ -40,15 +41,23 @@ public class CrosshairHudElement extends IngameHudElement {
 	@Override
 	public void render(PoseStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
+		//TODO übernehmen
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("crosshair");
+		//TODO übernehmen
+		this.elementActive = InGameHudOverlay.isElementActive("crosshair");
+
 		if (this.fireEvents) {
 			if (this.handler.pre(ForgeIngameGui.CROSSHAIR_ELEMENT, matrix)) return;
 		}
-		
-        if (this.visible) {
-        
-            this.renderCrosshairRaw(matrix);
-            
-        }
+
+		//TODO übernehmen
+		if (this.renderElement) {
+			if (this.visible) {
+
+				this.renderCrosshairRaw(matrix);
+
+			}
+		}
 
         if (this.fireEvents) {
         	this.handler.post(ForgeIngameGui.CROSSHAIR_ELEMENT, matrix);

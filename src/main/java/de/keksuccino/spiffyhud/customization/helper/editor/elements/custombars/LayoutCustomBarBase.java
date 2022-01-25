@@ -43,7 +43,6 @@ public class LayoutCustomBarBase extends LayoutElement {
 						this.getObject().barColorHex = call;
 						this.getObject().updateItem();
 					} else {
-						//TODO error message anzeigen
 					}
 				}
 			});
@@ -66,7 +65,6 @@ public class LayoutCustomBarBase extends LayoutElement {
 						this.getObject().backgroundColorHex = call;
 						this.getObject().updateItem();
 					} else {
-						//TODO error message anzeigen
 					}
 				}
 			});
@@ -95,7 +93,6 @@ public class LayoutCustomBarBase extends LayoutElement {
 							this.getObject().barTexturePath = call;
 							this.getObject().updateItem();
 						} else {
-							//TODO error popup
 						}
 					}
 				}
@@ -124,7 +121,6 @@ public class LayoutCustomBarBase extends LayoutElement {
 							this.getObject().backgroundTexturePath = call;
 							this.getObject().updateItem();
 						} else {
-							//TODO error popup
 						}
 					}
 				}

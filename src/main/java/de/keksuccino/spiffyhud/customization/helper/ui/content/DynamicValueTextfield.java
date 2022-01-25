@@ -412,7 +412,6 @@ public class DynamicValueTextfield extends AdvancedTextField {
 			}
 		}
 
-		//TODO übernehmen
 		//Custom placeholders (API) without category will be added to the Other category (new API)
 		for (PlaceholderTextContainer p : PlaceholderTextRegistry.getPlaceholders()) {
 			if (p.getCategory() == null) {
@@ -467,7 +466,6 @@ public class DynamicValueTextfield extends AdvancedTextField {
 			
 		}
 
-		//TODO übernehmen
 		//Custom placeholder handling (new API)
 		/** CUSTOM PLACEHOLDERS WITH CATEGORY (API) **/
 		Map<String, List<PlaceholderTextContainer>> categories = new HashMap<>();

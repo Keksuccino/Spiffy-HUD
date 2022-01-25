@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import de.keksuccino.konkrete.rendering.RenderUtils;
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.gui.components.spectator.SpectatorGui;
@@ -31,18 +32,26 @@ public class HotbarHudElement extends IngameHudElement {
 	@Override
 	public void render(PoseStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
+		//TODO übernehmen
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("hotbar");
+		//TODO übernehmen
+		this.elementActive = InGameHudOverlay.isElementActive("hotbar");
+
 		if (this.fireEvents) {
 			if (this.handler.pre(ForgeIngameGui.HOTBAR_ELEMENT, matrix)) return;
 		}
 
-		if (this.visible) {
+		//TODO übernehmen
+		if (this.renderElement) {
+			if (this.visible) {
 
-			if (mc.gameMode.getPlayerMode() == GameType.SPECTATOR) {
-				this.spectatorGui.renderHotbar(matrix);
-			} else {
-				this.renderHotbarRaw(matrix, partialTicks);
+				if (mc.gameMode.getPlayerMode() == GameType.SPECTATOR) {
+					this.spectatorGui.renderHotbar(matrix);
+				} else {
+					this.renderHotbarRaw(matrix, partialTicks);
+				}
+
 			}
-
 		}
 
 		if (this.fireEvents) {

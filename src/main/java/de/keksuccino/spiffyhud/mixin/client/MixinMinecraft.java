@@ -17,8 +17,6 @@ public abstract class MixinMinecraft {
 
 	private static boolean ingameGuiUpdated = false;
 
-	//TODO EXPERIMENTAL HUD INJECTION
-
 	@Inject(at = @At(value = "TAIL"), method = "<init>")
 	protected void onConstruct(CallbackInfo info) {
 

@@ -728,3 +728,9 @@ spiffyhud.helper.creator.items.mirroredplayer.rotation.custom.heady = Vertical H
 spiffyhud.helper.creator.items.mirroredplayer.rotation.btn.desc = Set the body and head rotation.
 spiffyhud.helper.creator.items.mirroredplayer.rotation.auto.btn.desc = Player will follow the mouse cursor.
 spiffyhud.helper.creator.items.mirroredplayer.rotation.custom.btn.desc = Set a custom player rotation.
+
+spiffyhud.helper.creator.items.visibilityrequirements.absorption = Has Player Absorption Hearts
+spiffyhud.helper.creator.items.visibilityrequirements.absorption.desc = Check if the player has%n%absorption hearts.
+
+spiffyhud.helper.creator.items.visibilityrequirements.fullyfrozen = Is Player Fully Frozen
+spiffyhud.helper.creator.items.visibilityrequirements.fullyfrozen.desc = Check if the player is%n%fully frozen (powder snow).

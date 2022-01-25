@@ -5,6 +5,7 @@ import java.awt.Color;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import de.keksuccino.konkrete.rendering.RenderUtils;
 import net.minecraft.network.chat.Component;
@@ -26,6 +27,11 @@ public class OverlayMessageHudElement extends IngameHudElement {
 	@Override
 	public void render(PoseStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
+		//TODO übernehmen
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("overlaymessage");
+		//TODO übernehmen
+		this.elementActive = InGameHudOverlay.isElementActive("overlaymessage");
+
 		if (!this.lastColorHex.equals(this.colorHex) && (this.colorHex != null)) {
 			this.color = RenderUtils.getColorFromHexString(this.colorHex);
 		}
@@ -39,7 +45,11 @@ public class OverlayMessageHudElement extends IngameHudElement {
 		
 		this.width = 10;
 		this.height = mc.font.lineHeight;
-		
+
+		//TODO übernehmen
+		if (!this.renderElement) {
+			return;
+		}
 		if (!this.visible) {
 			return;
 		}

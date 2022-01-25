@@ -404,8 +404,7 @@ public class LayoutEditorUI extends UIBase {
 			});
 			renderingOrderButton.setDescription(StringUtils.splitLines(Locals.localize("spiffyhud.helper.editor.properties.renderingorder.desc"), "%n%"));
 			this.addContent(renderingOrderButton);
-			
-			//TODO reimplementieren
+
 //			/** WINDOW SIZE RESTRICTIONS **/
 //			FHContextMenu windowSizeMenu = new FHContextMenu();
 //			windowSizeMenu.setAutoclose(true);
@@ -875,7 +874,6 @@ public class LayoutEditorUI extends UIBase {
 				
 			}
 
-			//TODO übernehmen
 			/** CUSTOM ITEMS (API) **/ //############ NEW API
 			for (CustomizationItemContainer c : de.keksuccino.spiffyhud.api.item.v2.CustomizationItemRegistry.getItems()) {
 

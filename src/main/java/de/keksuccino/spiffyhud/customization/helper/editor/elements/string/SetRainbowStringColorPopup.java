@@ -173,10 +173,8 @@ public class SetRainbowStringColorPopup extends Popup {
 				i.updateRainbowColors();
 				
 			} else {
-				//TODO error popup
 			}
 		} else {
-			//TODO error popup
 		}
 		
 		this.setDisplayed(false);
