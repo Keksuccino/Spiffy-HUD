@@ -2,6 +2,7 @@ package de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements;
 
 import java.awt.Color;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -29,6 +30,9 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
+
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("experience");
+		this.elementActive = InGameHudOverlay.isElementActive("experience");
 		
 		if (!this.lastLvlColorHex.equals(this.lvlColorHex)) {
 			this.lvlColor = RenderUtils.getColorFromHexString(this.lvlColorHex);
@@ -36,27 +40,31 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 		this.lastLvlColorHex = this.lvlColorHex;
 
 		if (CustomizableIngameGui.renderHealth && !CustomizableIngameGui.renderJumpBar) {
-			
-			if (this.visible) {
-				this.handler.bind(GUI_ICONS_LOCATION);
+
+			if (this.renderElement) {
+				if (this.visible) {
+					this.handler.bind(GUI_ICONS_LOCATION);
+				}
 			}
 			
 			if (this.fireEvents) {
 				if (this.handler.pre(ElementType.EXPERIENCE, matrix)) return;
 			}
-			
-			if (this.visible) {
-				
-				RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-				RenderSystem.disableBlend();
 
-				if (mc.playerController.gameIsSurvivalOrAdventure() || this.handler.isEditor()) {
-					this.renderExperienceRaw(matrix);
+			if (this.renderElement) {
+				if (this.visible) {
+
+					RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+					RenderSystem.disableBlend();
+
+					if (mc.playerController.gameIsSurvivalOrAdventure() || this.handler.isEditor()) {
+						this.renderExperienceRaw(matrix);
+					}
+
+					RenderSystem.enableBlend();
+					RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
 				}
-				
-				RenderSystem.enableBlend();
-				RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-				
 			}
 			
 			if (this.fireEvents) {
@@ -64,26 +72,30 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 			}
 			
 		} else if (CustomizableIngameGui.renderJumpBar) {
-			
-			if (this.visible) {
-				this.handler.bind(GUI_ICONS_LOCATION);
+
+			if (this.renderElement) {
+				if (this.visible) {
+					this.handler.bind(GUI_ICONS_LOCATION);
+				}
 			}
 			
 			if (this.fireEvents) {
 				if (this.handler.pre(ElementType.JUMPBAR, matrix)) return;
 			}
-			
-			if (this.visible) {
-				
-				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-				RenderSystem.disableBlend();
 
-				this.renderHorseJumpBarRaw(matrix);
+			if (this.renderElement) {
+				if (this.visible) {
 
-				RenderSystem.enableBlend();
-				mc.getProfiler().endSection();
-				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-				
+					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+					RenderSystem.disableBlend();
+
+					this.renderHorseJumpBarRaw(matrix);
+
+					RenderSystem.enableBlend();
+					mc.getProfiler().endSection();
+					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+				}
 			}
 			
 			if (this.fireEvents) {

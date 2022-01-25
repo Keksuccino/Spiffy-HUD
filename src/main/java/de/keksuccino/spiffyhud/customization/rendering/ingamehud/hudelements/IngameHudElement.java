@@ -20,6 +20,11 @@ public abstract class IngameHudElement extends AbstractGui {
 	public float scale = 1.0F;
 	public float rotation = 0.0F;
 	public float opacity = 1.0F;
+
+	/** Used by the API to prevent element rendering while keeping the element part of the HUD. **/
+	public boolean renderElement = true;
+	/** Used by the API to prevent the element from getting registered, so it will not be part of the HUD and editor. **/
+	public boolean elementActive = true;
 	
 	protected Minecraft mc = Minecraft.getInstance();
 	

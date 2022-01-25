@@ -3,6 +3,7 @@ package de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tags.FluidTags;
@@ -22,6 +23,9 @@ public class AirBarHudElement extends IngameHudElement {
 
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
+
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("air");
+		this.elementActive = InGameHudOverlay.isElementActive("air");
 		
 		this.width = (int) (80 * this.scale);
 		this.height = (int) (9 * this.scale);
@@ -29,9 +33,11 @@ public class AirBarHudElement extends IngameHudElement {
 		if (this.fireEvents) {
 			if (this.handler.pre(ElementType.AIR, matrix)) return;
 		}
-		
-		if (this.visible) {
-			this.renderAirRaw(matrix);
+
+		if (this.renderElement) {
+			if (this.visible) {
+				this.renderAirRaw(matrix);
+			}
 		}
 		
 		if (this.fireEvents) {

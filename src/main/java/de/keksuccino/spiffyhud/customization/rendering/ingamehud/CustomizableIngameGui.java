@@ -11,6 +11,7 @@ import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.api.hud.CustomVanillaCustomizationItem;
 import de.keksuccino.spiffyhud.api.hud.HudElementContainer;
 import de.keksuccino.spiffyhud.api.hud.HudElementRegistry;
@@ -227,80 +228,106 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 
 							/** CROSSHAIR **/
 							if (action.equalsIgnoreCase("editcrosshair")) {
-								this.backgroundElements.add(new CrosshairCustomizationItem(this.crosshairElement, sec, crossSet));
-								crossSet = true;
+								if (InGameHudOverlay.isElementActive("crosshair")) {
+									this.backgroundElements.add(new CrosshairCustomizationItem(this.crosshairElement, sec, crossSet));
+									crossSet = true;
+								}
 							}
 
 							/** BOSS HEALTH **/
 							if (action.equalsIgnoreCase("editbosshealth")) {
-								this.backgroundElements.add(new BossBarCustomizationItem(this.bossBarElement, sec, bossSet));
-								bossSet = true;
+								if (InGameHudOverlay.isElementActive("boss")) {
+									this.backgroundElements.add(new BossBarCustomizationItem(this.bossBarElement, sec, bossSet));
+									bossSet = true;
+								}
 							}
 
 							/** HOTBAR **/
 							if (action.equalsIgnoreCase("edithotbar")) {
-								this.backgroundElements.add(new HotbarCustomizationItem(this.hotbarElement, sec, hotbarSet));
-								hotbarSet = true;
+								if (InGameHudOverlay.isElementActive("hotbar")) {
+									this.backgroundElements.add(new HotbarCustomizationItem(this.hotbarElement, sec, hotbarSet));
+									hotbarSet = true;
+								}
 							}
 
 							/** PLAYER HEALTH BAR **/
 							if (action.equalsIgnoreCase("editplayerhealthbar")) {
-								this.backgroundElements.add(new PlayerHealthBarCustomizationItem(this.healthElement, sec, playerHealthSet));
-								playerHealthSet = true;
+								if (InGameHudOverlay.isElementActive("playerhealth")) {
+									this.backgroundElements.add(new PlayerHealthBarCustomizationItem(this.healthElement, sec, playerHealthSet));
+									playerHealthSet = true;
+								}
 							}
 
 							/** PLAYER FOOD BAR | MOUNT HEALTH BAR **/
 							if (action.equalsIgnoreCase("editplayerfoodbar")) {
-								this.backgroundElements.add(new FoodMountHealthCustomizationItem(this.foodMountHealthElement, sec, foodSet));
-								foodSet = true;
+								if (InGameHudOverlay.isElementActive("food")) {
+									this.backgroundElements.add(new FoodMountHealthCustomizationItem(this.foodMountHealthElement, sec, foodSet));
+									foodSet = true;
+								}
 							}
 
 							/** EXPERIENCE BAR | JUMP BAR **/
 							if (action.equalsIgnoreCase("editexperiencebar")) {
-								this.backgroundElements.add(new ExperienceJumpBarCustomizationItem(this.experienceJumpBarElement, sec, experienceSet));
-								experienceSet = true;
+								if (InGameHudOverlay.isElementActive("experience")) {
+									this.backgroundElements.add(new ExperienceJumpBarCustomizationItem(this.experienceJumpBarElement, sec, experienceSet));
+									experienceSet = true;
+								}
 							}
 
 							/** TITLE **/
 							if (action.equalsIgnoreCase("edittitle")) {
-								this.backgroundElements.add(new TitleCustomizationItem(this.titleElement, sec, titleSet));
-								titleSet = true;
+								if (InGameHudOverlay.isElementActive("title")) {
+									this.backgroundElements.add(new TitleCustomizationItem(this.titleElement, sec, titleSet));
+									titleSet = true;
+								}
 							}
 
 							/** SUBTITLE **/
 							if (action.equalsIgnoreCase("editsubtitle")) {
-								this.backgroundElements.add(new TitleCustomizationItem(this.subtitleElement, sec, subtitleSet));
-								subtitleSet = true;
+								if (InGameHudOverlay.isElementActive("subtitle")) {
+									this.backgroundElements.add(new TitleCustomizationItem(this.subtitleElement, sec, subtitleSet));
+									subtitleSet = true;
+								}
 							}
 
 							/** ARMOR BAR **/
 							if (action.equalsIgnoreCase("editarmorbar")) {
-								this.backgroundElements.add(new ArmorBarCustomizationItem(this.armorBarElement, sec, armorSet));
-								armorSet = true;
+								if (InGameHudOverlay.isElementActive("armor")) {
+									this.backgroundElements.add(new ArmorBarCustomizationItem(this.armorBarElement, sec, armorSet));
+									armorSet = true;
+								}
 							}
 
 							/** AIR BAR **/
 							if (action.equalsIgnoreCase("editairbar")) {
-								this.backgroundElements.add(new AirBarCustomizationItem(this.airBarElement, sec, airSet));
-								airSet = true;
+								if (InGameHudOverlay.isElementActive("air")) {
+									this.backgroundElements.add(new AirBarCustomizationItem(this.airBarElement, sec, airSet));
+									airSet = true;
+								}
 							}
 
 							/** SELECTED ITEM NAME **/
 							if (action.equalsIgnoreCase("editselecteditemname")) {
-								this.backgroundElements.add(new SelectedItemNameCustomizationItem(this.selectedItemNameElement, sec, selectedItemNameSet));
-								selectedItemNameSet = true;
+								if (InGameHudOverlay.isElementActive("selecteditem")) {
+									this.backgroundElements.add(new SelectedItemNameCustomizationItem(this.selectedItemNameElement, sec, selectedItemNameSet));
+									selectedItemNameSet = true;
+								}
 							}
 
 							/** OVERLAY MESSAGE **/
 							if (action.equalsIgnoreCase("editoverlaymessage")) {
-								this.backgroundElements.add(new OverlayMessageCustomizationItem(this.overlayMessageElement, sec, overlayMessageSet));
-								overlayMessageSet = true;
+								if (InGameHudOverlay.isElementActive("overlaymessage")) {
+									this.backgroundElements.add(new OverlayMessageCustomizationItem(this.overlayMessageElement, sec, overlayMessageSet));
+									overlayMessageSet = true;
+								}
 							}
-							
+
 							/** SIDEBAR **/
 							if (action.equalsIgnoreCase("editsidebar")) {
-								this.backgroundElements.add(new SidebarCustomizationItem(this.sidebarElement, sec, sidebarSet));
-								sidebarSet = true;
+								if (InGameHudOverlay.isElementActive("sidebar")) {
+									this.backgroundElements.add(new SidebarCustomizationItem(this.sidebarElement, sec, sidebarSet));
+									sidebarSet = true;
+								}
 							}
 
 						}
@@ -547,43 +574,69 @@ public class CustomizableIngameGui extends ForgeIngameGui {
 			//Add dummy customization items to handle positions of all non-customized elements
 			PropertiesSection dummySec = new PropertiesSection("customization");
 			if (!crossSet) {
-				this.backgroundElements.add(new CrosshairCustomizationItem(this.crosshairElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("crosshair")) {
+					this.backgroundElements.add(new CrosshairCustomizationItem(this.crosshairElement, dummySec, false));
+				}
 			}
 			if (!bossSet) {
-				this.backgroundElements.add(new BossBarCustomizationItem(this.bossBarElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("boss")) {
+					this.backgroundElements.add(new BossBarCustomizationItem(this.bossBarElement, dummySec, false));
+				}
 			}
 			if (!hotbarSet) {
-				this.backgroundElements.add(new HotbarCustomizationItem(this.hotbarElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("hotbar")) {
+					this.backgroundElements.add(new HotbarCustomizationItem(this.hotbarElement, dummySec, false));
+				}
 			}
 			if (!playerHealthSet) {
-				this.backgroundElements.add(new PlayerHealthBarCustomizationItem(this.healthElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("playerhealth")) {
+					this.backgroundElements.add(new PlayerHealthBarCustomizationItem(this.healthElement, dummySec, false));
+				}
 			}
 			if (!foodSet) {
-				this.backgroundElements.add(new FoodMountHealthCustomizationItem(this.foodMountHealthElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("food")) {
+					this.backgroundElements.add(new FoodMountHealthCustomizationItem(this.foodMountHealthElement, dummySec, false));
+				}
 			}
 			if (!experienceSet) {
-				this.backgroundElements.add(new ExperienceJumpBarCustomizationItem(this.experienceJumpBarElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("experience")) {
+					this.backgroundElements.add(new ExperienceJumpBarCustomizationItem(this.experienceJumpBarElement, dummySec, false));
+				}
 			}
 			if (!titleSet) {
-				this.backgroundElements.add(new TitleCustomizationItem(this.titleElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("title")) {
+					this.backgroundElements.add(new TitleCustomizationItem(this.titleElement, dummySec, false));
+				}
 			}
 			if (!subtitleSet) {
-				this.backgroundElements.add(new TitleCustomizationItem(this.subtitleElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("subtitle")) {
+					this.backgroundElements.add(new TitleCustomizationItem(this.subtitleElement, dummySec, false));
+				}
 			}
 			if (!armorSet) {
-				this.backgroundElements.add(new ArmorBarCustomizationItem(this.armorBarElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("armor")) {
+					this.backgroundElements.add(new ArmorBarCustomizationItem(this.armorBarElement, dummySec, false));
+				}
 			}
 			if (!airSet) {
-				this.backgroundElements.add(new AirBarCustomizationItem(this.airBarElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("air")) {
+					this.backgroundElements.add(new AirBarCustomizationItem(this.airBarElement, dummySec, false));
+				}
 			}
 			if (!selectedItemNameSet) {
-				this.backgroundElements.add(new SelectedItemNameCustomizationItem(this.selectedItemNameElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("selecteditem")) {
+					this.backgroundElements.add(new SelectedItemNameCustomizationItem(this.selectedItemNameElement, dummySec, false));
+				}
 			}
 			if (!overlayMessageSet) {
-				this.backgroundElements.add(new OverlayMessageCustomizationItem(this.overlayMessageElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("overlaymessage")) {
+					this.backgroundElements.add(new OverlayMessageCustomizationItem(this.overlayMessageElement, dummySec, false));
+				}
 			}
 			if (!sidebarSet) {
-				this.backgroundElements.add(new SidebarCustomizationItem(this.sidebarElement, dummySec, false));
+				if (InGameHudOverlay.isElementActive("sidebar")) {
+					this.backgroundElements.add(new SidebarCustomizationItem(this.sidebarElement, dummySec, false));
+				}
 			}
 
 			//Deprecated (old API)

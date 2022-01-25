@@ -3,6 +3,7 @@ package de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
@@ -20,6 +21,9 @@ public class ArmorBarHudElement extends IngameHudElement {
 
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
+
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("armor");
+		this.elementActive = InGameHudOverlay.isElementActive("armor");
 		
 		this.width = (int) (80 * this.scale);
 		this.height = (int) (9 * this.scale);
@@ -27,9 +31,11 @@ public class ArmorBarHudElement extends IngameHudElement {
 		if (this.fireEvents) {
 			if (this.handler.pre(ElementType.ARMOR, matrix)) return;
 		}
-		
-		if (this.visible) {
-			this.renderArmorRaw(matrix);
+
+		if (this.renderElement) {
+			if (this.visible) {
+				this.renderArmorRaw(matrix);
+			}
 		}
 		
 		if (this.fireEvents) {

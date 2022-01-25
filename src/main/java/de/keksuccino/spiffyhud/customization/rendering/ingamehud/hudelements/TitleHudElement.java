@@ -3,6 +3,7 @@ package de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import net.minecraft.util.math.MathHelper;
 
@@ -22,10 +23,20 @@ public class TitleHudElement extends IngameHudElement {
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
-		if (this.visible) {
-			
-			this.renderTitleRaw(scaledWidth, scaledHeight, partialTicks, matrix);
-			
+		if (this.isSubtitle) {
+			this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("subtitle");
+			this.elementActive = InGameHudOverlay.isElementActive("subtitle");
+		} else {
+			this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("title");
+			this.elementActive = InGameHudOverlay.isElementActive("title");
+		}
+
+		if (this.renderElement) {
+			if (this.visible) {
+
+				this.renderTitleRaw(scaledWidth, scaledHeight, partialTicks, matrix);
+
+			}
 		}
 
 	}

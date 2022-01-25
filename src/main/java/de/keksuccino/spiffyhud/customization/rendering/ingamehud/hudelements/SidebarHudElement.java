@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.util.Pair;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import de.keksuccino.konkrete.rendering.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -41,8 +42,13 @@ public class SidebarHudElement extends IngameHudElement {
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
-		if (this.visible) {
-			this.renderScoreboard(matrix);
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("sidebar");
+		this.elementActive = InGameHudOverlay.isElementActive("sidebar");
+
+		if (this.renderElement) {
+			if (this.visible) {
+				this.renderScoreboard(matrix);
+			}
 		}
 
 	}

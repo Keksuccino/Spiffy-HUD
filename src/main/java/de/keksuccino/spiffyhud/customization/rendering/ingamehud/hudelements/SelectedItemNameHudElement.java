@@ -5,6 +5,7 @@ import java.awt.Color;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import de.keksuccino.konkrete.rendering.RenderUtils;
 import net.minecraft.client.gui.FontRenderer;
@@ -29,6 +30,9 @@ public class SelectedItemNameHudElement extends IngameHudElement {
 
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
+
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("selecteditem");
+		this.elementActive = InGameHudOverlay.isElementActive("selecteditem");
 		
 		if (!this.lastColorHex.equals(this.colorHex) && (this.colorHex != null)) {
 			this.color = RenderUtils.getColorFromHexString(this.colorHex);
@@ -43,7 +47,10 @@ public class SelectedItemNameHudElement extends IngameHudElement {
 		
 		this.height = this.mc.fontRenderer.FONT_HEIGHT;
 		this.width = 20;
-		
+
+		if (!this.renderElement) {
+			return;
+		}
 		if (!this.visible) {
 			return;
 		}

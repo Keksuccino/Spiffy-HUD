@@ -3,6 +3,7 @@ package de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.SpectatorGui;
@@ -30,18 +31,23 @@ public class HotbarHudElement extends IngameHudElement {
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("hotbar");
+		this.elementActive = InGameHudOverlay.isElementActive("hotbar");
+
 		if (this.fireEvents) {
 			if (this.handler.pre(ElementType.HOTBAR, matrix)) return;
 		}
 
-		if (this.visible) {
+		if (this.renderElement) {
+			if (this.visible) {
 
-			if (mc.playerController.getCurrentGameType() == GameType.SPECTATOR) {
-				this.spectatorGui.func_238528_a_(matrix, partialTicks);
-			} else {
-				this.renderHotbarRaw(matrix, scaledWidth, scaledHeight, partialTicks);
+				if (mc.playerController.getCurrentGameType() == GameType.SPECTATOR) {
+					this.spectatorGui.func_238528_a_(matrix, partialTicks);
+				} else {
+					this.renderHotbarRaw(matrix, scaledWidth, scaledHeight, partialTicks);
+				}
+
 			}
-
 		}
 
 		if (this.fireEvents) {

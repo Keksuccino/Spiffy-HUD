@@ -4,8 +4,11 @@ import de.keksuccino.spiffyhud.customization.items.CustomizationItemBase;
 import de.keksuccino.spiffyhud.customization.rendering.ItemRenderUtils;
 import de.keksuccino.konkrete.math.MathUtils;
 import de.keksuccino.konkrete.properties.PropertiesSection;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.item.AirItem;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +134,9 @@ public class VisibilityRequirementContainer {
     public boolean vrCheckForRealTimeSecond = false;
     public boolean vrShowIfRealTimeSecond = false;
     public List<Integer> vrRealTimeSecond = new ArrayList<Integer>();
+    //---------
+    public boolean vrCheckForAbsorption = false;
+    public boolean vrShowIfAbsorption = false;
     //---------
 
     public CustomizationItemBase item;
@@ -576,6 +582,15 @@ public class VisibilityRequirementContainer {
             }
         }
 
+        //VR: Has Absorption
+        String vrStringShowIfAbsorption = properties.getEntryValue("vr:showif:absorption");
+        if (vrStringShowIfAbsorption != null) {
+            this.vrCheckForAbsorption = true;
+            if (vrStringShowIfAbsorption.equalsIgnoreCase("true")) {
+                this.vrShowIfAbsorption = true;
+            }
+        }
+
     }
 
     public boolean isVisible() {
@@ -1017,6 +1032,25 @@ public class VisibilityRequirementContainer {
                 }
             } else {
                 if (this.vrRealTimeSecond.contains(VisibilityRequirementHandler.realTimeSecond)) {
+                    return false;
+                }
+            }
+        }
+
+        //VR: Has Absorption
+        if (this.vrCheckForAbsorption) {
+            ClientPlayerEntity p = Minecraft.getInstance().player;
+            float absorb = 0.0F;
+            if (p != null) {
+                absorb = MathHelper.ceil(p.getAbsorptionAmount());
+            }
+            boolean b = absorb > 0.0F;
+            if (this.vrShowIfAbsorption) {
+                if (!b) {
+                    return false;
+                }
+            } else {
+                if (b) {
                     return false;
                 }
             }

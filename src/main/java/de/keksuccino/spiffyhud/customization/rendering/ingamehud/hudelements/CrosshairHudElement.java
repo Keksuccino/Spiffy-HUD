@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import de.keksuccino.spiffyhud.logger.Logging;
 import de.keksuccino.konkrete.resources.ExternalTextureResourceLocation;
@@ -40,15 +41,20 @@ public class CrosshairHudElement extends IngameHudElement {
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("crosshair");
+		this.elementActive = InGameHudOverlay.isElementActive("crosshair");
+
 		if (this.fireEvents) {
 			if (this.handler.pre(ElementType.CROSSHAIRS, matrix)) return;
 		}
-		
-        if (this.visible) {
-        
-            this.renderCrosshairRaw(matrix);
-            
-        }
+
+		if (this.renderElement) {
+			if (this.visible) {
+
+				this.renderCrosshairRaw(matrix);
+
+			}
+		}
         
         if (this.fireEvents) {
         	this.handler.post(ElementType.CROSSHAIRS, matrix);

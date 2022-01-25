@@ -604,6 +604,17 @@ public class VisibilityRequirementsPopup extends FHPopup {
         }, worldTimeHourCharFilter, realTimeSecondValuePreset);
         this.requirements.add(realTimeSecond);
 
+        /** Absorption **/
+        String absorptionName = Locals.localize("spiffyhud.helper.creator.items.visibilityrequirements.absorption");
+        String absorptionDesc = Locals.localize("spiffyhud.helper.creator.items.visibilityrequirements.absorption.desc");
+        Requirement absorption = new Requirement(this, absorptionName, absorptionDesc, slotItemNameValueName, c.vrCheckForAbsorption, c.vrShowIfAbsorption,
+                (enabledCallback) -> {
+                    c.vrCheckForAbsorption = enabledCallback;
+                }, (showIfCallback) -> {
+            c.vrShowIfAbsorption = showIfCallback;
+        }, null, null, null);
+        this.requirements.add(absorption);
+
     }
 
     @Override

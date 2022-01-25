@@ -1311,6 +1311,9 @@ public abstract class LayoutElement extends AbstractGui {
 				sec.addEntry("vr:value:realtimesecond", val);
 			}
 		}
+		if (c.vrCheckForAbsorption) {
+			sec.addEntry("vr:showif:absorption", "" + c.vrShowIfAbsorption);
+		}
 
 	}
 
