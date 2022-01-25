@@ -3,6 +3,7 @@ package de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import de.keksuccino.konkrete.rendering.RenderUtils;
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import de.keksuccino.spiffyhud.customization.rendering.ingamehud.CustomizableIngameGui;
 import net.minecraft.client.gui.hud.SpectatorHud;
 import net.minecraft.client.option.AttackIndicator;
@@ -30,14 +31,19 @@ public class HotbarHudElement extends IngameHudElement {
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
-		if (this.visible) {
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("hotbar");
+		this.elementActive = InGameHudOverlay.isElementActive("hotbar");
 
-			if (mc.interactionManager.getCurrentGameMode() == GameMode.SPECTATOR) {
-				this.spectatorGui.renderSpectatorMenu(matrix);
-			} else {
-				this.renderHotbarRaw(matrix, partialTicks);
+		if (this.renderElement) {
+			if (this.visible) {
+
+				if (mc.interactionManager.getCurrentGameMode() == GameMode.SPECTATOR) {
+					this.spectatorGui.renderSpectatorMenu(matrix);
+				} else {
+					this.renderHotbarRaw(matrix, partialTicks);
+				}
+
 			}
-
 		}
 
 	}

@@ -3,10 +3,13 @@ package de.keksuccino.spiffyhud.mixin.client;
 import de.keksuccino.konkrete.Konkrete;
 import de.keksuccino.spiffyhud.events.hud.*;
 import net.minecraft.client.gui.hud.BossBarHud;
+import net.minecraft.client.gui.hud.DebugHud;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.entity.Entity;
 import net.minecraft.scoreboard.ScoreboardObjective;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -18,6 +21,8 @@ import net.minecraft.client.util.math.MatrixStack;
 
 @Mixin(InGameHud.class)
 public class MixinInGameHud {
+
+	@Shadow @Final private DebugHud debugHud;
 
 	private InGameHud hud = (InGameHud)((Object)this);
 	
@@ -51,7 +56,18 @@ public class MixinInGameHud {
 			CustomizationHandler.INGAME_GUI.renderForegroundItems(matrix);
 			
 		}
+
+		//Render debug HUD after all other elements
+		if (MinecraftClient.getInstance().options.debugEnabled) {
+			debugHud.render(matrix);
+		}
 		
+	}
+
+	//Cancel original debug HUD rendering
+	@Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/DebugHud;render(Lnet/minecraft/client/util/math/MatrixStack;)V"), method = "render")
+	private void onRenderDebugHudInRender(DebugHud instance, MatrixStack matrices) {
+		//do nothing
 	}
 
 	//RenderBossBarsEvent Pre + Post

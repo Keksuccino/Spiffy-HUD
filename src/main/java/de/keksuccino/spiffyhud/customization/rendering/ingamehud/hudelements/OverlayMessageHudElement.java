@@ -1,6 +1,8 @@
 package de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements;
 
 import java.awt.Color;
+
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -25,6 +27,9 @@ public class OverlayMessageHudElement extends IngameHudElement {
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
 
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("overlaymessage");
+		this.elementActive = InGameHudOverlay.isElementActive("overlaymessage");
+
 		if (!this.lastColorHex.equals(this.colorHex) && (this.colorHex != null)) {
 			this.color = RenderUtils.getColorFromHexString(this.colorHex);
 		}
@@ -38,7 +43,10 @@ public class OverlayMessageHudElement extends IngameHudElement {
 		
 		this.width = 10;
 		this.height = mc.textRenderer.fontHeight;
-		
+
+		if (!this.renderElement) {
+			return;
+		}
 		if (!this.visible) {
 			return;
 		}

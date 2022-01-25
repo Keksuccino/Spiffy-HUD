@@ -55,8 +55,8 @@ public class ItemRenderUtils extends DrawableHelper {
             //Renders the stack size and durab bar
             matrix.push();
             matrix.scale(scale, scale, scale);
-            mc.getItemRenderer().renderGuiItemOverlay(mc.textRenderer, stack, x, y);
             RenderSystem.applyModelViewMatrix();
+            mc.getItemRenderer().renderGuiItemOverlay(mc.textRenderer, stack, x, y);
             matrix.pop();
             RenderSystem.applyModelViewMatrix();
             //-------------------- 2 end

@@ -1307,6 +1307,12 @@ public abstract class LayoutElement extends DrawableHelper {
 				sec.addEntry("vr:value:realtimesecond", val);
 			}
 		}
+		if (c.vrCheckForAbsorption) {
+			sec.addEntry("vr:showif:absorption", "" + c.vrShowIfAbsorption);
+		}
+		if (c.vrCheckForFullyFrozen) {
+			sec.addEntry("vr:showif:fullyfrozen", "" + c.vrShowIfFullyFrozen);
+		}
 
 	}
 

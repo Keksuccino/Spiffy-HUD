@@ -1,6 +1,8 @@
 package de.keksuccino.spiffyhud.customization.rendering.ingamehud.hudelements;
 
 import java.awt.Color;
+
+import de.keksuccino.spiffyhud.api.InGameHudOverlay;
 import net.minecraft.client.util.math.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -24,6 +26,9 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 
 	@Override
 	public void render(MatrixStack matrix, int scaledWidth, int scaledHeight, float partialTicks) {
+
+		this.renderElement = InGameHudOverlay.isRenderingEnabledForElement("experience");
+		this.elementActive = InGameHudOverlay.isElementActive("experience");
 		
 		if (!this.lastLvlColorHex.equals(this.lvlColorHex)) {
 			this.lvlColor = RenderUtils.getColorFromHexString(this.lvlColorHex);
@@ -31,44 +36,52 @@ public class ExperienceJumpBarHudElement extends IngameHudElement {
 		this.lastLvlColorHex = this.lvlColorHex;
 
 		if (!this.mc.player.hasJumpingMount() && !this.mc.options.hudHidden) {
-			
-			if (this.visible) {
-				this.handler.bind(GUI_ICONS_TEXTURE);
-			}
-			
-			if (this.visible) {
-				
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-				RenderSystem.disableBlend();
 
-				if (mc.interactionManager.hasExperienceBar() || this.handler.isEditor()) {
-					this.renderExperienceRaw(matrix);
+			if (this.renderElement) {
+				if (this.visible) {
+					this.handler.bind(GUI_ICONS_TEXTURE);
 				}
-				
-				RenderSystem.enableBlend();
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-				
+			}
+
+			if (this.renderElement) {
+				if (this.visible) {
+
+					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+					RenderSystem.disableBlend();
+
+					if (mc.interactionManager.hasExperienceBar() || this.handler.isEditor()) {
+						this.renderExperienceRaw(matrix);
+					}
+
+					RenderSystem.enableBlend();
+					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+				}
 			}
 			
 		}
 
 		if (this.mc.player.hasJumpingMount() && !this.mc.options.hudHidden) {
-			
-			if (this.visible) {
-				this.handler.bind(GUI_ICONS_TEXTURE);
+
+			if (this.renderElement) {
+				if (this.visible) {
+					this.handler.bind(GUI_ICONS_TEXTURE);
+				}
 			}
-			
-			if (this.visible) {
-				
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-				RenderSystem.disableBlend();
 
-				this.renderHorseJumpBarRaw(matrix);
+			if (this.renderElement) {
+				if (this.visible) {
 
-				RenderSystem.enableBlend();
-				mc.getProfiler().pop();
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-				
+					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+					RenderSystem.disableBlend();
+
+					this.renderHorseJumpBarRaw(matrix);
+
+					RenderSystem.enableBlend();
+					mc.getProfiler().pop();
+					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+				}
 			}
 			
 		}

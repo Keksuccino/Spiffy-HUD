@@ -6,8 +6,12 @@ import de.keksuccino.konkrete.math.MathUtils;
 import de.keksuccino.konkrete.properties.PropertiesSection;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.AirBlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.MathHelper;
 
 public class VisibilityRequirementContainer {
 
@@ -130,6 +134,12 @@ public class VisibilityRequirementContainer {
     public boolean vrCheckForRealTimeSecond = false;
     public boolean vrShowIfRealTimeSecond = false;
     public List<Integer> vrRealTimeSecond = new ArrayList<Integer>();
+    //---------
+    public boolean vrCheckForAbsorption = false;
+    public boolean vrShowIfAbsorption = false;
+    //---------
+    public boolean vrCheckForFullyFrozen = false;
+    public boolean vrShowIfFullyFrozen = false;
     //---------
 
     public CustomizationItemBase item;
@@ -574,6 +584,24 @@ public class VisibilityRequirementContainer {
             }
         }
 
+        //VR: Has Absorption
+        String vrStringShowIfAbsorption = properties.getEntryValue("vr:showif:absorption");
+        if (vrStringShowIfAbsorption != null) {
+            this.vrCheckForAbsorption = true;
+            if (vrStringShowIfAbsorption.equalsIgnoreCase("true")) {
+                this.vrShowIfAbsorption = true;
+            }
+        }
+
+        //VR: Is Fully Frozen
+        String vrStringShowIfFullyFrozen = properties.getEntryValue("vr:showif:fullyfrozen");
+        if (vrStringShowIfFullyFrozen != null) {
+            this.vrCheckForFullyFrozen = true;
+            if (vrStringShowIfFullyFrozen.equalsIgnoreCase("true")) {
+                this.vrShowIfFullyFrozen = true;
+            }
+        }
+
     }
 
     public boolean isVisible() {
@@ -1015,6 +1043,43 @@ public class VisibilityRequirementContainer {
                 }
             } else {
                 if (this.vrRealTimeSecond.contains(VisibilityRequirementHandler.realTimeSecond)) {
+                    return false;
+                }
+            }
+        }
+
+        //VR: Has Absorption
+        if (this.vrCheckForAbsorption) {
+            ClientPlayerEntity p = MinecraftClient.getInstance().player;
+            float absorb = 0.0F;
+            if (p != null) {
+                absorb = MathHelper.ceil(p.getAbsorptionAmount());
+            }
+            boolean b = absorb > 0.0F;
+            if (this.vrShowIfAbsorption) {
+                if (!b) {
+                    return false;
+                }
+            } else {
+                if (b) {
+                    return false;
+                }
+            }
+        }
+
+        //VR: Is Fully Frozen
+        if (this.vrCheckForFullyFrozen) {
+            ClientPlayerEntity p = MinecraftClient.getInstance().player;
+            boolean b = false;
+            if (p != null) {
+                b = p.isFreezing();
+            }
+            if (this.vrShowIfFullyFrozen) {
+                if (!b) {
+                    return false;
+                }
+            } else {
+                if (b) {
                     return false;
                 }
             }
