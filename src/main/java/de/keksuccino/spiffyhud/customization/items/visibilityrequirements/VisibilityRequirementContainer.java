@@ -1072,7 +1072,7 @@ public class VisibilityRequirementContainer {
             ClientPlayerEntity p = MinecraftClient.getInstance().player;
             boolean b = false;
             if (p != null) {
-                b = p.isFreezing();
+                b = p.isFrozen();
             }
             if (this.vrShowIfFullyFrozen) {
                 if (!b) {

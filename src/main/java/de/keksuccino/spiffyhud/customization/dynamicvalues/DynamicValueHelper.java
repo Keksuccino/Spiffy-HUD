@@ -13,6 +13,7 @@ import de.keksuccino.konkrete.input.StringUtils;
 import de.keksuccino.konkrete.math.MathUtils;
 import de.keksuccino.spiffyhud.api.placeholder.PlaceholderTextContainer;
 import de.keksuccino.spiffyhud.api.placeholder.PlaceholderTextRegistry;
+import de.keksuccino.spiffyhud.utils.WorldUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.impl.game.minecraft.launchwrapper.FabricServerTweaker;
@@ -223,7 +224,7 @@ public class DynamicValueHelper {
 					blockpos = entity.getBlockPos();
 				}
 				if (blockpos != null) {
-					in = in.replace("%biome%", "" + mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(blockpos)));
+					in = in.replace("%biome%", WorldUtils.getCurrentBiomeName());
 				}
 			}
 

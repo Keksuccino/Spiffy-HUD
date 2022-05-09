@@ -36,7 +36,7 @@ public class CpsHandler {
 
 	@SubscribeEvent
 	public void onMouseClick(MouseInputEvent e) {
-		if (MinecraftClient.getInstance().options.keyAttack.isPressed() && (e.action == GLFW.GLFW_PRESS)) {
+		if (MinecraftClient.getInstance().options.attackKey.isPressed() && (e.action == GLFW.GLFW_PRESS)) {
 			currentCps++;
 		}
 	}

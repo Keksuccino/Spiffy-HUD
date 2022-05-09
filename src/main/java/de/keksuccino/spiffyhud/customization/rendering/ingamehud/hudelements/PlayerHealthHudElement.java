@@ -127,7 +127,7 @@ public class PlayerHealthHudElement extends IngameHudElement {
 					marginLeft += 72;
 					//absorption hearts are rendered as wither hearts if effect is active
 					marginLeftAbsorption -= 36;
-				} else if (player.isFreezing() && !this.handler.isEditor()) {
+				} else if (player.isFrozen() && !this.handler.isEditor()) {
 					marginLeft += 126;
 				}
 				float absorbRemaining = absorb;

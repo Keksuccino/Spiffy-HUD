@@ -26,7 +26,7 @@
     "fabricloader": ">=0.12.6",
     "fabric": "*",
     "konkrete": ">=1.3.3",
-	"minecraft": "1.18.x",
+	"minecraft": ">=1.18.2",
     "java": ">=17"
   }
 }
