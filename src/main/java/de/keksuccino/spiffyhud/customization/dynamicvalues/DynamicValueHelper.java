@@ -13,6 +13,7 @@ import de.keksuccino.konkrete.input.StringUtils;
 import de.keksuccino.konkrete.math.MathUtils;
 import de.keksuccino.spiffyhud.api.placeholder.PlaceholderTextContainer;
 import de.keksuccino.spiffyhud.api.placeholder.PlaceholderTextRegistry;
+import de.keksuccino.spiffyhud.utils.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ServerData;
@@ -217,7 +218,7 @@ public class DynamicValueHelper {
 					blockpos = entity.blockPosition();
 				}
 				if (blockpos != null) {
-					in = in.replace("%biome%", "" + mc.level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(mc.level.getBiome(blockpos)));
+					in = in.replace("%biome%", WorldUtils.getCurrentBiomeName());
 				}
 			}
 
