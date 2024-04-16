@@ -16,7 +16,10 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.20.4:2024.04.14@zip")
+    }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
@@ -27,8 +30,9 @@ dependencies {
     modImplementation "maven.modrinth:melody:1.0.1-1.20.1-1.20.4-fabric"
     modImplementation "maven.modrinth:konkrete:1.9.2-1.20.4-fabric"
     modImplementation "maven.modrinth:modmenu:9.0.0"
-    //This will obviously break in-dev, but I just want to compile the frickin build rn and will fix this later
-    implementation "flatdir:fancymenu:3.1.4"
+    //This needs to be modImplementation in-dev and implementation when compiling
+    modImplementation "flatdir:fancymenu:3.1.6.1"
+    //implementation "flatdir:fancymenu:3.1.6"
 }
 
 loom {

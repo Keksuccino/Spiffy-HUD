@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "de.keksuccino.spiffyhud.mixin.mixins.fabric",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "de.keksuccino.spiffyhud.mixin.SpiffyMixinPlugin",
+  "minVersion": "0.8",
+  "refmap": "spiffyhud.refmap.json"
+}
+  
