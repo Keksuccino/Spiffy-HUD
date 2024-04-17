@@ -4,8 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "client.MixinCustomizationOverlay",
-    "client.MixinCustomizationOverlayUI",
-    "client.MixinGui"
+    "client.MixinCustomizationOverlayUI"
   ],
   "mixins": [
   ],

@@ -39,7 +39,7 @@ public class SpiffyMixinPlugin implements IMixinConfigPlugin {
         try {
             Class.forName("de.keksuccino.konkrete.Konkrete", false, SpiffyMixinPlugin.class.getClassLoader());
             return true;
-        } catch (Exception e) {}
+        } catch (Exception ignore) {}
         return false;
     }
 
@@ -47,7 +47,7 @@ public class SpiffyMixinPlugin implements IMixinConfigPlugin {
         try {
             Class.forName("de.keksuccino.fancymenu.FancyMenu", false, SpiffyMixinPlugin.class.getClassLoader());
             return true;
-        } catch (Exception e) {}
+        } catch (Exception ignore) {}
         return false;
     }
 

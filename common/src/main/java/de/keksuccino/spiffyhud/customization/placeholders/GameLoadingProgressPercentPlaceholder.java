@@ -23,7 +23,8 @@ public class GameLoadingProgressPercentPlaceholder extends Placeholder {
 
     @Override
     public String getReplacementFor(DeserializedPlaceholderString dps) {
-        return "" + (int)(MixinCache.cachedCurrentLoadingScreenProgress * 100.0F);
+//        return "" + (int)(MixinCache.cachedCurrentLoadingScreenProgress * 100.0F);
+        return "";
     }
 
     @Override

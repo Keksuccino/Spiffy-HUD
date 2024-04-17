@@ -1,7 +1,6 @@
 package de.keksuccino.spiffyhud.customization.elements.vanillabar;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.keksuccino.spiffyhud.mixin.mixins.common.client.IMixinLoadingOverlay;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
@@ -30,7 +29,7 @@ public class VanillaBarElement extends AbstractElement {
         int h = this.getAbsoluteHeight();
         float currentProgress = 0.5F;
         if (Minecraft.getInstance().getOverlay() instanceof LoadingOverlay) {
-            currentProgress = ((IMixinLoadingOverlay)Minecraft.getInstance().getOverlay()).getCurrentProgressDrippy();
+//            currentProgress = ((IMixinLoadingOverlay)Minecraft.getInstance().getOverlay()).getCurrentProgressDrippy();
         }
 
         RenderSystem.enableBlend();

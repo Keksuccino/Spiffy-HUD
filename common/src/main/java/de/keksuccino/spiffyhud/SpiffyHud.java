@@ -18,7 +18,21 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpiffyHud {
 
+	//TODO HIDE FM MENU BAR WHEN NOT IN "EDIT" MODE
+	//TODO HIDE FM MENU BAR WHEN NOT IN "EDIT" MODE
+	//TODO HIDE FM MENU BAR WHEN NOT IN "EDIT" MODE
+	//TODO HIDE FM MENU BAR WHEN NOT IN "EDIT" MODE
+	//TODO HIDE FM MENU BAR WHEN NOT IN "EDIT" MODE
+
 	//TODO render custom elements ALWAYS behind all default Vanilla elements ( to not cover something important )
+
+	//TODO add option to disable powder snow overlay
+
+	//TODO add option to disable pumpkin head overlay
+
+	//TODO add option to disable vignette
+
+
 
 
 
@@ -48,7 +62,7 @@ public class SpiffyHud {
 
 		if (Services.PLATFORM.isOnClient()) {
 
-			EventHandler.INSTANCE.registerListenersOf(new DrippyEvents());
+			EventHandler.INSTANCE.registerListenersOf(new SpiffyEvents());
 
 			//Register universal identifier for Drippy screen
 			UniversalScreenIdentifierRegistry.register("spiffy_overlay", SpiffyOverlayScreen.class.getName());
