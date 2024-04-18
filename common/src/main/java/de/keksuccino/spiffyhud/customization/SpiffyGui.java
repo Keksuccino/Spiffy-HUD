@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.ScreenCustomization;
 import de.keksuccino.fancymenu.customization.layer.ScreenCustomizationLayer;
 import de.keksuccino.fancymenu.customization.layer.ScreenCustomizationLayerHandler;
+import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.events.screen.*;
 import de.keksuccino.fancymenu.util.event.acara.EventHandler;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
@@ -21,7 +22,7 @@ public class SpiffyGui implements Renderable {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private static boolean initialized = false;
-    private static SpiffyOverlayScreen spiffyOverlayScreen = new SpiffyOverlayScreen();
+    private static SpiffyOverlayScreen spiffyOverlayScreen = new SpiffyOverlayScreen(false);
 
     private int lastScreenWidth = 0;
     private int lastScreenHeight = 0;
@@ -78,6 +79,7 @@ public class SpiffyGui implements Renderable {
     }
 
     private boolean shouldRenderCustomizations() {
+        if (Minecraft.getInstance().screen instanceof LayoutEditorScreen) return false;
         return (spiffyOverlayScreen != null) && (this.getLayer() != null);
     }
 
@@ -94,7 +96,10 @@ public class SpiffyGui implements Renderable {
             int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
             //Re-init overlay on window size change
-            if ((screenWidth != this.lastScreenWidth) || (screenHeight != this.lastScreenHeight)) {
+            if ((screenWidth != this.lastScreenWidth) || (screenHeight != this.lastScreenHeight) || Shared.reInitHudLayouts) {
+                Shared.reInitHudLayouts = false;
+                //TODO remove debug
+                LOGGER.info("################## Window size changed! Re-initializing HUD layouts!");
                 this.initOverlayScreen(true);
             }
             this.lastScreenWidth = screenWidth;
@@ -105,7 +110,7 @@ public class SpiffyGui implements Renderable {
     }
 
     private void setNewOverlayScreen() {
-        spiffyOverlayScreen = new SpiffyOverlayScreen();
+        spiffyOverlayScreen = new SpiffyOverlayScreen(false);
         ScreenCustomizationLayerHandler.registerScreen(spiffyOverlayScreen);
         this.getLayer(); //dummy call to let the method set loadEarly to true
     }
@@ -113,7 +118,7 @@ public class SpiffyGui implements Renderable {
     private void initOverlayScreen(boolean resize) {
         this.runLayerTask(() -> {
             try {
-                RenderingUtils.resetGuiScale();
+                double cachedScale = Minecraft.getInstance().getWindow().getGuiScale();
                 if (!resize) {
                     EventHandler.INSTANCE.postEvent(new OpenScreenEvent(spiffyOverlayScreen));
                 }
@@ -127,6 +132,8 @@ public class SpiffyGui implements Renderable {
                 if (!resize) {
                     EventHandler.INSTANCE.postEvent(new OpenScreenPostInitEvent(spiffyOverlayScreen));
                 }
+                //This is to ignore scale changes applied by Spiffy layouts (because scaling not supported)
+                Minecraft.getInstance().getWindow().setGuiScale(cachedScale);
             } catch (Exception ex) {
                 LOGGER.error("[SPIFFY HUD] Failed to initialize SpiffyOverlayScreen!", ex);
             }

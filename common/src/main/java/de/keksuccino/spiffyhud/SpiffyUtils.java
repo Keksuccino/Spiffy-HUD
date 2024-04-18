@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SpiffyUtils {
 
-    public static final SpiffyOverlayScreen DUMMY_SPIFFY_OVERLAY_SCREEN = new SpiffyOverlayScreen();
+    public static final SpiffyOverlayScreen DUMMY_SPIFFY_OVERLAY_SCREEN = new SpiffyOverlayScreen(false);
 
     public static boolean isSpiffyIdentifier(@Nullable String identifier) {
         if (identifier == null) return false;

@@ -2,6 +2,7 @@ package de.keksuccino.spiffyhud;
 
 import java.io.File;
 import de.keksuccino.fancymenu.customization.layout.LayoutHandler;
+import de.keksuccino.fancymenu.customization.overlay.CustomizationOverlay;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
 import de.keksuccino.spiffyhud.customization.backgrounds.Backgrounds;
 import de.keksuccino.spiffyhud.customization.elements.Elements;
@@ -12,17 +13,14 @@ import de.keksuccino.fancymenu.util.event.acara.EventHandler;
 import de.keksuccino.spiffyhud.platform.Services;
 import de.keksuccino.fancymenu.util.file.FileUtils;
 import de.keksuccino.fancymenu.util.file.GameDirectoryUtils;
+import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 public class SpiffyHud {
 
-	//TODO HIDE FM MENU BAR WHEN NOT IN "EDIT" MODE
-	//TODO HIDE FM MENU BAR WHEN NOT IN "EDIT" MODE
-	//TODO HIDE FM MENU BAR WHEN NOT IN "EDIT" MODE
-	//TODO HIDE FM MENU BAR WHEN NOT IN "EDIT" MODE
-	//TODO HIDE FM MENU BAR WHEN NOT IN "EDIT" MODE
+	//TODO change icon of customization button (is still Drippy icon)
 
 	//TODO render custom elements ALWAYS behind all default Vanilla elements ( to not cover something important )
 
@@ -32,6 +30,20 @@ public class SpiffyHud {
 
 	//TODO add option to disable vignette
 
+	//TODO "Inventory Slot" element (shows the item in slot X)
+	// - Bei "Set Slot" in Tooltip die Slots für Offhand, Armor, etc. packen
+	// - Element ist scalable
+	// - Element kann rotiert werden (falls möglich)
+
+	//TODO "Current Player" element
+	// - Like normal Player Entity element, but mimics the current player in-game player
+	// - Has pose features of normal Player Entity element
+	// - Has "Show Name" toggle
+	// - Is scalable
+
+	//TODO Vanilla HUD elements are NOT editable (move, customize, etc.) except HIDING the element (there are customizable Vanilla-like elements instead)
+
+	//TODO Add Vanilla-Like elements for all Vanilla HUD elements (crosshair, hotbar, scoreboard sidebar, effects overlay, Title (line 1 + 2), etc.)
 
 
 
@@ -81,6 +93,12 @@ public class SpiffyHud {
 
 			//Disable universal layouts for the HUD / Spiffy Overlay
 			LayoutHandler.registerUniversalLayoutInclusionRule(screenIdentifier -> !SpiffyUtils.isSpiffyIdentifier(screenIdentifier));
+
+			//Don't show FancyMenu's customization overlay in the HUD
+			CustomizationOverlay.registerOverlayVisibilityController(screen -> {
+				if (Minecraft.getInstance().screen instanceof SpiffyOverlayScreen s) return s.showFancyMenuOverlay;
+				return true;
+			});
 
 		}
 

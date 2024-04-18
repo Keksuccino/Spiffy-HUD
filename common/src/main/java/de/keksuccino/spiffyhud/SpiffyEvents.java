@@ -1,7 +1,6 @@
 package de.keksuccino.spiffyhud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.keksuccino.fancymenu.FancyMenu;
 import de.keksuccino.fancymenu.customization.overlay.CustomizationOverlay;
 import de.keksuccino.fancymenu.events.screen.InitOrResizeScreenCompletedEvent;
 import de.keksuccino.fancymenu.events.screen.RenderScreenEvent;
@@ -23,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpiffyEvents {
 
-    private static final ResourceLocation EDIT_BUTTON_TEXTURE = new ResourceLocation("drippyloadingscreen", "textures/edit_button.png");
+    private static final ResourceLocation EDIT_BUTTON_TEXTURE = new ResourceLocation("spiffyhud", "textures/edit_button.png");
 
     private ContextMenu spiffyMenu;
     private ExtendedButton spiffyButton;
@@ -31,14 +30,14 @@ public class SpiffyEvents {
     @EventListener
     public void onInitOrResizeScreenCompleted(InitOrResizeScreenCompletedEvent e) {
 
-        if ((e.getScreen() instanceof PauseScreen p) && p.showsPauseMenu() && FancyMenu.getOptions().showCustomizationOverlay.getValue()) {
+        if ((e.getScreen() instanceof PauseScreen p) && p.showsPauseMenu() && CustomizationOverlay.isOverlayVisible(e.getScreen())) {
 
             this.spiffyMenu = new ContextMenu()
                     .setForceDefaultTooltipStyle(true)
                     .setForceUIScale(true);
 
-            this.spiffyMenu.addClickableEntry("customize_loading_screen", Component.translatable("drippyloadingscreen.settings.customize_loading_screen"), (menu, entry) -> {
-                Minecraft.getInstance().setScreen(new SpiffyOverlayScreen());
+            this.spiffyMenu.addClickableEntry("customize_hud", Component.translatable("spiffyhud.edit_hud"), (menu, entry) -> {
+                Minecraft.getInstance().setScreen(new SpiffyOverlayScreen(true));
             }).setIcon(ContextMenu.IconFactory.getIcon("edit"));
 
             this.spiffyMenu.addSeparatorEntry("separator_after_customize");
@@ -76,7 +75,7 @@ public class SpiffyEvents {
 
                     var m = CustomizationOverlay.getCurrentMenuBarInstance();
                     if ((m == null) || (!m.isUserNavigatingInMenuBar() && !spiffyMenu.isUserNavigatingInMenu())) {
-                        TooltipHandler.INSTANCE.addTooltip(Tooltip.of(LocalizationUtils.splitLocalizedLines("drippyloadingscreen.edit_loading_screen.desc")).setDefaultStyle().setScale(UIBase.getUIScale()), () -> this.isHovered, false, true);
+                        TooltipHandler.INSTANCE.addTooltip(Tooltip.of(LocalizationUtils.splitLocalizedLines("spiffyhud.edit_hud.desc")).setDefaultStyle().setScale(UIBase.getUIScale()), () -> this.isHovered, false, true);
                     }
                     if (this.isHoveredOrFocused() || spiffyMenu.isOpen()) {
                         this.setX(-20);
@@ -133,7 +132,7 @@ public class SpiffyEvents {
     @EventListener(priority = 0) //FM is -1
     public void onScreenRenderPost(RenderScreenEvent.Post e) {
 
-        if ((e.getScreen() instanceof PauseScreen p) && p.showsPauseMenu() && FancyMenu.getOptions().showCustomizationOverlay.getValue()) {
+        if ((e.getScreen() instanceof PauseScreen p) && p.showsPauseMenu() && CustomizationOverlay.isOverlayVisible(e.getScreen())) {
             if (this.spiffyButton != null) {
                 this.spiffyButton.render(e.getGraphics(), e.getMouseX(), e.getMouseY(), e.getPartial());
             }

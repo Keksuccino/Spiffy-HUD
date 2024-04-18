@@ -32,7 +32,7 @@ dependencies {
     modImplementation "maven.modrinth:konkrete:1.9.2-1.20.4-fabric"
     modImplementation "maven.modrinth:modmenu:9.0.0"
     //This needs to be modImplementation in-dev and implementation when compiling
-    modImplementation "flatdir:fancymenu:3.1.6.1"
+    modImplementation "flatdir:fancymenu:3.1.6.2"
     //implementation "flatdir:fancymenu:3.1.6"
 }
 

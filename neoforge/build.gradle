@@ -43,7 +43,7 @@ dependencies {
     implementation "maven.modrinth:konkrete:1.9.1-1.20.4-neoforge"
     implementation "maven.modrinth:melody:1.0.5-1.20.4-neoforge"
     //implementation "maven.modrinth:fancymenu:3.1.4-1.20.4-neoforge"
-    implementation "flatdir:fancymenu:3.1.6.1"
+    implementation "flatdir:fancymenu:3.1.6.2"
 }
 
 // NeoGradle compiles the game, but we don't want to add our common code to the game's code
