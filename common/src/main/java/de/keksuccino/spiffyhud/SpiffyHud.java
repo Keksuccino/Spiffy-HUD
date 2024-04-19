@@ -20,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpiffyHud {
 
+	//TODO add placeholders for Attack Indicator progress/percentage ( value between 0.0 and 1.0 )
+
 	//TODO change icon of customization button (is still Drippy icon)
 
 	//TODO render custom elements ALWAYS behind all default Vanilla elements ( to not cover something important )

@@ -3,5 +3,17 @@
   "spiffyhud.edit_hud.desc": "Customize In-Game HUD\n\nThis button is bound to FancyMenu's menu bar.\nYou can hide it by hiding the menu bar.",
   "spiffyhud.elements.dummy.hotbar": "Hotbar",
   "spiffyhud.elements.dummy.experience_bar": "Experience Bar",
-  "spiffyhud.elements.dummy.jump_meter": "Jump Meter"
+  "spiffyhud.elements.dummy.jump_meter": "Jump Meter",
+  "spiffyhud.elements.dummy.selected_item_name": "Selected Item Name",
+  "spiffyhud.elements.dummy.scoreboard_sidebar": "Scoreboard Sidebar",
+  "spiffyhud.elements.dummy.scoreboard_sidebar.title": "Scoreboard",
+  "spiffyhud.elements.dummy.scoreboard_sidebar.line": "Line",
+  "spiffyhud.elements.dummy.food_bar": "Food Bar",
+  "spiffyhud.elements.dummy.armor_bar": "Armor Bar",
+  "spiffyhud.elements.dummy.air_bar": "Air Bar",
+  "spiffyhud.elements.dummy.health_bar": "Health Bar",
+  "spiffyhud.elements.dummy.mount_health_bar": "Mount Health Bar",
+  "spiffyhud.elements.dummy.overlay_message": "Overlay Message",
+  "spiffyhud.elements.dummy.crosshair": "Crosshair",
+  "spiffyhud.elements.dummy.attack_indicator": "Attack Indicator"
 }

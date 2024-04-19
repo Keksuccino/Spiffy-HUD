@@ -29,7 +29,7 @@ public abstract class MixinVanillaWidgetEditorElement extends ButtonEditorElemen
     @Inject(method = "init", at = @At("HEAD"), remap = false)
     private void beforeInit_Spiffy(CallbackInfo info) {
 
-        if (this.isSpiffyHudElement()) {
+        if (this.isSpiffyDummyElement()) {
 
             this.settings.setSkipReInitAfterSettingsChanged(true);
 
@@ -53,7 +53,7 @@ public abstract class MixinVanillaWidgetEditorElement extends ButtonEditorElemen
     //Don't add the "Copy Widget Locator" button to Spiffy's dummy Vanilla elements
     @WrapOperation(method = "init", at = @At(value = "INVOKE", target = "Lde/keksuccino/fancymenu/util/rendering/ui/contextmenu/v2/ContextMenu;addClickableEntryAfter(Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/network/chat/Component;Lde/keksuccino/fancymenu/util/rendering/ui/contextmenu/v2/ContextMenu$ClickableContextMenuEntry$ClickAction;)Lde/keksuccino/fancymenu/util/rendering/ui/contextmenu/v2/ContextMenu$ClickableContextMenuEntry;"), remap = false)
     private @NotNull ContextMenu.ClickableContextMenuEntry<?> wrapAddClickableEntryAfter_Spiffy(ContextMenu instance, @NotNull String addAfterIdentifier, @NotNull String identifier, @NotNull Component label, @NotNull ContextMenu.ClickableContextMenuEntry.ClickAction clickAction, Operation<ContextMenu.ClickableContextMenuEntry<?>> original) {
-        if ("copy_vanilla_widget_locator".equals(identifier) && this.isSpiffyHudElement()) {
+        if ("copy_vanilla_widget_locator".equals(identifier) && this.isSpiffyDummyElement()) {
             ContextMenu.ClickableContextMenuEntry<?> dummyEntry = instance.addClickableEntry(identifier, label, clickAction);
             instance.removeEntry(identifier);
             return dummyEntry;
@@ -62,11 +62,11 @@ public abstract class MixinVanillaWidgetEditorElement extends ButtonEditorElemen
     }
 
     @Unique
-    private boolean isSpiffyHudElement() {
+    private boolean isSpiffyDummyElement() {
         WidgetMeta meta = ((VanillaWidgetElement)this.element).widgetMeta;
         if (meta == null) return false;
         String compId = meta.getUniversalIdentifier();
-        return ((compId != null) && compId.startsWith("spiffy_"));
+        return ((compId != null) && compId.startsWith("spiffy_") && compId.endsWith("_dummy"));
     }
 
 }
