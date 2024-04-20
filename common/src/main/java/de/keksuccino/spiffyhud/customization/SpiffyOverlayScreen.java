@@ -1,5 +1,7 @@
 package de.keksuccino.spiffyhud.customization;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.ScreenCustomization;
@@ -7,15 +9,23 @@ import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.fancymenu.util.rendering.ui.widget.RendererWidget;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.MobEffectTextureManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -23,12 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpiffyOverlayScreen extends Screen {
-
-    //TODO add "Boss Health" dummy
-
-    //TODO add "Title & Subtitle" dummy
-
-    //TODO add "Effects" dummy
 
     //TODO render hotbar version of "Attack Indicator" to crosshair version, so it better shows it represents both versions
 
@@ -40,6 +44,8 @@ public class SpiffyOverlayScreen extends Screen {
     private static final ResourceLocation HOTBAR_SPRITE = new ResourceLocation("hud/hotbar");
     private static final ResourceLocation HOTBAR_SELECTION_SPRITE = new ResourceLocation("hud/hotbar_selection");
     private static final ResourceLocation HOTBAR_OFFHAND_LEFT_SPRITE = new ResourceLocation("hud/hotbar_offhand_left");
+    private static final ResourceLocation HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE = new ResourceLocation("hud/hotbar_attack_indicator_background");
+    private static final ResourceLocation HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE = new ResourceLocation("hud/hotbar_attack_indicator_progress");
     private static final ResourceLocation JUMP_BAR_BACKGROUND_SPRITE = new ResourceLocation("hud/jump_bar_background");
     private static final ResourceLocation JUMP_BAR_PROGRESS_SPRITE = new ResourceLocation("hud/jump_bar_progress");
     private static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = new ResourceLocation("hud/experience_bar_background");
@@ -52,6 +58,9 @@ public class SpiffyOverlayScreen extends Screen {
     private static final ResourceLocation HEART_VEHICLE_FULL_SPRITE = new ResourceLocation("hud/heart/vehicle_full");
     private static final ResourceLocation HEART_PLAYER_CONTAINER_SPRITE = new ResourceLocation("hud/heart/container");
     private static final ResourceLocation HEART_PLAYER_FULL_NORMAL_SPRITE = new ResourceLocation("hud/heart/full");
+    private static final ResourceLocation BOSS_BAR_BACKGROUND_SPRITE = new ResourceLocation("boss_bar/pink_background");
+    private static final ResourceLocation BOSS_BAR_PROGRESS_SPRITE = new ResourceLocation("boss_bar/pink_progress");
+    private static final ResourceLocation EFFECT_BACKGROUND_SPRITE = new ResourceLocation("hud/effect_background");
 
     public final boolean showFancyMenuOverlay;
     private float overlayMessageTime = 60;
@@ -97,6 +106,14 @@ public class SpiffyOverlayScreen extends Screen {
         this.addRenderableWidget(this.buildCrosshairWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.crosshair"));
 
         this.addRenderableWidget(this.buildAttackIndicatorWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.attack_indicator"));
+
+        this.addRenderableWidget(this.buildTitleWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.title"));
+
+        this.addRenderableWidget(this.buildSubtitleWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.subtitle"));
+
+        this.addRenderableWidget(this.buildBossBarWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.boss_bars"));
+
+        this.addRenderableWidget(this.buildEffectsWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.effects"));
 
     }
 
@@ -419,17 +436,15 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderSystem.enableBlend();
 
                     float h = this.overlayMessageTime - partial;
-                    int animatedTextColor = Mth.hsvToRgb(h / 50.0f, 0.7f, 0.6f) & 0xFFFFFF;
-                    int m = 255 << 24 & 0xFF000000;
-
-                    //Render text background
-                    int i = Minecraft.getInstance().options.getBackgroundColor(0.0f);
-                    if (i != 0) {
-                        graphics.fill(textX - 2, textY - 2, textX + messageWidth + 2, textY + font.lineHeight + 2, FastColor.ARGB32.multiply(i, 0xFFFFFF | m));
+                    int animatedTextColor = -1;
+                    try {
+                       animatedTextColor = Mth.hsvToRgb(Math.max(0.0f, h / 50.0f), 0.7f, 0.6f) & 0xFFFFFF;
+                    } catch (Exception ex) {
+                        LOGGER.error("[SPIFFY HUD] Failed to calculate animated overlay message color!", ex);
                     }
 
                     //Render text
-                    graphics.drawString(font, message, textX, textY, animatedTextColor | m);
+                    graphics.drawString(font, message, textX, textY, animatedTextColor);
 
                     //Tick overlay message time here because Screen#tick() doesn't work in the editor
                     if (this.overlayMessageTime > 1) {
@@ -470,11 +485,13 @@ public class SpiffyOverlayScreen extends Screen {
     protected RendererWidget buildAttackIndicatorWidget() {
 
         float attackStrength = 0.5F;
-        int indicatorX = this.width / 2 - 8;
-        int indicatorY = (this.height / 2 - 7 + 16) + 40; // +40 is a custom offset to separate the attack indicator from the crosshair, because it represents both attack indicators (crosshair and hotbar)
+        int indicatorX = (this.width / 2) + 1;
+        int indicatorY = (this.height / 2 - 7 + 16) + 40;
+        int hotIndicatorX = indicatorX - 2 - 18;
+        int hotIndicatorY = indicatorY - 6;
         int progressSpriteWidth = (int)(attackStrength * 17.0f);
 
-        return new RendererWidget(indicatorX, indicatorY, 16, 4,
+        return new RendererWidget(hotIndicatorX, hotIndicatorY, 18 + 2 + 16, 18,
                 (graphics, mouseX, mouseY, partial, x, y, width, height, widget) -> {
 
                     if (!(Minecraft.getInstance().screen instanceof LayoutEditorScreen)) return;
@@ -485,10 +502,181 @@ public class SpiffyOverlayScreen extends Screen {
                     graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE, 16, 4, 0, 0, indicatorX, indicatorY, progressSpriteWidth, 4);
                     RenderSystem.defaultBlendFunc();
 
+                    int hotProgress = 10;
+                    graphics.blitSprite(HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE, hotIndicatorX, hotIndicatorY, 18, 18);
+                    graphics.blitSprite(HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE, 18, 18, 0, 18 - hotProgress, hotIndicatorX, hotIndicatorY + 18 - hotProgress, 18, hotProgress);
+
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
         ).setWidgetIdentifierFancyMenu("spiffy_attack_indicator_dummy");
+
+    }
+
+    protected RendererWidget buildTitleWidget() {
+
+        Font font = Minecraft.getInstance().font;
+        Component title = Component.translatable("spiffyhud.elements.dummy.title");
+        int titleWidth = font.width(title);
+        int totalWidth = titleWidth * 4;
+        int totalHeight = font.lineHeight * 4;
+        int textX = (this.width / 2) - (totalWidth / 2);
+        int textY = (this.height / 2) - (12 * 4);
+
+        return new RendererWidget(textX, textY, totalWidth, totalHeight,
+                (graphics, mouseX, mouseY, partial, x, y, width, height, widget) -> {
+
+                    if (!(Minecraft.getInstance().screen instanceof LayoutEditorScreen)) return;
+                    RenderSystem.enableBlend();
+
+                    graphics.pose().pushPose();
+                    graphics.pose().translate((float)this.width / 2, (float)this.height / 2, 0.0f);
+
+                    RenderSystem.enableBlend();
+
+                    //Render title
+                    graphics.pose().pushPose();
+                    graphics.pose().scale(4.0f, 4.0f, 4.0f);
+                    graphics.drawString(font, title, -titleWidth / 2, -12, -1);
+                    graphics.pose().popPose();
+
+                    graphics.pose().popPose();
+
+                    RenderingUtils.resetShaderColor(graphics);
+
+                }
+        ).setWidgetIdentifierFancyMenu("spiffy_title_dummy");
+
+    }
+
+    protected RendererWidget buildSubtitleWidget() {
+
+        Font font = Minecraft.getInstance().font;
+        Component subtitle = Component.translatable("spiffyhud.elements.dummy.subtitle");
+        int subtitleWidth = font.width(subtitle);
+        int totalWidth = subtitleWidth * 2;
+        int totalHeight = font.lineHeight * 2;
+        int textX = (this.width / 2) - (totalWidth / 2);
+        int textY = (this.height / 2) + (6 * 2);
+
+        return new RendererWidget(textX, textY, totalWidth, totalHeight,
+                (graphics, mouseX, mouseY, partial, x, y, width, height, widget) -> {
+
+                    if (!(Minecraft.getInstance().screen instanceof LayoutEditorScreen)) return;
+                    RenderSystem.enableBlend();
+
+                    graphics.pose().pushPose();
+                    graphics.pose().translate((float)this.width / 2, (float)this.height / 2, 0.0f);
+
+                    RenderSystem.enableBlend();
+
+                    //Render subtitle
+                    graphics.pose().pushPose();
+                    graphics.pose().scale(2.0f, 2.0f, 2.0f);
+                    graphics.drawString(font, subtitle, -subtitleWidth / 2, 6, -1);
+                    graphics.pose().popPose();
+
+                    graphics.pose().popPose();
+
+                    RenderingUtils.resetShaderColor(graphics);
+
+                }
+        ).setWidgetIdentifierFancyMenu("spiffy_subtitle_dummy");
+
+    }
+
+    protected RendererWidget buildBossBarWidget() {
+
+        Font font = Minecraft.getInstance().font;
+        Component bossName = Component.translatable("spiffyhud.elements.dummy.boss_bars.bar");
+        int bossNameWidth = font.width(bossName);
+        int barX = this.width / 2 - 91;
+        int barY = 12;
+        int totalY = barY - 9;
+        int totalHeight = 53;
+
+        return new RendererWidget(barX, totalY, 182, totalHeight,
+                (graphics, mouseX, mouseY, partial, x, y, width, height, widget) -> {
+
+                    if (!(Minecraft.getInstance().screen instanceof LayoutEditorScreen)) return;
+                    RenderSystem.enableBlend();
+
+                    int y2 = barY;
+                    for (int i = 0; i < 3; i++) {
+
+                        //Draw bar
+                        graphics.blitSprite(BOSS_BAR_BACKGROUND_SPRITE, 182, 5, 0, 0, barX, y2, 182, 5);
+                        //Draw progress
+                        graphics.blitSprite(BOSS_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, barX, y2, 182 / 2, 5);
+
+                        int n = this.width / 2 - bossNameWidth / 2;
+                        int o = y2 - 9;
+                        graphics.drawString(font, bossName, n, o, -1);
+
+                        y2 += 10 + font.lineHeight;
+
+                    }
+
+                    RenderingUtils.resetShaderColor(graphics);
+
+                }
+        ).setWidgetIdentifierFancyMenu("spiffy_boss_bars_dummy");
+
+    }
+
+    protected RendererWidget buildEffectsWidget() {
+
+        List<MobEffectInstance> effects = List.of(
+                new MobEffectInstance(MobEffects.HEAL),
+                new MobEffectInstance(MobEffects.FIRE_RESISTANCE),
+                new MobEffectInstance(MobEffects.LUCK),
+                new MobEffectInstance(MobEffects.BAD_OMEN),
+                new MobEffectInstance(MobEffects.CONFUSION));
+        int effectsWidth = 25 * 3;
+        int effectsHeight = 24 + 2 + 24; //two rows
+        int effectsX = this.width - effectsWidth;
+        int effectsY = 1;
+
+        return new RendererWidget(effectsX, effectsY, effectsWidth, effectsHeight,
+                (graphics, mouseX, mouseY, partial, x, y, width, height, widget) -> {
+
+                    if (!(Minecraft.getInstance().screen instanceof LayoutEditorScreen)) return;
+                    RenderSystem.enableBlend();
+
+                    int i = 0;
+                    int j = 0;
+                    MobEffectTextureManager mobEffectTextureManager = Minecraft.getInstance().getMobEffectTextures();
+                    ArrayList<Runnable> list = Lists.newArrayListWithExpectedSize(effects.size());
+                    for (MobEffectInstance mobEffectInstance : Ordering.natural().reverse().sortedCopy(effects)) {
+                        MobEffect mobEffect = mobEffectInstance.getEffect();
+                        if (!mobEffectInstance.showIcon()) continue;
+                        int k = this.width;
+                        int l = 1;
+                        if (mobEffect.isBeneficial()) {
+                            k -= 25 * ++i;
+                        } else {
+                            k -= 25 * ++j;
+                            l += 26;
+                        }
+                        float f = 1.0f;
+                        int n;
+                        graphics.blitSprite(EFFECT_BACKGROUND_SPRITE, k, l, 24, 24);
+                        TextureAtlasSprite textureAtlasSprite = mobEffectTextureManager.get(mobEffect);
+                        n = k;
+                        int o = l;
+                        int finalN = n;
+                        list.add(() -> {
+                            graphics.setColor(1.0f, 1.0f, 1.0f, f);
+                            graphics.blit(finalN + 3, o + 3, 0, 18, 18, textureAtlasSprite);
+                            graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+                        });
+                    }
+                    list.forEach(Runnable::run);
+
+                    RenderingUtils.resetShaderColor(graphics);
+
+                }
+        ).setWidgetIdentifierFancyMenu("spiffy_effects_dummy");
 
     }
 

@@ -15,5 +15,10 @@
   "spiffyhud.elements.dummy.mount_health_bar": "Mount Health Bar",
   "spiffyhud.elements.dummy.overlay_message": "Overlay Message",
   "spiffyhud.elements.dummy.crosshair": "Crosshair",
-  "spiffyhud.elements.dummy.attack_indicator": "Attack Indicator"
+  "spiffyhud.elements.dummy.attack_indicator": "Attack Indicator (Hotbar/Crosshair)",
+  "spiffyhud.elements.dummy.title": "Title",
+  "spiffyhud.elements.dummy.subtitle": "Subtitle",
+  "spiffyhud.elements.dummy.boss_bars": "Boss Bars",
+  "spiffyhud.elements.dummy.boss_bars.bar": "Boss Bar",
+  "spiffyhud.elements.dummy.effects": "Effects"
 }
