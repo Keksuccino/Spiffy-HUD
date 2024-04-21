@@ -9,7 +9,6 @@ import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.fancymenu.util.rendering.ui.widget.RendererWidget;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,9 +22,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -33,8 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpiffyOverlayScreen extends Screen {
-
-    //TODO render hotbar version of "Attack Indicator" to crosshair version, so it better shows it represents both versions
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -143,7 +137,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_hotbar_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.HOTBAR_IDENTIFIER);
 
     }
 
@@ -170,7 +164,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_jump_meter_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.JUMP_METER_IDENTIFIER);
 
     }
 
@@ -208,7 +202,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_experience_bar_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.EXPERIENCE_BAR_IDENTIFIER);
 
     }
 
@@ -232,7 +226,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_selected_item_name_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.SELECTED_ITEM_NAME_IDENTIFIER);
 
     }
 
@@ -299,7 +293,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_scoreboard_sidebar_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.SCOREBOARD_SIDEBAR_IDENTIFIER);
 
     }
 
@@ -323,7 +317,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_food_bar_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.FOOD_BAR_IDENTIFIER);
 
     }
 
@@ -346,7 +340,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_armor_bar_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.ARMOR_BAR_IDENTIFIER);
 
     }
 
@@ -369,7 +363,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_air_bar_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.AIR_BAR_IDENTIFIER);
 
     }
 
@@ -393,7 +387,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_mount_health_bar_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.MOUNT_HEALTH_BAR_IDENTIFIER);
 
     }
 
@@ -417,7 +411,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_health_bar_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.PLAYER_HEALTH_BAR_IDENTIFIER);
 
     }
 
@@ -456,7 +450,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_overlay_message_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.OVERLAY_MESSAGE_IDENTIFIER);
 
     }
 
@@ -478,7 +472,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_crosshair_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.CROSSHAIR_IDENTIFIER);
 
     }
 
@@ -509,7 +503,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_attack_indicator_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.ATTACK_INDICATOR_IDENTIFIER);
 
     }
 
@@ -545,7 +539,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_title_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.TITLE_IDENTIFIER);
 
     }
 
@@ -581,7 +575,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_subtitle_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.SUBTITLE_IDENTIFIER);
 
     }
 
@@ -620,7 +614,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_boss_bars_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.BOSS_BARS_IDENTIFIER);
 
     }
 
@@ -676,7 +670,7 @@ public class SpiffyOverlayScreen extends Screen {
                     RenderingUtils.resetShaderColor(graphics);
 
                 }
-        ).setWidgetIdentifierFancyMenu("spiffy_effects_dummy");
+        ).setWidgetIdentifierFancyMenu(VanillaHudElements.EFFECTS_IDENTIFIER);
 
     }
 

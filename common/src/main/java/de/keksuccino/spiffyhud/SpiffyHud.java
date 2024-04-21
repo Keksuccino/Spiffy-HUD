@@ -20,11 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpiffyHud {
 
-	//TODO add placeholders for Attack Indicator progress/percentage ( value between 0.0 and 1.0 )
-
 	//TODO change icon of customization button (is still Drippy icon)
-
-	//TODO render custom elements ALWAYS behind all default Vanilla elements ( to not cover something important )
 
 	//TODO add option to disable powder snow overlay
 
@@ -42,8 +38,6 @@ public class SpiffyHud {
 	// - Has pose features of normal Player Entity element
 	// - Has "Show Name" toggle
 	// - Is scalable
-
-	//TODO Vanilla HUD elements are NOT editable (move, customize, etc.) except HIDING the element (there are customizable Vanilla-like elements instead)
 
 	//TODO Add Vanilla-Like elements for all Vanilla HUD elements (crosshair, hotbar, scoreboard sidebar, effects overlay, Title (line 1 + 2), etc.)
 
