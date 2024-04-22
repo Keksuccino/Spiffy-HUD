@@ -20,5 +20,7 @@
   "spiffyhud.elements.dummy.subtitle": "Subtitle",
   "spiffyhud.elements.dummy.boss_bars": "Boss Bars",
   "spiffyhud.elements.dummy.boss_bars.bar": "Boss Bar",
-  "spiffyhud.elements.dummy.effects": "Effects"
+  "spiffyhud.elements.dummy.effects": "Effects",
+  "spiffyhud.elements.vanillalike.hotbar": "Vanilla-Like Hotbar",
+  "spiffyhud.elements.vanillalike.scoreboard": "Vanilla-Like Scoreboard Sidebar"
 }

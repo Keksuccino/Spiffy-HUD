@@ -8,8 +8,6 @@ import org.jetbrains.annotations.NotNull;
 public class SpiffyHudNeoForge {
     
     public SpiffyHudNeoForge(@NotNull IEventBus eventBus) {
-
-        SpiffyHud.init();
         
     }
 

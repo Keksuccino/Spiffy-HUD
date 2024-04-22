@@ -22,17 +22,23 @@ public class VanillaHudElements {
     public static final String AIR_BAR_IDENTIFIER = "spiffy_air_bar_dummy";
     public static final String MOUNT_HEALTH_BAR_IDENTIFIER = "spiffy_mount_health_bar_dummy";
     public static final String PLAYER_HEALTH_BAR_IDENTIFIER = "spiffy_health_bar_dummy";
+    /** The overlay message gets displayed above the hotbar and shows stuff like "Playing now: ..." when using the Jukebox. This is not the same as the text that displays the item name when switching the hotbar slot. **/
     public static final String OVERLAY_MESSAGE_IDENTIFIER = "spiffy_overlay_message_dummy";
     public static final String CROSSHAIR_IDENTIFIER = "spiffy_crosshair_dummy";
+    /** The attack indicator element covers both indicator types (hotbar and crosshair). Make sure to also check if the hotbar or crosshair is hidden, because the attack indicator hides with these elements. **/
     public static final String ATTACK_INDICATOR_IDENTIFIER = "spiffy_attack_indicator_dummy";
+    /** This is only the first line of the title. The subtitle is handled separately. **/
     public static final String TITLE_IDENTIFIER = "spiffy_title_dummy";
+    /** This is not the subtitles overlay, but the second line of the "title" element. They are handled separately in Spiffy HUD. **/
     public static final String SUBTITLE_IDENTIFIER = "spiffy_subtitle_dummy";
+    /** The boss bars element is basically the whole boss bar overlay, so all active boss bars and boss names are covered. **/
     public static final String BOSS_BARS_IDENTIFIER = "spiffy_boss_bars_dummy";
+    /** The effects element is the whole effects overlay, so all active effects are covered. **/
     public static final String EFFECTS_IDENTIFIER = "spiffy_effects_dummy";
 
     /**
-     * Checks if a Vanilla HUD element is hidden via Spiffy HUD.<br>
-     * This is useful for when mods try to add support for their HUD elements that override Vanilla elements.
+     * Checks if a Vanilla HUD element is hidden in Spiffy HUD.<br>
+     * This is useful for when mods want to add support for their HUD elements that override Vanilla elements.
      *
      * @param elementIdentifier The identifier of the Vanilla HUD element. All identifiers can be found in {@link VanillaHudElements}.
      */

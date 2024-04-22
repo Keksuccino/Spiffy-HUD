@@ -20,6 +20,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpiffyHud {
 
+	//TODO make anchor overlay not work for when hovering Spiffy dummy elements
+
+	//TODO disable Audio and MusicController elements in Spiffy layouts
+
+	//TODO disable option to set if Vanilla elements should render behind or in front of custom elements in Spiffy layouts
+
+	//TODO change mod icon to Spiffy icon
+
 	//TODO change icon of customization button (is still Drippy icon)
 
 	//TODO add option to disable powder snow overlay
@@ -55,12 +63,8 @@ public class SpiffyHud {
 	public static final File MOD_DIR = createDirectory(new File(GameDirectoryUtils.getGameDirectory(), "/config/spiffyhud"));
 
 	private static Options options;
-	private static boolean initialized = false;
 
-	public static void init() {
-
-		if (initialized) return;
-		initialized = true;
+	public static void earlyInit() {
 
 		if (Services.PLATFORM.isOnClient()) {
 			LOGGER.info("[SPIFFY HUD] Loading v" + VERSION + " in client-side mode on " + MOD_LOADER.toUpperCase() + "!");
