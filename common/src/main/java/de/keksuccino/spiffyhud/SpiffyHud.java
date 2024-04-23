@@ -20,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpiffyHud {
 
+	//TODO bei schließen von Screen -> HUD layout resize update triggern (falls window in screen resized wurde)
+
 	//TODO make anchor overlay not work for when hovering Spiffy dummy elements
 
 	//TODO disable Audio and MusicController elements in Spiffy layouts

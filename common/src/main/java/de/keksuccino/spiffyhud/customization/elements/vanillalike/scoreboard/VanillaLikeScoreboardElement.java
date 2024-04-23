@@ -3,6 +3,7 @@ package de.keksuccino.spiffyhud.customization.elements.vanillalike.scoreboard;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
+import de.keksuccino.fancymenu.util.rendering.DrawableColor;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.spiffyhud.util.rendering.ElementMobilizer;
 import net.minecraft.ChatFormatting;
@@ -14,12 +15,19 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.numbers.NumberFormat;
 import net.minecraft.network.chat.numbers.StyledFormat;
 import net.minecraft.world.scores.*;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class VanillaLikeScoreboardElement extends AbstractElement {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private static final Comparator<PlayerScoreEntry> SCORE_DISPLAY_ORDER = Comparator.comparing(PlayerScoreEntry::value).reversed().thenComparing(PlayerScoreEntry::owner, String.CASE_INSENSITIVE_ORDER);
     private static final String SPACER = ": ";
@@ -31,12 +39,22 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
     private int sidebarOriginalY = 0;
     private boolean renderSidebar = false;
 
+    @NotNull
+    public de.keksuccino.spiffyhud.util.Alignment alignment = de.keksuccino.spiffyhud.util.Alignment.TOP_LEFT;
+    @Nullable
+    public DrawableColor customTitleBackgroundColor = null;
+    @Nullable
+    public DrawableColor customLineBackgroundColor = null;
+
     public VanillaLikeScoreboardElement(@NotNull ElementBuilder<?, ?> builder) {
         super(builder);
     }
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
+
+        if (this.minecraft.player == null) return;
+        if (this.minecraft.level == null) return;
 
         //Update size and originalPos of sidebar before render
         this.renderSidebar = false;
@@ -45,14 +63,14 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
 
         int x = this.getAbsoluteX();
         int y = this.getAbsoluteY();
+        Integer[] alignedBody = de.keksuccino.spiffyhud.util.Alignment.calculateElementBodyPosition(this.alignment, x, y, this.getAbsoluteWidth(), this.getAbsoluteHeight(), this.sidebarWidth, this.sidebarHeight);
+        x = alignedBody[0];
+        y = alignedBody[1];
 
         ElementMobilizer.mobilize(graphics, -this.sidebarOriginalX, -this.sidebarOriginalY, x, y, () -> {
 
             RenderSystem.enableBlend();
             RenderingUtils.resetShaderColor(graphics);
-
-            if (this.minecraft.player == null) return;
-            if (this.minecraft.level == null) return;
 
             //-------------------------------
 
@@ -77,6 +95,9 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
             objective = scoreboard.getDisplayObjective(displaySlot);
         }
         objective2 = objective != null ? objective : scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR);
+        //Tweak to Vanilla logic
+        if (isEditor()) objective2 = new Objective(scoreboard, "", ObjectiveCriteria.DUMMY, Component.empty(), ObjectiveCriteria.RenderType.INTEGER, false, null);
+        //---------------------------
         if (objective2 != null) {
             this.displayScoreboardSidebar(graphics, objective2);
         }
@@ -130,11 +151,15 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
             int o = getScreenWidth() - l - 3;
             int p = getScreenWidth() - 3 + 2;
             int linesBackgroundColor = this.minecraft.options.getBackgroundColor(0.3f);
+            //Tweak to Vanilla logic
+            if (this.customLineBackgroundColor != null) linesBackgroundColor = this.customLineBackgroundColor.getColorInt();
             int titleBackgroundColor = this.minecraft.options.getBackgroundColor(0.4f);
+            //Tweak to Vanilla logic
+            if (this.customTitleBackgroundColor != null) titleBackgroundColor = this.customTitleBackgroundColor.getColorInt();
             int s = m - lineCount * this.getFont().lineHeight;
             //Tweak to Vanilla logic
             this.sidebarWidth = Math.max(1, p - (o - 2));
-            this.sidebarHeight = Math.max(1, m - (this.getFont().lineHeight - 1));
+            this.sidebarHeight = Math.max(1, m - (s - this.getFont().lineHeight - 1));
             this.sidebarOriginalX = o - 2;
             this.sidebarOriginalY = s - this.getFont().lineHeight - 1;
             //-------------------------
@@ -159,12 +184,12 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
 
     @Override
     public int getAbsoluteWidth() {
-        return this.sidebarWidth;
+        return 100;
     }
 
     @Override
     public int getAbsoluteHeight() {
-        return this.sidebarHeight;
+        return 100;
     }
 
 }

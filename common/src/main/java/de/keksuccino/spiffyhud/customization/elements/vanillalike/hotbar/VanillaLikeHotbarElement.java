@@ -33,7 +33,7 @@ public class VanillaLikeHotbarElement extends AbstractElement {
         int w = this.getAbsoluteWidth();
         int h = this.getAbsoluteHeight();
 
-        ElementMobilizer.mobilize(graphics, -((getScreenWidth() / 2) - 120), -(getScreenHeight() - 20), x, y, () -> {
+        ElementMobilizer.mobilize(graphics, -((getScreenWidth() / 2) - 91), -(getScreenHeight() - 22), x, y, () -> {
 
             RenderSystem.enableBlend();
             RenderingUtils.resetShaderColor(graphics);
@@ -75,13 +75,20 @@ public class VanillaLikeHotbarElement extends AbstractElement {
         //--------------------
         graphics.blitSprite(HOTBAR_SPRITE, i - 91, getScreenHeight() - 22, 182, 22);
         graphics.blitSprite(HOTBAR_SELECTION_SPRITE, i - 91 - 1 + player.getInventory().selected * 20, getScreenHeight() - 22 - 1, 24, 23);
-        if (!itemStack.isEmpty()) {
-            if (humanoidArm == HumanoidArm.LEFT) {
-                graphics.blitSprite(HOTBAR_OFFHAND_LEFT_SPRITE, i - 91 - 29, getScreenHeight() - 23, 29, 24);
-            } else {
-                graphics.blitSprite(HOTBAR_OFFHAND_RIGHT_SPRITE, i + 91, getScreenHeight() - 23, 29, 24);
+        //Tweak to Vanilla logic (isEditor)
+        if (!isEditor()) {
+            if (!itemStack.isEmpty()) {
+                if (humanoidArm == HumanoidArm.LEFT) {
+                    graphics.blitSprite(HOTBAR_OFFHAND_LEFT_SPRITE, i - 91 - 29, getScreenHeight() - 23, 29, 24);
+                } else {
+                    graphics.blitSprite(HOTBAR_OFFHAND_RIGHT_SPRITE, i + 91, getScreenHeight() - 23, 29, 24);
+                }
             }
+        } else {
+            graphics.blitSprite(HOTBAR_OFFHAND_LEFT_SPRITE, i - 91 - 29, getScreenHeight() - 23, 29, 24);
+            graphics.blitSprite(HOTBAR_OFFHAND_RIGHT_SPRITE, i + 91, getScreenHeight() - 23, 29, 24);
         }
+        //------------------
         graphics.pose().popPose();
         int l = 1;
         for (m = 0; m < 9; ++m) {
@@ -139,12 +146,12 @@ public class VanillaLikeHotbarElement extends AbstractElement {
 
     @Override
     public int getAbsoluteWidth() {
-        return 210;
+        return 182;
     }
 
     @Override
     public int getAbsoluteHeight() {
-        return 20;
+        return 22;
     }
 
 }

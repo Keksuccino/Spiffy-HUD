@@ -3,6 +3,7 @@
   "package": "de.keksuccino.spiffyhud.mixin.mixins.common",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "client.IMixinGui",
     "client.MixinCustomizationOverlayUI",
     "client.MixinLayoutEditorUI",
     "client.MixinScreenCustomization",

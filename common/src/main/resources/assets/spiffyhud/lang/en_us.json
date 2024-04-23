@@ -1,4 +1,14 @@
 {
+  "spiffyhud.alignment": "Alignment: %s",
+  "spiffyhud.alignment.top_left": "Top-Left",
+  "spiffyhud.alignment.top_centered": "Top-Centered",
+  "spiffyhud.alignment.top_right": "Top-Right",
+  "spiffyhud.alignment.bottom_left": "Bottom-Left",
+  "spiffyhud.alignment.bottom_centered": "Bottom-Centered",
+  "spiffyhud.alignment.bottom_right": "Bottom-Right",
+  "spiffyhud.alignment.mid_left": "Mid-Left",
+  "spiffyhud.alignment.mid_centered": "Mid-Centered",
+  "spiffyhud.alignment.mid_right": "Mid-Right",
   "spiffyhud.edit_hud": "Customize In-Game HUD",
   "spiffyhud.edit_hud.desc": "Customize In-Game HUD\n\nThis button is bound to FancyMenu's menu bar.\nYou can hide it by hiding the menu bar.",
   "spiffyhud.elements.dummy.hotbar": "Hotbar",
@@ -21,6 +31,9 @@
   "spiffyhud.elements.dummy.boss_bars": "Boss Bars",
   "spiffyhud.elements.dummy.boss_bars.bar": "Boss Bar",
   "spiffyhud.elements.dummy.effects": "Effects",
-  "spiffyhud.elements.vanillalike.hotbar": "Vanilla-Like Hotbar",
-  "spiffyhud.elements.vanillalike.scoreboard": "Vanilla-Like Scoreboard Sidebar"
+  "spiffyhud.elements.vanillalike.hotbar": "[HUD] Vanilla-Like Hotbar",
+  "spiffyhud.elements.vanillalike.scoreboard": "[HUD] Vanilla-Like Scoreboard Sidebar",
+  "spiffyhud.elements.vanillalike.scoreboard.title_background_color": "Title Background Color [HEX]",
+  "spiffyhud.elements.vanillalike.scoreboard.lines_background_color": "Lines Background Color [HEX]",
+  "spiffyhud.elements.vanillalike.player_health": "[HUD] Vanilla-Like Player Health Bar"
 }
