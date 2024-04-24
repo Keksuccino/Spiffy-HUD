@@ -1,4 +1,4 @@
-package de.keksuccino.spiffyhud.customization.elements.vanillalike.playerhealth;
+package de.keksuccino.spiffyhud.customization.elements.vanillalike.armor;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
@@ -7,32 +7,27 @@ import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.spiffyhud.SpiffyUtils;
 import de.keksuccino.spiffyhud.util.SizeAndPositionRecorder;
 import de.keksuccino.spiffyhud.util.rendering.ElementMobilizer;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.util.Mth;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class VanillaLikePlayerHealthElement extends AbstractElement {
+public class VanillaLikePlayerArmorElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    private static final ResourceLocation ARMOR_EMPTY_SPRITE = new ResourceLocation("hud/armor_empty");
+    private static final ResourceLocation ARMOR_HALF_SPRITE = new ResourceLocation("hud/armor_half");
+    private static final ResourceLocation ARMOR_FULL_SPRITE = new ResourceLocation("hud/armor_full");
+
     private final Minecraft minecraft = Minecraft.getInstance();
     protected final RandomSource random = RandomSource.create();
-    protected int lastHealth;
-    protected int displayHealth;
-    protected long lastHealthTime;
-    protected long healthBlinkTime;
     protected int tickCount;
 
     private int barWidth = 100;
@@ -44,7 +39,7 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
     @NotNull
     public de.keksuccino.spiffyhud.util.Alignment alignment = de.keksuccino.spiffyhud.util.Alignment.TOP_LEFT;
 
-    public VanillaLikePlayerHealthElement(@NotNull ElementBuilder<?, ?> builder) {
+    public VanillaLikePlayerArmorElement(@NotNull ElementBuilder<?, ?> builder) {
         super(builder);
     }
 
@@ -91,62 +86,81 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
         int aa;
         int z;
         int y;
-        int x;
+        int barX;
+        int barY = 0;
         Player player = this.getCameraPlayer();
         if (player == null) {
             return;
         }
-        int i = Mth.ceil(player.getHealth());
-        boolean bl = this.healthBlinkTime > (long)this.tickCount && (this.healthBlinkTime - (long)this.tickCount) / 3L % 2L == 1L;
-        long l = Util.getMillis();
-        if (i < this.lastHealth && player.invulnerableTime > 0) {
-            this.lastHealthTime = l;
-            this.healthBlinkTime = this.tickCount + 20;
-        } else if (i > this.lastHealth && player.invulnerableTime > 0) {
-            this.lastHealthTime = l;
-            this.healthBlinkTime = this.tickCount + 10;
-        }
-        if (l - this.lastHealthTime > 1000L) {
-            this.lastHealth = i;
-            this.displayHealth = i;
-            this.lastHealthTime = l;
-        }
-        this.lastHealth = i;
-        int j = this.displayHealth;
+//        int i = Mth.ceil(player.getHealth());
+//        boolean bl = this.healthBlinkTime > (long)this.tickCount && (this.healthBlinkTime - (long)this.tickCount) / 3L % 2L == 1L;
+//        long l = Util.getMillis();
+//        if (i < this.lastHealth && player.invulnerableTime > 0) {
+//            this.lastHealthTime = l;
+//            this.healthBlinkTime = this.tickCount + 20;
+//        } else if (i > this.lastHealth && player.invulnerableTime > 0) {
+//            this.lastHealthTime = l;
+//            this.healthBlinkTime = this.tickCount + 10;
+//        }
+//        if (l - this.lastHealthTime > 1000L) {
+//            this.lastHealth = i;
+//            this.displayHealth = i;
+//            this.lastHealthTime = l;
+//        }
+//        this.lastHealth = i;
+//        int j = this.displayHealth;
         this.random.setSeed(this.tickCount * 312871L);
-        FoodData foodData = player.getFoodData();
-        int k = foodData.getFoodLevel();
+//        FoodData foodData = player.getFoodData();
+//        int k = foodData.getFoodLevel();
         int m = getScreenWidth() / 2 - 91;
         int n = getScreenWidth() / 2 + 91;
         int o = getScreenHeight() - 39;
-        float f = Math.max((float)player.getAttributeValue(Attributes.MAX_HEALTH), (float)Math.max(j, i));
-        int p = Mth.ceil(player.getAbsorptionAmount());
-        int q = Mth.ceil((f + (float)p) / 2.0f / 10.0f);
-        int r = Math.max(10 - (q - 2), 3);
-        int s = o - (q - 1) * r - 10;
-        int t = o - 10;
+//        float f = Math.max((float)player.getAttributeValue(Attributes.MAX_HEALTH), (float)Math.max(j, i));
+//        int p = Mth.ceil(player.getAbsorptionAmount());
+//        int q = Mth.ceil((f + (float)p) / 2.0f / 10.0f);
+//        int r = Math.max(10 - (q - 2), 3);
+//        int s = o - (q - 1) * r - 10;
+//        int t = o - 10;
         int u = player.getArmorValue();
-        int v = -1;
-        if (player.hasEffect(MobEffects.REGENERATION)) {
-            v = this.tickCount % Mth.ceil(f + 5.0f);
+        //Tweak to Vanilla logic
+        if (isEditor()) u = 10;
+//        int v = -1;
+//        if (player.hasEffect(MobEffects.REGENERATION)) {
+//            v = this.tickCount % Mth.ceil(f + 5.0f);
+//        }
+//        this.minecraft.getProfiler().push("armor");
+        //Tweak to Vanilla logic
+        SizeAndPositionRecorder recorder = new SizeAndPositionRecorder();
+        recorder.setWidthOffset(9);
+        recorder.setHeightOffset(9);
+        //------------------
+        for (int w = 0; w < 10; ++w) {
+            if (u <= 0) continue;
+            barX = m + w * 8;
+            //Tweak to Vanilla logic
+            recorder.updateX(barX);
+            recorder.updateY(barY);
+            //----------------------
+            //Tweak to Vanilla logic (if wrap)
+            if (this.shouldRenderBar) {
+                if (w * 2 + 1 < u) {
+                    graphics.blitSprite(ARMOR_FULL_SPRITE, barX, barY, 9, 9);
+                }
+                if (w * 2 + 1 == u) {
+                    graphics.blitSprite(ARMOR_HALF_SPRITE, barX, barY, 9, 9);
+                }
+                if (w * 2 + 1 <= u) continue;
+                graphics.blitSprite(ARMOR_EMPTY_SPRITE, barX, barY, 9, 9);
+            }
         }
         //Tweak to Vanilla logic
-//        this.minecraft.getProfiler().push("armor");
-//        for (int w = 0; w < 10; ++w) {
-//            if (u <= 0) continue;
-//            x = m + w * 8;
-//            if (w * 2 + 1 < u) {
-//                graphics.blitSprite(ARMOR_FULL_SPRITE, x, s, 9, 9);
-//            }
-//            if (w * 2 + 1 == u) {
-//                graphics.blitSprite(ARMOR_HALF_SPRITE, x, s, 9, 9);
-//            }
-//            if (w * 2 + 1 <= u) continue;
-//            graphics.blitSprite(ARMOR_EMPTY_SPRITE, x, s, 9, 9);
-//        }
+        this.barOriginalX = recorder.getX();
+        this.barOriginalY = recorder.getY();
+        this.barWidth = recorder.getWidth();
+        this.barHeight = recorder.getHeight();
+        //-----------------------
 //        this.minecraft.getProfiler().popPush("health");
-        this.renderHearts(graphics, player, m, o, r, v, f, i, j, p, bl);
-        //Tweak to Vanilla logic
+//        this.renderHearts(graphics, player, m, o, r, v, f, i, j, p, bl);
 //        LivingEntity livingEntity = this.getPlayerVehicleWithHealth();
 //        x = this.getVehicleMaxHearts(livingEntity);
 //        if (x == 0) {
@@ -197,78 +211,6 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
 //        this.minecraft.getProfiler().pop();
     }
 
-    private void renderHearts(GuiGraphics guiGraphics, Player player, int x, int y, int height, int offsetHeartIndex, float maxHealth, int currentHealth, int displayHealth, int absorptionAmount, boolean renderHighlight) {
-        //Tweak to Vanilla logic
-        if (isEditor()) {
-            maxHealth = 40;
-            currentHealth = 10;
-            displayHealth = currentHealth;
-            absorptionAmount = 4;
-        }
-        //--------------------------
-        Gui.HeartType heartType = Gui.HeartType.forPlayer(player);
-        boolean hardcore = player.level().getLevelData().isHardcore();
-        int i = Mth.ceil((double)maxHealth / 2.0);
-        int j = Mth.ceil((double)absorptionAmount / 2.0);
-        int k = i * 2;
-        //Tweak to Vanilla logic
-        SizeAndPositionRecorder recorder = new SizeAndPositionRecorder();
-        recorder.setWidthOffset(9);
-        recorder.setHeightOffset(9);
-        //-------------------------
-        for (int l = i + j - 1; l >= 0; --l) {
-            boolean bl4;
-            int r;
-            boolean bl2;
-            int m = l / 10;
-            int n = l % 10;
-            int heartX = x + n * 8;
-            int heartY = y - m * height;
-            if (currentHealth + absorptionAmount <= 4) {
-                heartY += this.random.nextInt(2);
-            }
-            if (l < i && l == offsetHeartIndex) {
-                heartY -= 2;
-            }
-            //Tweak to Vanilla logic
-            recorder.updateX(heartX);
-            recorder.updateY(heartY);
-            //--------------------
-            //Tweak to Vanilla logic (if wrap)
-            if (this.shouldRenderBar) {
-                this.renderHeart(guiGraphics, Gui.HeartType.CONTAINER, heartX, heartY, hardcore, renderHighlight, false);
-                int q = l * 2;
-                boolean bl3 = bl2 = l >= i;
-                if (bl2 && (r = q - k) < absorptionAmount) {
-                    boolean bl32 = r + 1 == absorptionAmount;
-                    this.renderHeart(guiGraphics, heartType == Gui.HeartType.WITHERED ? heartType : Gui.HeartType.ABSORBING, heartX, heartY, hardcore, false, bl32);
-                }
-                if (renderHighlight && q < displayHealth) {
-                    bl4 = q + 1 == displayHealth;
-                    this.renderHeart(guiGraphics, heartType, heartX, heartY, hardcore, true, bl4);
-                }
-                if (q >= currentHealth) continue;
-                bl4 = q + 1 == currentHealth;
-                this.renderHeart(guiGraphics, heartType, heartX, heartY, hardcore, false, bl4);
-            }
-        }
-        //Tweak to Vanilla logic
-        if (recorder.isUpdated()) {
-            this.barOriginalX = recorder.getX();
-            this.barOriginalY = recorder.getY();
-            this.barWidth = recorder.getWidth();
-            this.barHeight = recorder.getHeight();
-        } else {
-            this.barWidth = 1;
-            this.barHeight = 9;
-        }
-        //---------------------
-    }
-
-    private void renderHeart(GuiGraphics guiGraphics, Gui.HeartType heartType, int x, int y, boolean hardcore, boolean halfHeart, boolean blinking) {
-        guiGraphics.blitSprite(heartType.getSprite(hardcore, blinking, halfHeart), x, y, 9, 9);
-    }
-
     private Font getFont() {
         return Minecraft.getInstance().font;
     }
@@ -285,7 +227,7 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
 
     @Override
     public int getAbsoluteHeight() {
-        return 40;
+        return 20;
     }
 
 }
