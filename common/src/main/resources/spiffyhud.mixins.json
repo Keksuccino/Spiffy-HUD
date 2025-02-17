@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "package": "de.keksuccino.spiffyhud.mixin.mixins.common",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "client.IMixinGui",
+    "client.MixinCustomizationOverlayUI",
+    "client.MixinLayoutEditorUI",
+    "client.MixinScreenCustomization",
+    "client.MixinVanillaWidgetEditorElement"
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "spiffyhud.refmap.json",
+  "plugin": "de.keksuccino.spiffyhud.mixin.SpiffyMixinPlugin",
+  "minVersion": "0.8"
+}
