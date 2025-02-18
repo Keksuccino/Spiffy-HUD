@@ -17,7 +17,10 @@ public class VanillaLikeExperienceElementBuilder extends ElementBuilder<VanillaL
 
     @Override
     public @NotNull VanillaLikeExperienceElement buildDefaultInstance() {
-        return new VanillaLikeExperienceElement(this);
+        VanillaLikeExperienceElement e = new VanillaLikeExperienceElement(this);
+        e.stickyAnchor = true;
+        e.stayOnScreen = false;
+        return e;
     }
 
     @Override

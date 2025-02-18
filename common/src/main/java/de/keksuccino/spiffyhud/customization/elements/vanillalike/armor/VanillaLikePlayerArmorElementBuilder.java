@@ -19,7 +19,10 @@ public class VanillaLikePlayerArmorElementBuilder extends ElementBuilder<Vanilla
 
     @Override
     public @NotNull VanillaLikePlayerArmorElement buildDefaultInstance() {
-        return new VanillaLikePlayerArmorElement(this);
+        VanillaLikePlayerArmorElement e = new VanillaLikePlayerArmorElement(this);
+        e.stickyAnchor = true;
+        e.stayOnScreen = false;
+        return e;
     }
 
     @Override

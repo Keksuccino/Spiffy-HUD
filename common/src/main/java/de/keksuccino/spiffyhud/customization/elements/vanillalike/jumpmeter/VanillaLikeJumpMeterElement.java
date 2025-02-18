@@ -4,25 +4,24 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
-import de.keksuccino.spiffyhud.util.rendering.ElementMobilizer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.PlayerRideableJumping;
-import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Objects;
 
 public class VanillaLikeJumpMeterElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    // Texture containing GUI icons.
     private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+
+    private static final int BAR_WIDTH = 182;
+    private static final int BAR_HEIGHT = 5;
 
     private final Minecraft minecraft = Minecraft.getInstance();
 
@@ -33,60 +32,67 @@ public class VanillaLikeJumpMeterElement extends AbstractElement {
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
 
-        if (this.minecraft.player == null) return;
-        if (this.minecraft.level == null) return;
+        // Ensure that both the player and the level exist before rendering.
+        if (this.minecraft.player == null || this.minecraft.level == null) return;
 
-        int x = this.getAbsoluteX();
-        int y = this.getAbsoluteY();
+        // Retrieve the element's absolute position and size.
+        int elementX = this.getAbsoluteX();
+        int elementY = this.getAbsoluteY();
+        int elementWidth = this.getAbsoluteWidth();
+        int elementHeight = this.getAbsoluteHeight();
 
-        ElementMobilizer.mobilize(graphics, -(getScreenWidth() / 2 - 91), -(getScreenHeight() - 32 + 3), x, y, () -> {
+        // Enable blending and reset shader colors.
+        RenderSystem.enableBlend();
+        RenderingUtils.resetShaderColor(graphics);
 
-            RenderSystem.enableBlend();
-            RenderingUtils.resetShaderColor(graphics);
+        // Render the jump meter inside the element's bounds.
+        this.renderJumpMeter(graphics, elementX, elementY, elementWidth, elementHeight);
 
-            //-------------------------------
-
-            this.renderJumpMeter(graphics);
-
-            //-------------------------------
-
-            RenderingUtils.resetShaderColor(graphics);
-
-        });
+        RenderingUtils.resetShaderColor(graphics);
 
     }
 
-    private void renderJumpMeter(GuiGraphics graphics) {
+    /**
+     * Renders the jump meter bar within the specified element bounds.
+     *
+     * @param graphics      The graphics context used for rendering.
+     * @param elementX      The absolute x-coordinate of the element.
+     * @param elementY      The absolute y-coordinate of the element.
+     * @param elementWidth  The width of the element.
+     * @param elementHeight The height of the element.
+     */
+    private void renderJumpMeter(GuiGraphics graphics, int elementX, int elementY, int elementWidth, int elementHeight) {
+
+        // Get the player's rideable jump vehicle, if any.
         PlayerRideableJumping rideable = Objects.requireNonNull(this.minecraft.player).jumpableVehicle();
-        int x = getScreenWidth() / 2 - 91;
-        float f = this.minecraft.player.getJumpRidingScale();
-        int j = (int)(f * 183.0f);
-        int k = getScreenHeight() - 32 + 3;
-        graphics.blit(GUI_ICONS_LOCATION, x, k, 0, 84, 182, 5);
-        if ((rideable != null) && (rideable.getJumpCooldown() > 0)) {
-            graphics.blit(GUI_ICONS_LOCATION, x, k, 0, 74, 182, 5);
-        } else if (j > 0) {
-            graphics.blit(GUI_ICONS_LOCATION, x, k, 0, 89, j, 5);
+
+        // Calculate the jump riding scale and determine the width of the jump meter fill.
+        float jumpScale = this.minecraft.player.getJumpRidingScale();
+        int fillWidth = (int) (jumpScale * elementWidth);
+        if (isEditor()) fillWidth = BAR_WIDTH / 2;
+
+        // Draw the jump meter background (texture region starting at y = 84).
+        graphics.blit(GUI_ICONS_LOCATION, elementX, elementY, 0, 84, elementWidth, elementHeight);
+
+        // If the player is riding an entity with jump cooldown, render the cooldown overlay (texture region at y = 74).
+        if ((rideable != null && rideable.getJumpCooldown() > 0) && !isEditor()) {
+            graphics.blit(GUI_ICONS_LOCATION, elementX, elementY, 0, 74, elementWidth, elementHeight);
         }
-    }
+        // Otherwise, if there is a jump meter fill value, render the filled portion (texture region at y = 89).
+        else if (fillWidth > 0) {
+            graphics.blit(GUI_ICONS_LOCATION, elementX, elementY, 0, 89, fillWidth, elementHeight);
+        }
 
-    private Font getFont() {
-        return Minecraft.getInstance().font;
-    }
-
-    @Nullable
-    private Player getCameraPlayer() {
-        return (Minecraft.getInstance().getCameraEntity() instanceof Player p) ? p : null;
     }
 
     @Override
     public int getAbsoluteWidth() {
-        return 182;
+        return BAR_WIDTH;
     }
 
     @Override
     public int getAbsoluteHeight() {
-        return 5;
+        return BAR_HEIGHT;
     }
 
 }

@@ -6,7 +6,6 @@ import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.spiffyhud.util.SizeAndPositionRecorder;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
-import de.keksuccino.spiffyhud.util.rendering.ElementMobilizer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.LerpingBossEvent;
@@ -23,8 +22,10 @@ public class VanillaLikeBossOverlayElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    // Texture used for boss bars.
     private static final ResourceLocation GUI_BARS_LOCATION = new ResourceLocation("textures/gui/bars.png");
 
+    // Dummy events for editor mode.
     private static final List<LerpingBossEvent> DUMMY_EVENTS = List.of(
             new LerpingBossEvent(UUID.randomUUID(), Component.translatable("spiffyhud.elements.dummy.boss_bars.bar"), 0.5F, BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS, false, false, false),
             new LerpingBossEvent(UUID.randomUUID(), Component.translatable("spiffyhud.elements.dummy.boss_bars.bar"), 0.5F, BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS, false, false, false),
@@ -33,8 +34,12 @@ public class VanillaLikeBossOverlayElement extends AbstractElement {
 
     private final Minecraft minecraft = Minecraft.getInstance();
 
-    private int barWidth = 100;
-    private int barHeight = 100;
+    // Cached bounds for the boss bar drawing area (in a local coordinate system).
+    // barWidth is the larger of the default bar width (182) or the computed width (if text overflows);
+    // barHeight is computed from the total height of all bars.
+    // barOriginalX and barOriginalY represent the recorded minimal X/Y of the boss bar area.
+    private int barWidth = 182;
+    private int barHeight = 0;
     private int barOriginalX = 0;
     private int barOriginalY = 0;
 
@@ -45,130 +50,173 @@ public class VanillaLikeBossOverlayElement extends AbstractElement {
         super(builder);
     }
 
+    /**
+     * Renders the boss overlay element within its bounds.
+     * First the local boss bar area is computed and then aligned inside the element.
+     * We then render all boss events (dummy events in editor mode or real ones otherwise)
+     * using our own drawing code.
+     */
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
 
-        if (this.minecraft.player == null) return;
-        if (this.minecraft.level == null) return;
+        if (this.minecraft.player == null || this.minecraft.level == null) return;
 
-        //Update size and originalPos of bar before render
+        // Compute the local (relative) boss bar area.
         this.updateBodySizeAndPosCache();
 
-        int x = this.getAbsoluteX();
-        int y = this.getAbsoluteY();
-        Integer[] alignedBody = SpiffyAlignment.calculateElementBodyPosition(this.spiffyAlignment, x, y, this.getAbsoluteWidth(), this.getAbsoluteHeight(), this.barWidth, this.barHeight);
-        x = alignedBody[0];
-        y = alignedBody[1];
+        // Get the element's absolute bounds.
+        int elementX = this.getAbsoluteX();
+        int elementY = this.getAbsoluteY();
+        int elementWidth = this.getAbsoluteWidth();
+        int elementHeight = this.getAbsoluteHeight();
 
-        ElementMobilizer.mobilize(graphics, -this.barOriginalX, -this.barOriginalY, x, y, () -> {
+        // Compute the aligned position of the boss bar area within the element.
+        // (SpiffyAlignment.calculateElementBodyPosition expects absolute values, so we pass the element bounds
+        // and our computed boss bar area dimensions. The returned alignedPosition is absolute.)
+        Integer[] alignedPosition = SpiffyAlignment.calculateElementBodyPosition(
+                this.spiffyAlignment, elementX, elementY, elementWidth, elementHeight, this.barWidth, this.barHeight);
+        // Compute offsets relative to our recorded local boss bar area.
+        int offsetX = alignedPosition[0] - this.barOriginalX;
+        int offsetY = alignedPosition[1] - this.barOriginalY;
 
-            RenderSystem.enableBlend();
-            RenderingUtils.resetShaderColor(graphics);
+        RenderSystem.enableBlend();
+        RenderingUtils.resetShaderColor(graphics);
 
-//            graphics.pose().scale(-1.0F, 1.0F, 1.0F);
-//            graphics.pose().translate(-this.barWidth, 0.0F, 0.0F);
+        // Choose events to render.
+        Iterable<LerpingBossEvent> eventsToRender = isEditor() ? DUMMY_EVENTS : Minecraft.getInstance().gui.getBossOverlay().events.values();
 
-            //-------------------------------
+        this.renderBossBars(graphics, offsetX, offsetY, eventsToRender);
 
-            if (!isEditor()) {
-                Minecraft.getInstance().gui.getBossOverlay().render(graphics);
-            } else {
-                this.renderDummyBars(graphics);
-            }
-
-            //-------------------------------
-
-            RenderingUtils.resetShaderColor(graphics);
-
-        });
+        RenderingUtils.resetShaderColor(graphics);
 
     }
 
-    //This is the render() method of the BossHealthOverlay, but without the rendering part
+    /**
+     * Updates the cached local drawing bounds of the boss bar area.
+     * Here we use relative coordinates so that the boss bars are laid out starting at X = 0.
+     * The default boss bar width is 182.
+     */
     private void updateBodySizeAndPosCache() {
-        //Tweak to Vanilla logic
         SizeAndPositionRecorder recorder = new SizeAndPositionRecorder();
         recorder.setHeightOffset(5);
-        //--------------------
-        if (Minecraft.getInstance().gui.getBossOverlay().events.isEmpty() && !isEditor()) { //added isEditor check
+        int defaultBarWidth = 182;
+
+        // Use dummy events in editor mode, or real events otherwise.
+        Iterable<LerpingBossEvent> eventsToRecord = isEditor() ? DUMMY_EVENTS
+                : Minecraft.getInstance().gui.getBossOverlay().events.values();
+        if (!eventsToRecord.iterator().hasNext() && !isEditor()) {
             return;
         }
-        int i = getScreenWidth();
-        int j = 12;
-        for (LerpingBossEvent lerpingBossEvent : isEditor() ? DUMMY_EVENTS : Minecraft.getInstance().gui.getBossOverlay().events.values()) { //added isEditor check
-            int barX = i / 2 - 91;
-            int barY = j;
-            //Tweak to Vanilla logic
-            recorder.updateX(barX);
-            recorder.updateY(barY);
-            //-----------------------
-            //this.drawBar(guiGraphics, barX, barY, lerpingBossEvent);
-            Component component = lerpingBossEvent.getName();
-            int m = this.minecraft.font.width(component);
-            int textX = i / 2 - m / 2;
-            int textY = barY - 9;
-            //Tweak to Vanilla logic
-            recorder.updateX(textX);
-            recorder.updateY(textY);
-            //-----------------------
-            //guiGraphics.drawString(this.minecraft.font, component, textX, textY, 0xFFFFFF);
-            if ((j += 10 + this.minecraft.font.lineHeight) < getScreenHeight() / 3) continue;
-            break;
+        int currentY = 12; // Starting Y coordinate (local)
+        for (LerpingBossEvent bossEvent : eventsToRecord) {
+            // For the boss bar background, use X = 0.
+            int barPosX = 0;
+            int barPosY = currentY;
+            recorder.updateX(barPosX);
+            recorder.updateY(barPosY);
+
+            // For the text, center it in the default width.
+            Component eventName = bossEvent.getName();
+            int textWidth = this.minecraft.font.width(eventName);
+            int textPosX = (defaultBarWidth - textWidth) / 2;
+            int textPosY = barPosY - 9;
+            recorder.updateX(textPosX);
+            recorder.updateY(textPosY);
+
+            currentY += 10 + this.minecraft.font.lineHeight;
         }
-        //Tweak to Vanilla logic
-        this.barOriginalX = recorder.getX();
+        // Record the minimal X/Y and the total width/height.
+        this.barOriginalX = recorder.getX(); // Typically 0 (or negative if text overflows)
         this.barOriginalY = recorder.getY();
-        this.barWidth = 182;
+        this.barWidth = Math.max(defaultBarWidth, recorder.getWidth());
         this.barHeight = recorder.getHeight();
-        //--------------------
     }
 
-    private void renderDummyBars(GuiGraphics graphics) {
-        int i = getScreenWidth();
-        int j = 12;
-        for (LerpingBossEvent lerpingBossEvent : DUMMY_EVENTS) {
-            int barX = i / 2 - 91;
-            int barY = j;
-            this.drawBar(graphics, barX, barY, lerpingBossEvent);
-            Component component = lerpingBossEvent.getName();
-            int m = this.minecraft.font.width(component);
-            int textX = i / 2 - m / 2;
-            int textY = barY - 9;
-            graphics.drawString(this.minecraft.font, component, textX, textY, 0xFFFFFF);
-            if ((j += 10 + this.minecraft.font.lineHeight) < getScreenHeight() / 3) continue;
-            break;
+    /**
+     * Renders all boss bars (and their text) from the provided events.
+     * The positions are adjusted by the given offsets so that the boss bars render inside the element.
+     *
+     * @param graphics   The graphics context.
+     * @param offsetX    Horizontal offset (from alignment).
+     * @param offsetY    Vertical offset (from alignment).
+     * @param bossEvents The boss events to render.
+     */
+    private void renderBossBars(GuiGraphics graphics, int offsetX, int offsetY, Iterable<LerpingBossEvent> bossEvents) {
+        int currentY = offsetY + 12; // Start at the same relative Y as used in updateBodySizeAndPosCache.
+        for (LerpingBossEvent bossEvent : bossEvents) {
+            // Draw the boss bar background at local X = 0 (plus offset).
+            int barPosX = offsetX;
+            int barPosY = currentY;
+            drawBar(graphics, barPosX, barPosY, bossEvent);
+            // Center the boss bar text within the computed element width.
+            Component eventName = bossEvent.getName();
+            int textWidth = this.minecraft.font.width(eventName);
+            int textPosX = offsetX + (getAbsoluteWidth() - textWidth) / 2;
+            int textPosY = barPosY - 9;
+            graphics.drawString(this.minecraft.font, eventName, textPosX, textPosY, 0xFFFFFF);
+            currentY += 10 + this.minecraft.font.lineHeight;
         }
     }
 
-    private void drawBar(GuiGraphics guiGraphics, int x, int y, BossEvent bossEvent) {
-        this.drawBar(guiGraphics, x, y, bossEvent, 182, 0);
-        int i = (int)(bossEvent.getProgress() * 183.0f);
-        if (i > 0) {
-            this.drawBar(guiGraphics, x, y, bossEvent, i, 5);
+    /**
+     * Draws a single boss bar by first drawing its background and then the filled progress.
+     *
+     * @param graphics  The graphics context.
+     * @param barX      The X coordinate (local, plus offset) where the bar is drawn.
+     * @param barY      The Y coordinate (local, plus offset) where the bar is drawn.
+     * @param bossEvent The boss event providing progress and style.
+     */
+    private void drawBar(GuiGraphics graphics, int barX, int barY, BossEvent bossEvent) {
+        // Draw the background (default width = 182).
+        drawBar(graphics, barX, barY, bossEvent, 182, 0);
+        // Calculate and draw the filled portion based on progress.
+        int filledWidth = (int) (bossEvent.getProgress() * 183.0f);
+        if (filledWidth > 0) {
+            drawBar(graphics, barX, barY, bossEvent, filledWidth, 5);
         }
     }
 
-    private void drawBar(GuiGraphics guiGraphics, int x, int y, BossEvent bossEvent, int width, int i) {
-        guiGraphics.blit(GUI_BARS_LOCATION, x, y, 0, bossEvent.getColor().ordinal() * 5 * 2 + i, width, 5);
+    /**
+     * Draws a segment of a boss bar from the texture atlas.
+     *
+     * @param graphics       The graphics context.
+     * @param barX           The X coordinate for drawing.
+     * @param barY           The Y coordinate for drawing.
+     * @param bossEvent      The boss event providing styling.
+     * @param width          The width of the segment.
+     * @param textureYOffset The Y offset in the texture atlas.
+     */
+    private void drawBar(GuiGraphics graphics, int barX, int barY, BossEvent bossEvent, int width, int textureYOffset) {
+        graphics.blit(GUI_BARS_LOCATION, barX, barY, 0,
+                bossEvent.getColor().ordinal() * 5 * 2 + textureYOffset, width, 5);
         if (bossEvent.getOverlay() != BossEvent.BossBarOverlay.PROGRESS) {
             RenderSystem.enableBlend();
-            guiGraphics.blit(GUI_BARS_LOCATION, x, y, 0, 80 + (bossEvent.getOverlay().ordinal() - 1) * 5 * 2 + i, width, 5);
+            graphics.blit(GUI_BARS_LOCATION, barX, barY, 0,
+                    80 + (bossEvent.getOverlay().ordinal() - 1) * 5 * 2 + textureYOffset, width, 5);
             RenderSystem.disableBlend();
         }
     }
 
+    /**
+     * Returns the computed absolute width of the element (the boss bar area).
+     */
     @Override
     public int getAbsoluteWidth() {
-        return 200;
+        return this.barWidth;
     }
 
+    /**
+     * Returns the computed absolute height of the element (the boss bar area).
+     */
     @Override
     public int getAbsoluteHeight() {
-        return 60;
+        return this.barHeight;
     }
 
+    /**
+     * Compatibility method for editor mode.
+     */
     protected boolean isInEditor() {
         return isEditor();
     }
-
 }

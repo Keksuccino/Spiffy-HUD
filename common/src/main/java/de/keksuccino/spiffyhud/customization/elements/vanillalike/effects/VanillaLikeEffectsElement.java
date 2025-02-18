@@ -35,7 +35,9 @@ public class VanillaLikeEffectsElement extends AbstractElement {
     protected int tickCount;
 
     // These variables record the overall dimensions of the effects bar.
-    private int barHeight = 100;
+    // They will be updated based on the currently active effects.
+    private int barHeight = 60; // default height (will be updated)
+    private int barWidth = 100;  // default width (will be updated)
 
     // When true, the background (and icon inset) is rendered.
     private boolean shouldRenderBar = false;
@@ -66,7 +68,6 @@ public class VanillaLikeEffectsElement extends AbstractElement {
         // First call renderEffects with (0,0) offset to update the bar dimensions.
         this.shouldRenderBar = false;
         this.renderEffects(graphics, 0, 0);
-        this.shouldRenderBar = true;
 
         // Get the element's absolute position and dimensions.
         int elementAbsX = this.getAbsoluteX();
@@ -93,6 +94,7 @@ public class VanillaLikeEffectsElement extends AbstractElement {
         RenderingUtils.resetShaderColor(graphics);
 
         // Render effects directly at (baseX, baseY).
+        this.shouldRenderBar = true;
         this.renderEffects(graphics, baseX, baseY);
 
         RenderingUtils.resetShaderColor(graphics);
@@ -104,12 +106,7 @@ public class VanillaLikeEffectsElement extends AbstractElement {
      *
      * <p>This method computes each effect's final absolute position by using a base (baseX, baseY) provided by the render() method
      * and then adding per-icon offsets that depend on the effect's type (beneficial or harmful) and the chosen alignment.
-     * The horizontal layout is computed using the element's width (via getAbsoluteWidth()):
-     * <ul>
-     *   <li>Left-based: icons start at 0.</li>
-     *   <li>Center-based: icons start at (elementWidth - (iconCount * 25)) / 2.</li>
-     *   <li>Right-based: icons start at elementWidth - (iconCount * 25).</li>
-     * </ul>
+     * Horizontal positions are computed using a dynamically determined element width based on the number of icons.
      * Vertical positions are determined by a base row offset (with harmful effects rendered 26 pixels below beneficial ones).</p>
      *
      * @param graphics the graphics context
@@ -176,11 +173,15 @@ public class VanillaLikeEffectsElement extends AbstractElement {
         int beneficialRowY = baseY + baseRowOffset;
         int harmfulRowY = baseY + baseRowOffset + 26;
 
-        // Use the element's width for horizontal layout.
-        int elementWidth = this.getAbsoluteWidth();
+        // Compute required width based on number of icons.
+        int beneficialIconCount = beneficialEffects.size();
+        int harmfulIconCount = harmfulEffects.size();
+        int requiredWidth = Math.max(beneficialIconCount, harmfulIconCount) * 25;
+
+        // Use the computed width for horizontal layout.
+        int elementWidth = requiredWidth;
 
         // Calculate starting X positions for beneficial effects.
-        int beneficialIconCount = beneficialEffects.size();
         int beneficialStartX;
         if (isLeftAligned) {
             beneficialStartX = 0;
@@ -191,7 +192,6 @@ public class VanillaLikeEffectsElement extends AbstractElement {
         }
 
         // Calculate starting X positions for harmful effects.
-        int harmfulIconCount = harmfulEffects.size();
         int harmfulStartX;
         if (isLeftAligned) {
             harmfulStartX = 0;
@@ -274,22 +274,22 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             }
         }
 
-        // Update overall bar dimensions from the recorder.
+        // Update overall bar dimensions from the recorder and our computed width.
         this.barHeight = recorder.getHeight();
+        this.barWidth = requiredWidth;
 
         // Execute all rendering tasks.
         renderTasks.forEach(Runnable::run);
-
     }
 
     @Override
     public int getAbsoluteWidth() {
-        return 100;
+        return this.barWidth;
     }
 
     @Override
     public int getAbsoluteHeight() {
-        return 60;
+        return this.barHeight;
     }
 
 }

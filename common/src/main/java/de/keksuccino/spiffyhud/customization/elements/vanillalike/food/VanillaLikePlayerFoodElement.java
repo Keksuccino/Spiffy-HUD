@@ -24,13 +24,12 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
 
+    private static final int BAR_WIDTH = 81;
+    private static final int BAR_HEIGHT = 9;
+
     private final Minecraft minecraft = Minecraft.getInstance();
     protected final RandomSource random = RandomSource.create();
     protected int tickCount;
-
-    // Metrics for the food bar's bounding box within the element
-    private int barWidth = 100;
-    private int barHeight = 100;
 
     @NotNull
     public SpiffyAlignment spiffyAlignment = SpiffyAlignment.TOP_LEFT;
@@ -53,11 +52,6 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
             return;
         }
 
-        // Use the element's top-left as a provisional base position to update bar metrics.
-        int provisionalBaseX = this.getAbsoluteX();
-        int provisionalBaseY = this.getAbsoluteY();
-        this.updateBarMetrics(provisionalBaseX, provisionalBaseY);
-
         // Calculate the aligned position of the food bar within the element.
         int elementX = this.getAbsoluteX();
         int elementY = this.getAbsoluteY();
@@ -67,8 +61,8 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
                 elementY,
                 this.getAbsoluteWidth(),
                 this.getAbsoluteHeight(),
-                this.barWidth,
-                this.barHeight
+                BAR_WIDTH,
+                BAR_HEIGHT
         );
         int barPosX = alignedPosition[0];
         int barPosY = alignedPosition[1];
@@ -80,42 +74,6 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
         this.renderFoodBar(graphics, barPosX, barPosY);
 
         RenderingUtils.resetShaderColor(graphics);
-
-    }
-
-    /**
-     * Updates the metrics (original position, width, height) of the food bar based on the layout of food icons.
-     *
-     * @param baseX The provisional base X coordinate (typically the element's top-left X).
-     * @param baseY The provisional base Y coordinate (typically the element's top-left Y).
-     */
-    private void updateBarMetrics(int baseX, int baseY) {
-
-        Player player = getCameraPlayer();
-        if (player == null) return;
-
-        final int numIcons = 10;
-        final int ICON_WIDTH = 9;
-        final int ICON_SPACING = 8;
-        boolean renderIconsLeftToRight = shouldRenderIconsLeftToRight();
-
-        int minX = Integer.MAX_VALUE;
-        int minY = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE;
-        int maxY = Integer.MIN_VALUE;
-
-        // Loop through each icon slot to determine the bar's bounding box.
-        for (int i = 0; i < numIcons; i++) {
-            // For left-based and center-based alignments, draw left-to-right.
-            int iconX = renderIconsLeftToRight ? baseX + i * ICON_SPACING : baseX + ((numIcons - 1 - i) * ICON_SPACING);
-            int iconY = baseY;
-            minX = Math.min(minX, iconX);
-            minY = Math.min(minY, iconY);
-            maxX = Math.max(maxX, iconX + ICON_WIDTH);
-            maxY = Math.max(maxY, iconY + ICON_WIDTH); // ICON_HEIGHT is the same as ICON_WIDTH (9)
-        }
-        this.barWidth = maxX - minX;
-        this.barHeight = maxY - minY;
 
     }
 
@@ -223,12 +181,12 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
 
     @Override
     public int getAbsoluteWidth() {
-        return 100;
+        return BAR_WIDTH;
     }
 
     @Override
     public int getAbsoluteHeight() {
-        return 20;
+        return BAR_HEIGHT;
     }
 
 }

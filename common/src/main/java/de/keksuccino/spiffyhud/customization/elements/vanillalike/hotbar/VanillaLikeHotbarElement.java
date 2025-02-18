@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
-import de.keksuccino.spiffyhud.util.rendering.ElementMobilizer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -16,127 +15,163 @@ import org.jetbrains.annotations.Nullable;
 
 public class VanillaLikeHotbarElement extends AbstractElement {
 
+    // The location of the widgets texture used for the hotbar.
     private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
+
+    private static final int BAR_WIDTH = 182;
+    private static final int BAR_HEIGHT = 22;
 
     public VanillaLikeHotbarElement(@NotNull ElementBuilder<?, ?> builder) {
         super(builder);
     }
 
+    /**
+     * Renders the hotbar element.
+     * The hotbar background, selection highlight, offhand icons, and slots are all drawn relative to
+     * the element’s absolute position and size.
+     */
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
 
-        int x = this.getAbsoluteX();
-        int y = this.getAbsoluteY();
-        int w = this.getAbsoluteWidth();
-        int h = this.getAbsoluteHeight();
+        // Get the absolute position and size of this element.
+        int elementX = this.getAbsoluteX();
+        int elementY = this.getAbsoluteY();
+        int elementWidth = this.getAbsoluteWidth();   // Expected width: 182
+        int elementHeight = this.getAbsoluteHeight(); // Expected height: 22
 
-        ElementMobilizer.mobilize(graphics, -((getScreenWidth() / 2) - 91), -(getScreenHeight() - 22), x, y, () -> {
+        // Enable blending and reset shader color for proper rendering.
+        RenderSystem.enableBlend();
+        RenderingUtils.resetShaderColor(graphics);
 
-            RenderSystem.enableBlend();
-            RenderingUtils.resetShaderColor(graphics);
+        // Only proceed if the player is available.
+        if (Minecraft.getInstance().player == null) return;
 
-            if (Minecraft.getInstance().player == null) return;
+        // Render the hotbar within the element's bounds.
+        this.renderHotbar(graphics, partialTick, elementX, elementY, elementWidth, elementHeight);
 
-            //-------------------------------
-
-            this.renderHotbar(partial, graphics);
-
-            //-------------------------------
-
-            RenderingUtils.resetShaderColor(graphics);
-
-        });
+        RenderingUtils.resetShaderColor(graphics);
 
     }
 
-    private void renderHotbar(float partial, GuiGraphics graphics) {
+    /**
+     * Renders the hotbar background, selection highlight, offhand icons, and item slots.
+     *
+     * @param graphics       The graphics context for rendering.
+     * @param partialTick    The partial tick time for animations.
+     * @param elementX       The X position of the element.
+     * @param elementY       The Y position of the element.
+     * @param elementWidth   The width of the element.
+     * @param elementHeight  The height of the element.
+     */
+    private void renderHotbar(GuiGraphics graphics, float partialTick, int elementX, int elementY, int elementWidth, int elementHeight) {
 
-        float f;
-        int o;
-        int n;
-        int m;
+        // Get the current player.
         Player player = this.getCameraPlayer();
         if (player == null) {
             return;
         }
-        ItemStack itemStack = player.getOffhandItem();
-        HumanoidArm humanoidArm = player.getMainArm().getOpposite();
-        int i = getScreenWidth() / 2;
-        int j = 182;
-        int k = 91;
-        graphics.pose().pushPose();
-        //Tweak to Vanilla logic
+
+        // Get the player's offhand item and determine the opposite of the main arm.
+        ItemStack offhandItem = player.getOffhandItem();
+        HumanoidArm oppositeMainArm = player.getMainArm().getOpposite();
+
+        // Draw the hotbar background using the element's bounds.
+        graphics.blit(WIDGETS_LOCATION, elementX, elementY, 0, 0, elementWidth, elementHeight);
+
+        // Draw the selection highlight around the currently selected hotbar slot.
+        int selectedSlot = player.getInventory().selected;
+        // The highlight is drawn with a 1-pixel offset relative to the hotbar background.
+        graphics.blit(WIDGETS_LOCATION, elementX - 1 + selectedSlot * 20, elementY - 1, 0, BAR_HEIGHT, 24, BAR_HEIGHT);
+
+        // Render offhand icons if applicable.
         if (!isEditor()) {
-            graphics.pose().translate(0.0f, 0.0f, -90.0f);
-        }
-        //--------------------
-        graphics.blit(WIDGETS_LOCATION, i - 91, getScreenHeight() - 22, 0, 0, 182, 22);
-        graphics.blit(WIDGETS_LOCATION, i - 91 - 1 + player.getInventory().selected * 20, getScreenHeight() - 22 - 1, 0, 22, 24, 22);
-        //Tweak to Vanilla logic (isEditor)
-        if (!isEditor()) {
-            if (!itemStack.isEmpty()) {
-                if (humanoidArm == HumanoidArm.LEFT) {
-                    graphics.blit(WIDGETS_LOCATION, i - 91 - 29, getScreenHeight() - 23, 24, 22, 29, 24);
+            if (!offhandItem.isEmpty()) {
+                if (oppositeMainArm == HumanoidArm.LEFT) {
+                    // Render offhand icon on the left side of the hotbar.
+                    graphics.blit(WIDGETS_LOCATION, elementX - 29, elementY - 1, 24, BAR_HEIGHT, 29, 24);
                 } else {
-                    graphics.blit(WIDGETS_LOCATION, i + 91, getScreenHeight() - 23, 53, 22, 29, 24);
+                    // Render offhand icon on the right side of the hotbar.
+                    graphics.blit(WIDGETS_LOCATION, elementX + elementWidth, elementY - 1, 53, BAR_HEIGHT, 29, 24);
                 }
             }
         } else {
-            // Render both sides in editor for better showing how wide the hotbar can be to both sides
-            graphics.blit(WIDGETS_LOCATION, i - 91 - 29, getScreenHeight() - 23, 24, 22, 29, 24);
-            graphics.blit(WIDGETS_LOCATION, i + 91, getScreenHeight() - 23, 53, 22, 29, 24);
+            // In editor mode, display both offhand icons for demonstration purposes.
+            graphics.blit(WIDGETS_LOCATION, elementX - 29, elementY - 1, 24, BAR_HEIGHT, 29, 24);
+            graphics.blit(WIDGETS_LOCATION, elementX + elementWidth, elementY - 1, 53, BAR_HEIGHT, 29, 24);
         }
-        //------------------
-        graphics.pose().popPose();
-        int l = 1;
-        for (m = 0; m < 9; ++m) {
-            n = i - 90 + m * 20 + 2;
-            o = getScreenHeight() - 16 - 3;
-            this.renderSlot(graphics, n, o, partial, player, player.getInventory().items.get(m), l++);
+
+        // Calculate starting positions for rendering the 9 hotbar slots.
+        int slotStartX = elementX + 3; // 3 pixels padding from the left edge.
+        int slotY = elementY + 3;      // 3 pixels padding from the top edge.
+        int renderSeed = 1;
+
+        // Render each of the 9 main hotbar slots.
+        for (int slotIndex = 0; slotIndex < 9; slotIndex++) {
+            int slotX = slotStartX + slotIndex * 20; // Each slot is spaced 20 pixels apart.
+            renderSlot(graphics, slotX, slotY, partialTick, player, player.getInventory().items.get(slotIndex), renderSeed++);
         }
-        if (!itemStack.isEmpty()) {
-            m = getScreenHeight() - 16 - 3;
-            if (humanoidArm == HumanoidArm.LEFT) {
-                this.renderSlot(graphics, i - 91 - 26, m, partial, player, itemStack, l++);
+
+        // Render the offhand slot if there is an offhand item.
+        if (!offhandItem.isEmpty()) {
+            if (oppositeMainArm == HumanoidArm.LEFT) {
+                renderSlot(graphics, elementX - 26, slotY, partialTick, player, offhandItem, renderSeed++);
             } else {
-                this.renderSlot(graphics, i + 91 + 10, m, partial, player, itemStack, l++);
+                renderSlot(graphics, elementX + elementWidth + 10, slotY, partialTick, player, offhandItem, renderSeed++);
             }
         }
-        //Tweak to Vanilla logic
-//        RenderSystem.enableBlend();
-//        if (Minecraft.getInstance().options.attackIndicator().get() == AttackIndicatorStatus.HOTBAR && (f = Minecraft.getInstance().player.getAttackStrengthScale(0.0f)) < 1.0f) {
-//            n = getScreenHeight() - 20;
-//            o = i + 91 + 6;
-//            if (humanoidArm == HumanoidArm.RIGHT) {
-//                o = i - 91 - 22;
-//            }
-//            int p = (int)(f * 19.0f);
-//            graphics.blitSprite(HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE, o, n, 18, 18);
-//            graphics.blitSprite(HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE, 18, 18, 0, 18 - p, o, n + 18 - p, 18, p);
-//        }
-//        RenderSystem.disableBlend();
-        //----------------------
+
     }
 
-    private void renderSlot(GuiGraphics guiGraphics, int x, int y, float partialTick, Player player, ItemStack stack, int seed) {
+    /**
+     * Renders a single item slot, including any pop animation and decorations.
+     *
+     * @param graphics   The graphics context for rendering.
+     * @param slotX         The X position of the slot.
+     * @param slotY         The Y position of the slot.
+     * @param partialTick   The partial tick time for animations.
+     * @param player        The current player.
+     * @param stack         The item stack to render.
+     * @param renderSeed    A seed value for randomized rendering effects.
+     */
+    private void renderSlot(GuiGraphics graphics, int slotX, int slotY, float partialTick, Player player, ItemStack stack, int renderSeed) {
+
+        // Do not render if the item stack is empty.
         if (stack.isEmpty()) {
             return;
         }
-        float f = (float)stack.getPopTime() - partialTick;
-        if (f > 0.0f) {
-            float g = 1.0f + f / 5.0f;
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate(x + 8, y + 12, 0.0f);
-            guiGraphics.pose().scale(1.0f / g, (g + 1.0f) / 2.0f, 1.0f);
-            guiGraphics.pose().translate(-(x + 8), -(y + 12), 0.0f);
+
+        // Determine if the item has a pop animation.
+        float popTimeRemaining = (float) stack.getPopTime() - partialTick;
+        if (popTimeRemaining > 0.0f) {
+            // Calculate scaling factor based on the pop animation.
+            float scaleFactor = 1.0f + popTimeRemaining / 5.0f;
+            graphics.pose().pushPose();
+            // Translate to the center of the slot.
+            graphics.pose().translate(slotX + 8, slotY + 12, 0.0f);
+            // Apply scaling transformation for the pop effect.
+            graphics.pose().scale(1.0f / scaleFactor, (scaleFactor + 1.0f) / 2.0f, 1.0f);
+            // Translate back to the original position.
+            graphics.pose().translate(-(slotX + 8), -(slotY + 12), 0.0f);
         }
-        guiGraphics.renderItem(player, stack, x, y, seed);
-        if (f > 0.0f) {
-            guiGraphics.pose().popPose();
+
+        // Render the item within the slot.
+        graphics.renderItem(player, stack, slotX, slotY, renderSeed);
+
+        // If a pop animation was applied, revert the transformation.
+        if (popTimeRemaining > 0.0f) {
+            graphics.pose().popPose();
         }
-        guiGraphics.renderItemDecorations(Minecraft.getInstance().font, stack, x, y);
+
+        // Render additional item decorations such as count overlays.
+        graphics.renderItemDecorations(Minecraft.getInstance().font, stack, slotX, slotY);
+
     }
 
+    /**
+     * Retrieves the current camera player.
+     *
+     * @return The current player if available, otherwise null.
+     */
     @Nullable
     private Player getCameraPlayer() {
         return (Minecraft.getInstance().getCameraEntity() instanceof Player p) ? p : null;
@@ -144,12 +179,12 @@ public class VanillaLikeHotbarElement extends AbstractElement {
 
     @Override
     public int getAbsoluteWidth() {
-        return 182;
+        return BAR_WIDTH;
     }
 
     @Override
     public int getAbsoluteHeight() {
-        return 22;
+        return BAR_HEIGHT;
     }
 
 }

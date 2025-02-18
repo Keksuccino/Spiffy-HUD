@@ -9,7 +9,6 @@ import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.Objects;
 
 public class VanillaLikePlayerFoodElementBuilder extends ElementBuilder<VanillaLikePlayerFoodElement, VanillaLikePlayerFoodEditorElement> {
@@ -20,7 +19,10 @@ public class VanillaLikePlayerFoodElementBuilder extends ElementBuilder<VanillaL
 
     @Override
     public @NotNull VanillaLikePlayerFoodElement buildDefaultInstance() {
-        return new VanillaLikePlayerFoodElement(this);
+        VanillaLikePlayerFoodElement e = new VanillaLikePlayerFoodElement(this);
+        e.stickyAnchor = true;
+        e.stayOnScreen = false;
+        return e;
     }
 
     @Override

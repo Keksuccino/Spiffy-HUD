@@ -19,7 +19,10 @@ public class VanillaLikePlayerAirElementBuilder extends ElementBuilder<VanillaLi
 
     @Override
     public @NotNull VanillaLikePlayerAirElement buildDefaultInstance() {
-        return new VanillaLikePlayerAirElement(this);
+        VanillaLikePlayerAirElement e = new VanillaLikePlayerAirElement(this);
+        e.stickyAnchor = true;
+        e.stayOnScreen = false;
+        return e;
     }
 
     @Override

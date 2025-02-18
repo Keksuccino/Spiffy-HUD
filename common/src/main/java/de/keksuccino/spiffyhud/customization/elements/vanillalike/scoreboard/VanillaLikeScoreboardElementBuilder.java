@@ -20,7 +20,10 @@ public class VanillaLikeScoreboardElementBuilder extends ElementBuilder<VanillaL
 
     @Override
     public @NotNull VanillaLikeScoreboardElement buildDefaultInstance() {
-        return new VanillaLikeScoreboardElement(this);
+        VanillaLikeScoreboardElement e = new VanillaLikeScoreboardElement(this);
+        e.stickyAnchor = true;
+        e.stayOnScreen = false;
+        return e;
     }
 
     @Override

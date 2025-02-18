@@ -3,6 +3,7 @@ package de.keksuccino.spiffyhud.util.rendering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
@@ -25,8 +26,10 @@ public class SpiffyRenderUtils {
      */
     public static void blitMirrored(GuiGraphics graphics, ResourceLocation atlasLocation, int x, int y, int blitOffset, int u, int v, int width, int height, int textureWidth, int textureHeight) {
 
-        // Set the atlas texture.
         RenderSystem.setShaderTexture(0, atlasLocation);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+
+        RenderSystem.enableBlend();
 
         // Calculate texture coordinates.
         float minU = (u + width) / (float) textureWidth;
@@ -43,7 +46,7 @@ public class SpiffyRenderUtils {
         bufferBuilder.vertex(matrix, (float)(x + width), (float)y, (float)blitOffset).uv(maxU, minV).endVertex();
         BufferUploader.drawWithShader(bufferBuilder.end());
 
-        graphics.flush();
+        RenderSystem.disableBlend();
 
     }
 

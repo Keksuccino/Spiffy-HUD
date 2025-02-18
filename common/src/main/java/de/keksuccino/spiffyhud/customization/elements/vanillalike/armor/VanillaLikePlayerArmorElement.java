@@ -5,14 +5,11 @@ import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.spiffyhud.SpiffyUtils;
-import de.keksuccino.spiffyhud.util.SizeAndPositionRecorder;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
-import de.keksuccino.spiffyhud.util.rendering.ElementMobilizer;
+import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,17 +20,14 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    // The location of the vanilla GUI icons texture.
     private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
 
-    private final Minecraft minecraft = Minecraft.getInstance();
-    protected final RandomSource random = RandomSource.create();
-    protected int tickCount;
+    private static final int BAR_WIDTH = 81;
+    private static final int BAR_HEIGHT = 9;
 
-    private int barWidth = 100;
-    private int barHeight = 100;
-    private int barOriginalX = 0;
-    private int barOriginalY = 0;
-    private boolean shouldRenderBar = false;
+    private final Minecraft minecraft = Minecraft.getInstance();
+    protected int tickCount;
 
     @NotNull
     public SpiffyAlignment spiffyAlignment = SpiffyAlignment.TOP_LEFT;
@@ -45,87 +39,129 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
 
+        // Update the current tick (if needed for any time-dependent effects).
         this.tickCount = SpiffyUtils.getGuiAccessor().getTickCount_Spiffy();
 
-        if (this.minecraft.player == null) return;
-        if (this.minecraft.level == null) return;
+        // Ensure that the player and level are available.
+        if (this.minecraft.player == null || this.minecraft.level == null) {
+            return;
+        }
 
-        //Update size and originalPos of bar before render
-        this.shouldRenderBar = false;
-        this.renderPlayerHealth(graphics);
-        this.shouldRenderBar = true;
+        // Retrieve the element's absolute position and size.
+        int elementX = this.getAbsoluteX();
+        int elementY = this.getAbsoluteY();
+        int elementWidth = this.getAbsoluteWidth();
+        int elementHeight = this.getAbsoluteHeight();
 
-        int x = this.getAbsoluteX();
-        int y = this.getAbsoluteY();
-        Integer[] alignedBody = SpiffyAlignment.calculateElementBodyPosition(this.spiffyAlignment, x, y, this.getAbsoluteWidth(), this.getAbsoluteHeight(), this.barWidth, this.barHeight);
-        x = alignedBody[0];
-        y = alignedBody[1];
+        // Calculate where the armor bar should be drawn inside the element based on alignment.
+        Integer[] alignedPosition = SpiffyAlignment.calculateElementBodyPosition(
+                this.spiffyAlignment,
+                elementX,
+                elementY,
+                elementWidth,
+                elementHeight,
+                BAR_WIDTH,
+                BAR_HEIGHT
+        );
+        int armorBarX = alignedPosition[0];
+        int armorBarY = alignedPosition[1];
 
-        ElementMobilizer.mobilize(graphics, -this.barOriginalX, -this.barOriginalY, x, y, () -> {
+        // Render the armor bar at the computed aligned position.
+        RenderSystem.enableBlend();
+        RenderingUtils.resetShaderColor(graphics);
 
-            RenderSystem.enableBlend();
-            RenderingUtils.resetShaderColor(graphics);
+        this.renderPlayerArmor(graphics, armorBarX, armorBarY);
 
-            //-------------------------------
-
-            this.renderPlayerHealth(graphics);
-
-            //-------------------------------
-
-            RenderingUtils.resetShaderColor(graphics);
-
-        });
+        RenderingUtils.resetShaderColor(graphics);
 
     }
 
-    private void renderPlayerHealth(GuiGraphics graphics) {
-        int barX;
-        int barY = 0; // y is always 0, because parent render method translates it to correct position
+    /**
+     * Renders the player's armor bar at a given offset.
+     * Uses different rendering orders and texture blitting (mirrored or not)
+     * based on whether the element alignment is right-based or not.
+     *
+     * @param graphics the graphics context for rendering
+     * @param offsetX  the x-coordinate where the bar should start drawing
+     * @param offsetY  the y-coordinate where the bar should start drawing
+     */
+    private void renderPlayerArmor(GuiGraphics graphics, int offsetX, int offsetY) {
+
+        // Retrieve the current player; if unavailable, skip rendering.
         Player player = this.getCameraPlayer();
         if (player == null) {
             return;
         }
-        this.random.setSeed(this.tickCount * 312871L);
-        int m = getScreenWidth() / 2 - 91;
-        int u = player.getArmorValue();
-        //Tweak to Vanilla logic
-        if (isEditor()) u = 10;
-        //Tweak to Vanilla logic
-        SizeAndPositionRecorder recorder = new SizeAndPositionRecorder();
-        recorder.setWidthOffset(9);
-        recorder.setHeightOffset(9);
-        //------------------
-        for (int w = 0; w < 10; ++w) {
-            if (u <= 0) continue;
-            barX = m + w * 8;
-            //Tweak to Vanilla logic
-            recorder.updateX(barX);
-            recorder.updateY(barY);
-            //----------------------
-            //Tweak to Vanilla logic (if wrap)
-            if (this.shouldRenderBar) {
-                if (w * 2 + 1 < u) {
-                    graphics.blit(GUI_ICONS_LOCATION, barX, barY, 34, 9, 9, 9);
-                }
-                if (w * 2 + 1 == u) {
-                    graphics.blit(GUI_ICONS_LOCATION, barX, barY, 25, 9, 9, 9);
-                }
-                if (w * 2 + 1 <= u) continue;
-                graphics.blit(GUI_ICONS_LOCATION, barX, barY, 16, 9, 9, 9);
-            }
+
+        // Get the player's armor value.
+        int armorValue = player.getArmorValue();
+        // For editor/demo mode, simulate an armor value.
+        if (isEditor()) {
+            armorValue = 9;
         }
-        //Tweak to Vanilla logic
-        this.barOriginalX = recorder.getX();
-        this.barOriginalY = recorder.getY();
-        this.barWidth = recorder.getWidth();
-        this.barHeight = recorder.getHeight();
-        //-----------------------
+
+        // Define constants for the number of icons, spacing between them, and icon size.
+        final int iconCount = 10;
+        final int iconSpacing = 8;
+        final int iconSize = 9;
+
+        // Determine if the current alignment is right-based.
+        boolean isRightAligned = spiffyAlignment == SpiffyAlignment.TOP_RIGHT ||
+                spiffyAlignment == SpiffyAlignment.MID_RIGHT ||
+                spiffyAlignment == SpiffyAlignment.BOTTOM_RIGHT;
+
+        // Loop over each armor slot.
+        for (int slot = 0; slot < iconCount; slot++) {
+
+            // Calculate the x-coordinate based on alignment:
+            // - For right-based alignment, we render from right to left.
+            // - For left or centered alignments, we render from left to right.
+            int iconX;
+            if (isRightAligned) {
+                iconX = offsetX + (iconCount - 1 - slot) * iconSpacing;
+            } else {
+                iconX = offsetX + slot * iconSpacing;
+            }
+            int iconY = offsetY;
+
+            // Each slot represents two armor points.
+            // Compute the armor segment value that this slot corresponds to.
+            int armorSegment = slot * 2 + 1;
+
+            // Determine which icon to draw:
+            // - Full armor icon if the segment value is less than the armor value.
+            // - Half armor icon if the segment value exactly equals the armor value.
+            // - Otherwise, draw the empty armor icon background.
+            if (armorSegment < armorValue) {
+                // Full armor icon
+                if (isRightAligned) {
+                    SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, iconX, iconY, 0, 34, 9, iconSize, iconSize, 256, 256);
+                } else {
+                    graphics.blit(GUI_ICONS_LOCATION, iconX, iconY, 34, 9, iconSize, iconSize);
+                }
+            } else if (armorSegment == armorValue) {
+                // Half armor icon
+                if (isRightAligned) {
+                    SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, iconX, iconY, 0, 25, 9, iconSize, iconSize, 256, 256);
+                } else {
+                    graphics.blit(GUI_ICONS_LOCATION, iconX, iconY, 25, 9, iconSize, iconSize);
+                }
+            } else {
+                // Empty armor icon (background)
+                if (isRightAligned) {
+                    SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, iconX, iconY, 0, 16, 9, iconSize, iconSize, 256, 256);
+                } else {
+                    graphics.blit(GUI_ICONS_LOCATION, iconX, iconY, 16, 9, iconSize, iconSize);
+                }
+            }
+
+        }
+
     }
 
-    private Font getFont() {
-        return Minecraft.getInstance().font;
-    }
-
+    /**
+     * Returns the camera player if available.
+     */
     @Nullable
     private Player getCameraPlayer() {
         return (Minecraft.getInstance().getCameraEntity() instanceof Player p) ? p : null;
@@ -133,12 +169,12 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
 
     @Override
     public int getAbsoluteWidth() {
-        return 100;
+        return BAR_WIDTH;
     }
 
     @Override
     public int getAbsoluteHeight() {
-        return 20;
+        return BAR_HEIGHT;
     }
 
 }

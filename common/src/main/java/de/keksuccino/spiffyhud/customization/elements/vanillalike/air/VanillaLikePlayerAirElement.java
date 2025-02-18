@@ -27,6 +27,9 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
     private static final int BUBBLE_SIZE = 9;      // The width (and height) of a bubble in pixels.
     private static final int BUBBLE_SPACING = 8;   // The spacing offset between bubbles.
 
+    private static final int TOTAL_BAR_WIDTH = 81;
+    private static final int TOTAL_BAR_HEIGHT = 9;
+
     private final Minecraft minecraft = Minecraft.getInstance();
     protected int tickCount;
 
@@ -56,10 +59,7 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
         // First pass: perform a dry-run (without drawing) to update the bar's dimensions.
         this.shouldRenderBar = false;
         // We call renderPlayerAir with an offset of (0,0) because we only need to update barWidth and barHeight.
-        renderPlayerAir(graphics, 0, 0);
-
-        // Now enable actual drawing.
-        this.shouldRenderBar = true;
+        this.renderPlayerAir(graphics, 0, 0);
 
         // Retrieve the element's absolute position and size.
         int elementAbsX = this.getAbsoluteX();
@@ -85,6 +85,7 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
         RenderSystem.enableBlend();
         RenderingUtils.resetShaderColor(graphics);
 
+        this.shouldRenderBar = true;
         this.renderPlayerAir(graphics, barAbsX, barAbsY);
 
         RenderingUtils.resetShaderColor(graphics);
@@ -180,12 +181,12 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
 
     @Override
     public int getAbsoluteWidth() {
-        return 100;
+        return TOTAL_BAR_WIDTH;
     }
 
     @Override
     public int getAbsoluteHeight() {
-        return 20;
+        return TOTAL_BAR_HEIGHT;
     }
 
 }

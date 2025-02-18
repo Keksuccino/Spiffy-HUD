@@ -8,7 +8,6 @@ import de.keksuccino.spiffyhud.SpiffyUtils;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -30,9 +29,6 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
     // These values will be computed based on the drawn hearts layout.
     private int barWidth = 100;
     private int barHeight = 100;
-    // Since the new drawing method draws directly using absolute positions, these remain 0.
-    private int barOriginalX = 0;
-    private int barOriginalY = 0;
 
     // When false, the drawing method only computes layout dimensions.
     private boolean shouldRenderBar = false;
@@ -53,6 +49,7 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
      */
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
+
         this.tickCount = SpiffyUtils.getGuiAccessor().getTickCount_Spiffy();
 
         if (this.minecraft.player == null || this.minecraft.level == null) {
@@ -62,7 +59,7 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
         //––– First, compute the layout dimensions without actually drawing the hearts.
         this.shouldRenderBar = false;
         // Draw at (0,0) only to calculate the layout (barWidth and barHeight will be updated)
-        renderVehicleHealth(graphics, 0, 0);
+        this.renderVehicleHealth(graphics, 0, 0);
 
         //––– Compute the position of the bar within the element based on alignment.
         int elementX = this.getAbsoluteX();
@@ -79,9 +76,14 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
         int barRenderX = alignedBody[0];
         int barRenderY = alignedBody[1];
 
+        RenderSystem.enableBlend();
+
         //––– Now, actually render the hearts using the computed offset.
         this.shouldRenderBar = true;
-        renderVehicleHealth(graphics, barRenderX, barRenderY);
+        this.renderVehicleHealth(graphics, barRenderX, barRenderY);
+
+        RenderingUtils.resetShaderColor(graphics);
+
     }
 
     /**
@@ -94,14 +96,17 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
      * - For left–, center– or right–based alignments, hearts are drawn in natural (left-to-right) order.
      * - For right–based alignments, hearts are drawn in reverse order so that the full hearts start on the right.
      * <p>
-     * Additionally, if the vertical alignment is top–based (TOP_LEFT, TOP_CENTERED, TOP_RIGHT),
-     * then the order of rows is inverted so that rows with full hearts appear at the top.
+     * Additionally, the vertical drawing order depends on the overall alignment:
+     * - For top–based alignments (TOP_LEFT, TOP_CENTERED, TOP_RIGHT), the natural order is used so that
+     *   full hearts (lower indices) appear at the top.
+     * - For bottom– or center–based alignments, the drawing order is inverted so that full hearts appear at the bottom.
      *
      * @param graphics the GUI graphics context used for rendering.
      * @param baseX    the x–offset at which to start drawing the bar (already computed from element alignment).
      * @param baseY    the y–offset at which to start drawing the bar.
      */
     private void renderVehicleHealth(GuiGraphics graphics, int baseX, int baseY) {
+
         LivingEntity mount = this.getPlayerVehicleWithHealth();
         int totalHearts = (mount != null) ? this.getVehicleMaxHearts(mount) : 10;
         int currentHealth = (int) Math.ceil((mount != null) ? mount.getHealth() : 0);
@@ -122,16 +127,14 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
         int totalRows = (int) Math.ceil(totalHearts / (double) heartsPerRow);
 
         // For full rows (or if total hearts is fewer than heartsPerRow), we use fixedRowWidth.
-        int computedBarWidth = (totalHearts >= heartsPerRow) ? fixedRowWidth : fixedRowWidth;
+        int computedBarWidth = fixedRowWidth;
         int computedBarHeight = totalRows * 10;
 
         // Save computed bar dimensions so that alignment calculations work correctly.
-        this.barOriginalX = 0;
-        this.barOriginalY = 0;
         this.barWidth = computedBarWidth;
         this.barHeight = computedBarHeight;
 
-        // Determine if the vertical alignment is top-based.
+        // Determine vertical alignment.
         boolean isTopAlignment = (this.spiffyAlignment == SpiffyAlignment.TOP_LEFT ||
                 this.spiffyAlignment == SpiffyAlignment.TOP_CENTERED ||
                 this.spiffyAlignment == SpiffyAlignment.TOP_RIGHT);
@@ -140,7 +143,6 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
                 this.spiffyAlignment == SpiffyAlignment.BOTTOM_RIGHT ||
                 this.spiffyAlignment == SpiffyAlignment.MID_RIGHT);
         // Determine if the hearts should be mirrored horizontally.
-        // Now mirror for left-based and center-based alignments.
         boolean mirrorHearts = (this.spiffyAlignment == SpiffyAlignment.TOP_LEFT ||
                 this.spiffyAlignment == SpiffyAlignment.BOTTOM_LEFT ||
                 this.spiffyAlignment == SpiffyAlignment.MID_LEFT ||
@@ -148,45 +150,42 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
                 this.spiffyAlignment == SpiffyAlignment.BOTTOM_CENTERED ||
                 this.spiffyAlignment == SpiffyAlignment.MID_CENTERED);
 
-        // Iterate over each row.
-        // For vertical order: if top–based, invert the row order so that the top row is drawn first.
+        // Iterate over each row using the natural order (0 to totalRows-1)
         for (int row = 0; row < totalRows; row++) {
-            int rowBottomUp = isTopAlignment ? (totalRows - 1 - row) : row;
+            int naturalRow = row; // Always use the natural (health) order for heart indexing.
+            // Compute the vertical drawing offset based on alignment:
+            // For top-based: natural order (row 0 at the top);
+            // For bottom- or center-based: invert so that natural row 0 (full hearts) is at the bottom.
+            int rowY = isTopAlignment ? naturalRow * 10 : (totalRows - 1 - naturalRow) * 10;
 
             // Calculate the number of hearts in this row.
-            int heartsThisRow = (rowBottomUp == totalRows - 1) ? (totalHearts - (totalRows - 1) * heartsPerRow) : heartsPerRow;
+            int heartsThisRow = (naturalRow == totalRows - 1) ? (totalHearts - (totalRows - 1) * heartsPerRow) : heartsPerRow;
 
-            // For non–right alignments, determine the horizontal offset.
+            // For non-right alignments, determine the horizontal offset.
             int rowStartX = 0;
             if (!isRightAlignment) {
                 if (this.spiffyAlignment == SpiffyAlignment.TOP_CENTERED ||
                         this.spiffyAlignment == SpiffyAlignment.BOTTOM_CENTERED ||
                         this.spiffyAlignment == SpiffyAlignment.MID_CENTERED) {
                     rowStartX = (fixedRowWidth - heartsThisRow * 8) / 2;
-                } else { // Left–based: start at 0.
+                } else { // Left-based: start at 0.
                     rowStartX = 0;
                 }
             }
-            // Determine vertical position for this row.
-            int rowY = isTopAlignment ? row * 10 : rowBottomUp * 10;
-
             // Draw each heart in the row.
             for (int col = 0; col < heartsThisRow; col++) {
-                int effectiveCol; // Represents the natural order index within the row.
+                int effectiveCol;
                 int heartX;
                 if (isRightAlignment) {
-                    // For right alignment, reverse the order:
-                    // The rightmost heart corresponds to effectiveCol 0.
+                    // For right alignment, reverse the order within the row.
                     effectiveCol = heartsThisRow - 1 - col;
-                    // Position so that the rightmost heart is at the right edge of the fixed row.
                     heartX = baseX + fixedRowWidth - (effectiveCol + 1) * 8;
                 } else {
-                    // For left or centered, use natural order.
                     effectiveCol = col;
                     heartX = baseX + rowStartX + effectiveCol * 8;
                 }
-                // Compute overall heart index based on natural order (regardless of drawing order).
-                int overallHeartIndex = rowBottomUp * heartsPerRow + effectiveCol;
+                // Compute overall heart index based on the natural row order.
+                int overallHeartIndex = naturalRow * heartsPerRow + effectiveCol;
                 int heartY = baseY + rowY;
 
                 if (this.shouldRenderBar) {
@@ -217,6 +216,7 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
                 }
             }
         }
+
     }
 
     /**
@@ -261,11 +261,12 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
 
     @Override
     public int getAbsoluteWidth() {
-        return 100;
+        return this.barWidth;
     }
 
     @Override
     public int getAbsoluteHeight() {
-        return 30;
+        return this.barHeight;
     }
+
 }

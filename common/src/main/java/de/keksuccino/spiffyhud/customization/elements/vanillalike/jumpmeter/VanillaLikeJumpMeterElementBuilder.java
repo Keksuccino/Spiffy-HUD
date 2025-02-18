@@ -17,7 +17,10 @@ public class VanillaLikeJumpMeterElementBuilder extends ElementBuilder<VanillaLi
 
     @Override
     public @NotNull VanillaLikeJumpMeterElement buildDefaultInstance() {
-        return new VanillaLikeJumpMeterElement(this);
+        VanillaLikeJumpMeterElement e = new VanillaLikeJumpMeterElement(this);
+        e.stickyAnchor = true;
+        e.stayOnScreen = false;
+        return e;
     }
 
     @Override

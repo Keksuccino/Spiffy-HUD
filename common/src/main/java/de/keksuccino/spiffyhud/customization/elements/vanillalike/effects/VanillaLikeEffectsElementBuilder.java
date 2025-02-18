@@ -9,7 +9,6 @@ import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.Objects;
 
 public class VanillaLikeEffectsElementBuilder extends ElementBuilder<VanillaLikeEffectsElement, VanillaLikeEffectsEditorElement> {
@@ -20,7 +19,10 @@ public class VanillaLikeEffectsElementBuilder extends ElementBuilder<VanillaLike
 
     @Override
     public @NotNull VanillaLikeEffectsElement buildDefaultInstance() {
-        return new VanillaLikeEffectsElement(this);
+        VanillaLikeEffectsElement e = new VanillaLikeEffectsElement(this);
+        e.stickyAnchor = true;
+        e.stayOnScreen = false;
+        return e;
     }
 
     @Override

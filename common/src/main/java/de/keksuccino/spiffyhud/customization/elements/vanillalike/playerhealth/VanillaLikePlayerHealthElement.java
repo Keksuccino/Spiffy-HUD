@@ -1,7 +1,9 @@
 package de.keksuccino.spiffyhud.customization.elements.vanillalike.playerhealth;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
+import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.spiffyhud.SpiffyUtils;
 import de.keksuccino.spiffyhud.util.SizeAndPositionRecorder;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
@@ -80,9 +82,13 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
         int alignedBarX = alignedPosition[0];
         int alignedBarY = alignedPosition[1];
 
+        RenderSystem.enableBlend();
+
         // === Second Pass: Draw the Hearts Bar at the Computed Absolute Position ===
         this.shouldRenderBar = true;
         this.renderPlayerHealthInternal(graphics, alignedBarX, alignedBarY);
+
+        RenderingUtils.resetShaderColor(graphics);
 
     }
 
@@ -95,6 +101,7 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
      * When shouldRenderBar is false, this method only records the bar’s bounds.
      */
     private void renderPlayerHealthInternal(GuiGraphics graphics, int originX, int originY) {
+
         Player player = this.getCameraPlayer();
         if (player == null) {
             return;
@@ -294,12 +301,12 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
 
     @Override
     public int getAbsoluteWidth() {
-        return 100;
+        return this.barWidth;
     }
 
     @Override
     public int getAbsoluteHeight() {
-        return 40;
+        return this.barHeight;
     }
 
 }

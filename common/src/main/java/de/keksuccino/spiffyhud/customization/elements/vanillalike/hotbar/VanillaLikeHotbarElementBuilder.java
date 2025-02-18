@@ -17,7 +17,10 @@ public class VanillaLikeHotbarElementBuilder extends ElementBuilder<VanillaLikeH
 
     @Override
     public @NotNull VanillaLikeHotbarElement buildDefaultInstance() {
-        return new VanillaLikeHotbarElement(this);
+        VanillaLikeHotbarElement e = new VanillaLikeHotbarElement(this);
+        e.stickyAnchor = true;
+        e.stayOnScreen = false;
+        return e;
     }
 
     @Override
