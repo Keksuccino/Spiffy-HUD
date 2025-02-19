@@ -25,8 +25,6 @@ dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     implementation project(":common")
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.2")))
-    include(implementation 'com.github.Keksuccino:japng:0.5.3')
-    include(implementation 'com.github.rtyley:animated-gif-lib-for-java:animated-gif-lib-1.7')
     modImplementation "curse.maven:melody-938643:4983989"
     modImplementation "maven.modrinth:konkrete:1.8.1-1.20.1-fabric"
     modImplementation "maven.modrinth:modmenu:7.2.2"

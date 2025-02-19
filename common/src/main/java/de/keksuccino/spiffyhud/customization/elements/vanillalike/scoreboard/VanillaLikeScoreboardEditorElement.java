@@ -16,6 +16,7 @@ public class VanillaLikeScoreboardEditorElement extends AbstractEditorElement {
         this.settings.setStretchable(false);
         this.settings.setAdvancedSizingSupported(false);
         this.settings.setResizeable(false);
+        this.settings.setParallaxAllowed(false);
     }
 
     @Override

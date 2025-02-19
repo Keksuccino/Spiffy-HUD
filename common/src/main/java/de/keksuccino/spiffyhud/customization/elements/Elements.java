@@ -1,6 +1,7 @@
 package de.keksuccino.spiffyhud.customization.elements;
 
 import de.keksuccino.fancymenu.customization.element.ElementRegistry;
+import de.keksuccino.spiffyhud.customization.elements.slot.SlotElementBuilder;
 import de.keksuccino.spiffyhud.customization.elements.vanillalike.air.VanillaLikePlayerAirElementBuilder;
 import de.keksuccino.spiffyhud.customization.elements.vanillalike.armor.VanillaLikePlayerArmorElementBuilder;
 import de.keksuccino.spiffyhud.customization.elements.vanillalike.bossbars.VanillaLikeBossOverlayElementBuilder;
@@ -27,6 +28,8 @@ public class Elements {
     public static final VanillaLikeEffectsElementBuilder VANILLA_LIKE_EFFECTS = new VanillaLikeEffectsElementBuilder();
     public static final VanillaLikeBossOverlayElementBuilder VANILLA_LIKE_BOSS_OVERLAY = new VanillaLikeBossOverlayElementBuilder();
 
+    public static final SlotElementBuilder INVENTORY_SLOT = new SlotElementBuilder();
+
     public static void registerAll() {
 
         ElementRegistry.register(VANILLA_LIKE_HOTBAR);
@@ -40,6 +43,8 @@ public class Elements {
         ElementRegistry.register(VANILLA_LIKE_MOUNT_HEALTH);
         ElementRegistry.register(VANILLA_LIKE_EFFECTS);
         ElementRegistry.register(VANILLA_LIKE_BOSS_OVERLAY);
+
+        ElementRegistry.register(INVENTORY_SLOT);
 
     }
 

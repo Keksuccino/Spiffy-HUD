@@ -238,6 +238,7 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
                 }
             }
         }
+
     }
 
     /**

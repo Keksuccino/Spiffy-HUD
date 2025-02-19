@@ -43,5 +43,9 @@
   "spiffyhud.elements.vanillalike.jump_meter": "[HUD] Vanilla-Like Jump Meter",
   "spiffyhud.elements.vanillalike.mount_health": "[HUD] Vanilla-Like Mount Health Bar",
   "spiffyhud.elements.vanillalike.effects": "[HUD] Vanilla-Like Effects Overlay",
-  "spiffyhud.elements.vanillalike.boss_bars": "[HUD] Vanilla-Like Boss Overlay"
+  "spiffyhud.elements.vanillalike.boss_bars": "[HUD] Vanilla-Like Boss Overlay",
+  "spiffyhud.elements.slot": "[HUD] Inventory Slot",
+  "spiffyhud.elements.slot.desc": "Displays the item in the given inventory slot\nor the selected hotbar slot item.",
+  "spiffyhud.elements.slot.slot": "Set Slot Number",
+  "spiffyhud.elements.slot.selected": "Use Selected Hotbar Slot: %s"
 }
