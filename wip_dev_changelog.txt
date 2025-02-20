@@ -4,4 +4,4 @@ Alpha 2
 - Made it more clear that Vanilla HUD elements can't be moved and that the user should use a Vanilla-like instead
 - Fixed log spam in editor when resizing or opening the editor screen
 - Fixed HUD size not updating when changing window size while in any screen (like Spiffy's edit overlay)
-- 
+- Fixed Air bar disappears when hiding the Food bar
