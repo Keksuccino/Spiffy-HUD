@@ -1,5 +1,12 @@
 Alpha 2
 
+- Added "Camera Rotation X" placeholder
+- Added "Camera Rotation Y" placeholder
+- Added "Camera Rotation Delta X" placeholder
+- Added "Camera Rotation Delta Y" placeholder
+- Added "Player Position Delta X" placeholder
+- Added "Player Postion Delta Y" placeholder
+- Added "Player Position Delta Z" placeholder
 - Removed unsupported right-click menu options from Vanilla HUD elements
 - Made it more clear that Vanilla HUD elements can't be moved and that the user should use a Vanilla-like instead
 - Fixed log spam in editor when resizing or opening the editor screen
