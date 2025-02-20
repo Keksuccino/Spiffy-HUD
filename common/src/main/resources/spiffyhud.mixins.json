@@ -6,11 +6,12 @@
     "client.IMixinGui",
     "client.MixinCustomizationOverlayUI",
     "client.MixinLayoutEditorUI",
+    "client.MixinMinecraft",
     "client.MixinScreenCustomization",
-    "client.MixinVanillaWidgetEditorElement"
+    "client.MixinVanillaWidgetEditorElement",
+    "client.MixinEditorElementSettings"
   ],
   "mixins": [
-    "client.MixinEditorElementSettings"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -37,7 +37,7 @@ public class MixinForgeGui extends Gui {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;setSeed(J)V"))
     private void before_setSeed_in_render_Spiffy(GuiGraphics graphics, float partial, CallbackInfo info) {
 
-        if (this.spiffyGui == null) this.spiffyGui = new SpiffyGui();
+        if (this.spiffyGui == null) this.spiffyGui = SpiffyGui.INSTANCE;
 
         if (!Minecraft.getInstance().options.hideGui) {
             spiffyGui.render(graphics, -10000000, -10000000, partial);

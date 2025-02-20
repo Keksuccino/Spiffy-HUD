@@ -47,5 +47,20 @@
   "spiffyhud.elements.slot": "[HUD] Inventory Slot",
   "spiffyhud.elements.slot.desc": "Displays the item in the given inventory slot\nor the selected hotbar slot item.",
   "spiffyhud.elements.slot.slot": "Set Slot Number",
-  "spiffyhud.elements.slot.selected": "Use Selected Hotbar Slot: %s"
+  "spiffyhud.elements.slot.selected": "Use Selected Hotbar Slot: %s",
+  "spiffyhud.elements.dummy.display.cant_move_vanilla_elements": "You can't move Vanilla HUD elements!\nDelete the Vanilla element and add a Vanilla-like custom one instead!",
+  "spiffyhud.placeholders.camera_rotation_x": "Camera Rotation X",
+  "spiffyhud.placeholders.camera_rotation_x.desc": "Returns the camera X rotation as value between -180.0 and 180.0 (degrees).",
+  "spiffyhud.placeholders.camera_rotation_y": "Camera Rotation Y",
+  "spiffyhud.placeholders.camera_rotation_y.desc": "Returns the camera Y rotation as value between -180.0 and 180.0 (degrees).",
+  "spiffyhud.placeholders.camera_rotation_delta_x": "Camera Rotation Delta X",
+  "spiffyhud.placeholders.camera_rotation_delta_x.desc": "Displays the raw change in camera pitch (X axis)\nbetween ticks as a decimal value.\nThe value may be positive or negative.",
+  "spiffyhud.placeholders.camera_rotation_delta_y": "Camera Rotation Delta Y",
+  "spiffyhud.placeholders.camera_rotation_delta_y.desc": "Displays the raw change in camera yaw (Y axis)\nbetween ticks as a decimal value.\nThe value may be positive or negative.",
+  "spiffyhud.placeholders.player_position_delta_x": "Player Position Delta X",
+  "spiffyhud.placeholders.player_position_delta_x.desc": "Displays the change in player position along\nthe X axis between ticks as a decimal value.\nThe value can be positive or negative.",
+  "spiffyhud.placeholders.player_position_delta_y": "Player Position Delta Y",
+  "spiffyhud.placeholders.player_position_delta_y.desc": "Displays the change in player position along\nthe Y axis between ticks as a decimal value.\nThe value can be positive or negative.",
+  "spiffyhud.placeholders.player_position_delta_z": "Player Position Delta Z",
+  "spiffyhud.placeholders.player_position_delta_z.desc": "Displays the change in player position along\nthe Z axis between ticks as a decimal value.\nThe value can be positive or negative."
 }

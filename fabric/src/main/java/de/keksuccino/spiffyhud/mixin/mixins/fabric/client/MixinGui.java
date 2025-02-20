@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Gui.class)
-public class MixinGui {
+public abstract class MixinGui {
 
     @Shadow private Component overlayMessageString;
     @Shadow private Component title;
@@ -33,10 +33,14 @@ public class MixinGui {
 
     @Unique private SpiffyGui spiffyGui = null;
 
+    @Shadow protected abstract int getVehicleMaxHearts(LivingEntity $$0);
+
+    @Shadow protected abstract LivingEntity getPlayerVehicleWithHealth();
+
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/spectator/SpectatorGui;renderHotbar(Lnet/minecraft/client/gui/GuiGraphics;)V"))
     private void beforeRenderSpectatorHotbar_Spiffy(GuiGraphics graphics, float partial, CallbackInfo info) {
 
-        if (this.spiffyGui == null) this.spiffyGui = new SpiffyGui();
+        if (this.spiffyGui == null) this.spiffyGui = SpiffyGui.INSTANCE;
 
         if (!Minecraft.getInstance().options.hideGui) {
             spiffyGui.render(graphics, -10000000, -10000000, partial);
@@ -47,7 +51,7 @@ public class MixinGui {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHotbar(FLnet/minecraft/client/gui/GuiGraphics;)V"))
     private void beforeRenderNormalHotbar_Spiffy(GuiGraphics graphics, float partial, CallbackInfo info) {
 
-        if (this.spiffyGui == null) this.spiffyGui = new SpiffyGui();
+        if (this.spiffyGui == null) this.spiffyGui = SpiffyGui.INSTANCE;
 
         if (!Minecraft.getInstance().options.hideGui) {
             spiffyGui.render(graphics, -10000000, -10000000, partial);
@@ -148,6 +152,14 @@ public class MixinGui {
     private int wrap_getVehicleMaxHearts_in_renderPlayerHealth_Spiffy(Gui instance, LivingEntity livingEntity, Operation<Integer> original) {
         if (VanillaHudElements.isHidden(VanillaHudElements.FOOD_BAR_IDENTIFIER)) return 1000; //player food does not get rendered when
         return original.call(instance, livingEntity);
+    }
+
+    /**
+     * @reason Revert patch to getVehicleMaxHearts() from method above.
+     */
+    @WrapOperation(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;getVisibleVehicleHeartRows(I)I"))
+    private int wrap_getVisibleVehicleHeartRows_in_renderPlayerHealth_Spiffy(Gui instance, int $$0, Operation<Integer> original) {
+        return original.call(instance, this.getVehicleMaxHearts(this.getPlayerVehicleWithHealth()));
     }
 
     /**

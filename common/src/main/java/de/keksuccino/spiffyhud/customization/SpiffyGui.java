@@ -19,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class SpiffyGui implements Renderable {
 
+    public static final SpiffyGui INSTANCE = new SpiffyGui();
+
     private static final Logger LOGGER = LogManager.getLogger();
 
     private static boolean initialized = false;
@@ -27,7 +29,7 @@ public class SpiffyGui implements Renderable {
     private int lastScreenWidth = 0;
     private int lastScreenHeight = 0;
 
-    public SpiffyGui() {
+    private SpiffyGui() {
 
         if (!initialized) {
             //TODO init stuff here if needed
@@ -38,7 +40,7 @@ public class SpiffyGui implements Renderable {
         this.lastScreenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         this.lastScreenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         this.initOverlayScreen(false);
-        this.tickOverlayUpdate();
+        this.tick();
 
     }
 
@@ -47,8 +49,6 @@ public class SpiffyGui implements Renderable {
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
 
         if (!this.shouldRenderCustomizations()) return;
-
-        this.tickOverlayUpdate();
 
         this.runLayerTask(() -> {
 
@@ -91,19 +91,24 @@ public class SpiffyGui implements Renderable {
         return l;
     }
 
-    private void tickOverlayUpdate() {
+    public void onResize() {
         try {
-            int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-            int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
-            //Re-init overlay on window size change
-            if ((screenWidth != this.lastScreenWidth) || (screenHeight != this.lastScreenHeight) || Shared.reInitHudLayouts) {
+            //TODO remove debug
+            LOGGER.info("################## Window resized! Re-initializing HUD overlay!");
+            this.initOverlayScreen(true);
+        } catch (Exception ex) {
+            LOGGER.error("[SPIFFY HUD] Failed to resize SpiffyGui!", ex);
+        }
+    }
+
+    public void tick() {
+        try {
+            if (Shared.reInitHudLayouts) {
                 Shared.reInitHudLayouts = false;
                 //TODO remove debug
-                LOGGER.info("################## Window size changed! Re-initializing HUD layouts!");
+                LOGGER.info("################## Re-initialized HUD overlay, because Shared.reInitHudLayouts was TRUE!");
                 this.initOverlayScreen(true);
             }
-            this.lastScreenWidth = screenWidth;
-            this.lastScreenHeight = screenHeight;
         } catch (Exception ex) {
             LOGGER.error("[SPIFFY HUD] Failed to tick SpiffyGui!", ex);
         }

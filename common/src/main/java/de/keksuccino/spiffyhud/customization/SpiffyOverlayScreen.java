@@ -8,9 +8,7 @@ import de.keksuccino.fancymenu.customization.ScreenCustomization;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.fancymenu.util.rendering.ui.widget.RendererWidget;
-import de.keksuccino.spiffyhud.util.SizeAndPositionRecorder;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
@@ -27,7 +25,6 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -109,12 +106,12 @@ public class SpiffyOverlayScreen extends Screen {
         int widgetHeight = 22;
         return new SpiffyRendererWidget(x, y, widgetWidth, widgetHeight, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
             RenderSystem.enableBlend();
-            // Draw the hotbar background from widgets.png (u=0,v=0,size 182x22)
+            // Draw the hotbar background
             graphics.blit(WIDGETS_LOCATION, screenCenter - 91, this.height - 22, 0, 0, 182, 22, 256, 256);
-            // Draw selection overlay (from widgets.png, u=0,v=22,size 24x22) for the selected slot
+            // Draw selection overlay for the selected slot
             int selected = Minecraft.getInstance().player.getInventory().selected;
             graphics.blit(WIDGETS_LOCATION, screenCenter - 91 - 1 + selected * 20, this.height - 22 - 1, 0, 22, 24, 22, 256, 256);
-            // Draw offhand element if available (using u=24,v=22 or u=53,v=22 depending on main arm)
+            // Draw offhand element if available
             if (!Minecraft.getInstance().player.getOffhandItem().isEmpty()) {
                 boolean leftHanded = Minecraft.getInstance().player.getMainArm() == HumanoidArm.LEFT;
                 if (leftHanded) {
@@ -152,7 +149,7 @@ public class SpiffyOverlayScreen extends Screen {
         int height = 5;
         return new SpiffyRendererWidget(x, y, width, height, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
             RenderSystem.enableBlend();
-            // Draw experience bar background from GUI_ICONS_LOCATION (u=0,v=64,size 182x5)
+            // Draw experience bar background from GUI_ICONS_LOCATION
             graphics.blit(GUI_ICONS_LOCATION, gx, gy, 0, 64, gwidth, gheight, 256, 256);
             // Draw progress (dummy progress of 50%)
             int progressWidth = (int)(0.5F * 183.0f);
@@ -256,9 +253,9 @@ public class SpiffyOverlayScreen extends Screen {
             // Draw 10 food icons using GUI_ICONS_LOCATION:
             for (int i = 0; i < 10; i++) {
                 int offsetX = barX - i * 8 - 9;
-                // Empty food icon: (u=16,v=27, size 9x9)
+                // Empty food icon
                 graphics.blit(GUI_ICONS_LOCATION, offsetX, barY, 16, 27, 9, 9, 256, 256);
-                // Full overlay: (u=52,v=27)
+                // Full
                 graphics.blit(GUI_ICONS_LOCATION, offsetX, barY, 52, 27, 9, 9, 256, 256);
             }
             RenderingUtils.resetShaderColor(graphics);
@@ -270,7 +267,7 @@ public class SpiffyOverlayScreen extends Screen {
         int barY = (this.height - 39 - 10) - 5;
         return new SpiffyRendererWidget(barX, barY, 90, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
             RenderSystem.enableBlend();
-            // Draw 10 armor icons (using dummy coordinates, e.g., u=34,v=9 for full armor icon)
+            // Draw 10 armor icons
             for (int i = 0; i < 10; i++) {
                 int offsetX = barX + i * 8;
                 graphics.blit(GUI_ICONS_LOCATION, offsetX, barY, 34, 9, 9, 9, 256, 256);
@@ -284,7 +281,7 @@ public class SpiffyOverlayScreen extends Screen {
         int barY = (this.height - 39 - 10) - 5;
         return new SpiffyRendererWidget(barX - 90, barY, 90, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
             RenderSystem.enableBlend();
-            // Draw 10 air bubble icons (using dummy coordinates, e.g., u=16,v=18)
+            // Draw 10 air bubble icons
             for (int i = 0; i < 10; i++) {
                 int offsetX = barX - i * 8 - 9;
                 graphics.blit(GUI_ICONS_LOCATION, offsetX, barY, 16, 18, 9, 9, 256, 256);
@@ -298,7 +295,7 @@ public class SpiffyOverlayScreen extends Screen {
         int barY = (this.height - 39 - 10) - 15;
         return new SpiffyRendererWidget(barX - 90, barY, 90, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
             RenderSystem.enableBlend();
-            // Draw dummy mount health icons (container from u=52,v=9 and overlay from u=88,v=9)
+            // Draw dummy mount health icons
             for (int i = 0; i < 10; i++) {
                 int offsetX = barX - i * 8 - 9;
                 graphics.blit(GUI_ICONS_LOCATION, offsetX, barY, 52, 9, 9, 9, 256, 256);
@@ -314,7 +311,7 @@ public class SpiffyOverlayScreen extends Screen {
         return new SpiffyRendererWidget(barX, barY, 90, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
             Gui.HeartType heartType = Gui.HeartType.forPlayer(Minecraft.getInstance().player);
             RenderSystem.enableBlend();
-            // Draw dummy player health bar (container from u=16,v=9 and full overlay from u=88,v=9)
+            // Draw dummy player health bar
             for (int i = 0; i < 10; i++) {
                 int posX = barX + i * 8;
                 graphics.blit(GUI_ICONS_LOCATION, posX, barY, Gui.HeartType.CONTAINER.getX(false, false), 0, 9, 9);
@@ -332,7 +329,7 @@ public class SpiffyOverlayScreen extends Screen {
         int textY = ((this.height - 68) - 4) - 18;
         return new SpiffyRendererWidget(textX - 2, textY - 2, messageWidth + 4, font.lineHeight + 4, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
             RenderSystem.enableBlend();
-            // Use a dummy animated color calculation (as in older Gui)
+            // Use a dummy animated color calculation
             int animatedTextColor = Mth.hsvToRgb((60 - partial) / 50.0f, 0.7f, 0.6f) & 0xFFFFFF;
             graphics.drawString(Minecraft.getInstance().font, message, textX, textY, animatedTextColor);
             RenderingUtils.resetShaderColor(graphics);
