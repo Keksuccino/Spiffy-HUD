@@ -9,6 +9,7 @@ Alpha 2
 - Added "Player Position Delta Z" placeholder
 - Added "Player Item Use Progress" placeholder
 - Added "Is Player Using Item" requirement
+- Added "Player Mirror" element
 - Removed unsupported right-click menu options from Vanilla HUD elements
 - Made it more clear that Vanilla HUD elements can't be moved and that the user should use a Vanilla-like instead
 - Fixed log spam in editor when resizing or opening the editor screen
