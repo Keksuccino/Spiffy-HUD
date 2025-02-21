@@ -12,6 +12,8 @@ Alpha 2
 - Added "Player Mirror" element
 - Added an entry to the right-click menu of Slot elements that explains slot IDs and shows which slot has which ID
 - Removed unsupported right-click menu options from Vanilla HUD elements
+- Removed unsupported element types in Spiffy layouts
+- Removed unsupported editor right-click menu options in Spiffy layouts
 - Made it more clear that Vanilla HUD elements can't be moved and that the user should use a Vanilla-like instead
 - Fixed log spam in editor when resizing or opening the editor screen
 - Fixed HUD size not updating when changing window size while in any screen (like Spiffy's edit overlay)
