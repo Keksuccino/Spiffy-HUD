@@ -4,12 +4,13 @@ import java.io.File;
 import de.keksuccino.fancymenu.customization.layout.LayoutHandler;
 import de.keksuccino.fancymenu.customization.overlay.CustomizationOverlay;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
-import de.keksuccino.spiffyhud.customization.backgrounds.Backgrounds;
 import de.keksuccino.spiffyhud.customization.elements.Elements;
+import de.keksuccino.spiffyhud.customization.elements.slot.SlotIdHelpScreen;
 import de.keksuccino.spiffyhud.customization.placeholders.Placeholders;
 import de.keksuccino.fancymenu.customization.ScreenCustomization;
 import de.keksuccino.fancymenu.customization.screen.identifier.UniversalScreenIdentifierRegistry;
 import de.keksuccino.fancymenu.util.event.acara.EventHandler;
+import de.keksuccino.spiffyhud.customization.requirements.Requirements;
 import de.keksuccino.spiffyhud.platform.Services;
 import de.keksuccino.fancymenu.util.file.FileUtils;
 import de.keksuccino.fancymenu.util.file.GameDirectoryUtils;
@@ -20,13 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpiffyHud {
 
-	//TODO bei schließen von Screen -> HUD layout resize update triggern (falls window in screen resized wurde)
-
-	//TODO make anchor overlay not work for when hovering Spiffy dummy elements
-
 	//TODO disable Audio and MusicController elements in Spiffy layouts
-
-	//TODO disable option to set if Vanilla elements should render behind or in front of custom elements in Spiffy layouts
 
 	//TODO change mod icon to Spiffy icon
 
@@ -38,28 +33,9 @@ public class SpiffyHud {
 
 	//TODO add option to disable vignette
 
-	//TODO "Inventory Slot" element (shows the item in slot X)
-	// - Bei "Set Slot" in Tooltip die Slots für Offhand, Armor, etc. packen
-	// - Element ist scalable
-	// - Element kann rotiert werden (falls möglich)
-
-	//TODO "Current Player" element
-	// - Like normal Player Entity element, but mimics the current player in-game player
-	// - Has pose features of normal Player Entity element
-	// - Has "Show Name" toggle
-	// - Is scalable
-
-	//TODO Add Vanilla-Like elements for all Vanilla HUD elements (crosshair, hotbar, scoreboard sidebar, effects overlay, Title (line 1 + 2), etc.)
-
-
-
-
-
-
-
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public static final String VERSION = "2.0.0";
+	public static final String VERSION = "3.0.0";
 	public static final String MOD_LOADER = Services.PLATFORM.getPlatformName();
 	public static final String MOD_ID = "spiffyhud";
 	public static final File MOD_DIR = createDirectory(new File(GameDirectoryUtils.getGameDirectory(), "/config/spiffyhud"));
@@ -81,14 +57,14 @@ public class SpiffyHud {
 			//Register universal identifier for Drippy screen
 			UniversalScreenIdentifierRegistry.register("spiffy_overlay", SpiffyOverlayScreen.class.getName());
 
-			//Disable customization for all background config screens
-			ScreenCustomization.addScreenBlacklistRule(s -> s.startsWith("de.keksuccino.drippyloadingscreen.customization.backgrounds."));
-
-			//Register custom backgrounds
-			Backgrounds.registerAll();
+			//Disable customization for all Spiffy screens that shouldn't be editable
+			ScreenCustomization.addScreenBlacklistRule(s -> s.equals(SlotIdHelpScreen.class.getName()));
 
 			//Register custom placeholders
 			Placeholders.registerAll();
+
+			//Register custom requirements
+			Requirements.registerAll();
 
 			//Register custom element types
 			Elements.registerAll();

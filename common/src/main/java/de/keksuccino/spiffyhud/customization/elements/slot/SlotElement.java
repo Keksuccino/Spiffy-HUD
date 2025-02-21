@@ -55,10 +55,10 @@ public class SlotElement extends AbstractElement {
 
             if (isEditor()) {
 
-                MutableComponent label = this.useSelectedSlot ? Component.literal("S") : Component.literal("" + this.parsedSlot);
+                MutableComponent label = this.useSelectedSlot ? Component.literal("SEL") : Component.literal("" + this.parsedSlot);
                 if (this.customElementLayerName != null) {
                     label = buildComponent(this.customElementLayerName).copy();
-                    label.append(this.useSelectedSlot ? Component.literal(" (S)") : Component.literal(" (" + this.parsedSlot + ")"));
+                    label.append(this.useSelectedSlot ? Component.literal(" (SEL)") : Component.literal(" (" + this.parsedSlot + ")"));
                 }
 
                 graphics.fill(x, y, x + w, y + h, this.inEditorColor.getColorIntWithAlpha(0.5F));
@@ -143,7 +143,7 @@ public class SlotElement extends AbstractElement {
     @Override
     public @NotNull Component getDisplayName() {
         MutableComponent c = super.getDisplayName().copy();
-        c.append(this.useSelectedSlot ? Component.literal(" (S)") : Component.literal(" (" + this.parsedSlot + ")"));
+        c.append(this.useSelectedSlot ? Component.literal(" (SEL)") : Component.literal(" (" + this.parsedSlot + ")"));
         return c;
     }
 

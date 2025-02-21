@@ -3,6 +3,7 @@ package de.keksuccino.spiffyhud.customization.elements.slot;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.editor.AbstractEditorElement;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,6 +34,13 @@ public class SlotEditorElement extends AbstractEditorElement {
                 consumes -> consumes.getElement().useSelectedSlot,
                 (slotEditorElement, aBoolean) -> slotEditorElement.getElement().useSelectedSlot = aBoolean,
                 "spiffyhud.elements.slot.selected");
+
+        this.rightClickMenu.addSeparatorEntry("separator_before_slot_id_help");
+
+        this.rightClickMenu.addClickableEntry("slot_id_help", Component.translatable("spiffyhud.elements.slot.slot_id_help"), (menu, entry) -> {
+            this.rightClickMenu.closeMenu();
+            Minecraft.getInstance().setScreen(new SlotIdHelpScreen(this.editor));
+        });
 
     }
 

@@ -11,6 +11,7 @@ public class Placeholders {
     public static final PlayerPositionDeltaXPlaceholder PLAYER_POSITION_DELTA_X = new PlayerPositionDeltaXPlaceholder();
     public static final PlayerPositionDeltaYPlaceholder PLAYER_POSITION_DELTA_Y = new PlayerPositionDeltaYPlaceholder();
     public static final PlayerPositionDeltaZPlaceholder PLAYER_POSITION_DELTA_Z = new PlayerPositionDeltaZPlaceholder();
+    public static final PlayerItemUseProgressPlaceholder PLAYER_ITEM_USE_PROGRESS = new PlayerItemUseProgressPlaceholder();
 
     public static void registerAll() {
 
@@ -21,6 +22,7 @@ public class Placeholders {
         PlaceholderRegistry.register(PLAYER_POSITION_DELTA_X);
         PlaceholderRegistry.register(PLAYER_POSITION_DELTA_Y);
         PlaceholderRegistry.register(PLAYER_POSITION_DELTA_Z);
+        PlaceholderRegistry.register(PLAYER_ITEM_USE_PROGRESS);
 
     }
 

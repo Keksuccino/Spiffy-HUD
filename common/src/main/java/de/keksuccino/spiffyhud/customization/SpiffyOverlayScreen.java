@@ -508,7 +508,7 @@ public class SpiffyOverlayScreen extends Screen {
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.EFFECTS_IDENTIFIER);
     }
 
-    private static class SpiffyRendererWidget extends RendererWidget {
+    public static class SpiffyRendererWidget extends RendererWidget {
 
         public SpiffyRendererWidget(int x, int y, int width, int height, @NotNull RendererWidgetBody body) {
             super(x, y, width, height, body);

@@ -46,8 +46,10 @@
   "spiffyhud.elements.vanillalike.boss_bars": "[HUD] Vanilla-Like Boss Overlay",
   "spiffyhud.elements.slot": "[HUD] Inventory Slot",
   "spiffyhud.elements.slot.desc": "Displays the item in the given inventory slot\nor the selected hotbar slot item.",
-  "spiffyhud.elements.slot.slot": "Set Slot Number",
+  "spiffyhud.elements.slot.slot": "Set Slot ID",
   "spiffyhud.elements.slot.selected": "Use Selected Hotbar Slot: %s",
+  "spiffyhud.elements.slot.slot_id_help": "Slot IDs Explained",
+  "spiffyhud.elements.slot.slot_id_help.text": "\n^^^\n\n# Important Slot IDs for the Player Inventory\n \n \n## Hotbar\n\n - **Slot IDs:** 0 to 8\n - The first hotbar slot is 0.\n\n## Main Inventory\n\n  - **Slot IDs:** 9 to 35\n  - The top-left main inventory slot is 9.\n\n## Armor Slots\n\n  - **Slot IDs:** 36 to 39\n  - 36 (boots), 37 (leggings), 38 (chestplate), 39 (helmet)\n\n## Offhand Slot\n\n  - **Slot ID:** 40\n \n \n![](https://raw.githubusercontent.com/Keksuccino/Spiffy-HUD/refs/heads/main/mod_resources/inv_slots_1.20.1_small.png)\n\n^^^",
   "spiffyhud.elements.dummy.display.cant_move_vanilla_elements": "You can't move Vanilla HUD elements!\nDelete the Vanilla element and add a Vanilla-like custom one instead!",
   "spiffyhud.placeholders.camera_rotation_x": "Camera Rotation X",
   "spiffyhud.placeholders.camera_rotation_x.desc": "Returns the camera X rotation as value between -180.0 and 180.0 (degrees).",
@@ -62,5 +64,11 @@
   "spiffyhud.placeholders.player_position_delta_y": "Player Position Delta Y",
   "spiffyhud.placeholders.player_position_delta_y.desc": "Displays the change in player position along\nthe Y axis between ticks as a decimal value.\nThe value can be positive or negative.",
   "spiffyhud.placeholders.player_position_delta_z": "Player Position Delta Z",
-  "spiffyhud.placeholders.player_position_delta_z.desc": "Displays the change in player position along\nthe Z axis between ticks as a decimal value.\nThe value can be positive or negative."
+  "spiffyhud.placeholders.player_position_delta_z.desc": "Displays the change in player position along\nthe Z axis between ticks as a decimal value.\nThe value can be positive or negative.",
+  "spiffyhud.placeholders.player_item_use_progress": "Player Item Use Progress",
+  "spiffyhud.placeholders.player_item_use_progress.desc": "Returns the current item use progress of the player.\nThis is, for example, the progress of eating food,\ndrinking a potion, drawing a bow, etc.\nThe returned value is a decimal between 0.0 (0%) and 1.0 (100%).",
+  "spiffyhud.requirements.is_player_using_item": "Is Player Using Item",
+  "spiffyhud.requirements.is_player_using_item.desc": "Returns true when the player is using an item.\nUsing an item means, for example, eating food,\ndrinking a potion, drawing a bow, etc.",
+  "spiffyhud.elements.player": "[HUD] Player Mirror",
+  "spiffyhud.elements.player.desc": "Mirrors the client player like in the Inventory screen."
 }

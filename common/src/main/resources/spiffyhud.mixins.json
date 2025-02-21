@@ -5,11 +5,12 @@
   "client": [
     "client.IMixinGui",
     "client.MixinCustomizationOverlayUI",
+    "client.MixinEditorElementSettings",
     "client.MixinLayoutEditorUI",
     "client.MixinMinecraft",
     "client.MixinScreenCustomization",
     "client.MixinVanillaWidgetEditorElement",
-    "client.MixinEditorElementSettings"
+    "client.MixinAnchorPointOverlay"
   ],
   "mixins": [
   ],
