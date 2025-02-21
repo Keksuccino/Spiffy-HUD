@@ -10,6 +10,7 @@ Alpha 2
 - Added "Player Item Use Progress" placeholder
 - Added "Is Player Using Item" requirement
 - Added "Player Mirror" element
+- Added an entry to the right-click menu of Slot elements that explains slot IDs and shows which slot has which ID
 - Removed unsupported right-click menu options from Vanilla HUD elements
 - Made it more clear that Vanilla HUD elements can't be moved and that the user should use a Vanilla-like instead
 - Fixed log spam in editor when resizing or opening the editor screen
