@@ -1,4 +1,5 @@
 Beta 1
 
 - Added "Overlay Remover" element to remove/hide overlay types like the pumpkin head overlay, powder snow overlay, world border vignette, etc.
+- Replaced placeholder logo textures with Spiffy's actual new logo
 - 
