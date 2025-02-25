@@ -3,5 +3,5 @@ Beta 1
 - Added "Overlay Remover" element to remove/hide overlay types like the pumpkin head overlay, powder snow overlay, world border vignette, etc.
 - Replaced placeholder logo textures with Spiffy's actual new logo
 - Removed unsupported "Render Custom Elements Behind Vanilla" option, because HUD layouts will always render behind Vanilla HUD elements (and after overlays like portal, pumpkin, vignette, etc.)
-- Fixed transparent images hiding parts of the hotbar when rendered on top of it (this was actually caused by Vanilla)
+- Fixed transparent images hiding parts of the hotbar when rendered behind it (this was actually caused by Vanilla)
 - 
