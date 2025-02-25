@@ -1,20 +1,4 @@
-Alpha 2
+Beta 1
 
-- Added "Camera Rotation X" placeholder
-- Added "Camera Rotation Y" placeholder
-- Added "Camera Rotation Delta X" placeholder
-- Added "Camera Rotation Delta Y" placeholder
-- Added "Player Position Delta X" placeholder
-- Added "Player Postion Delta Y" placeholder
-- Added "Player Position Delta Z" placeholder
-- Added "Player Item Use Progress" placeholder
-- Added "Is Player Using Item" requirement
-- Added "Player Mirror" element
-- Added an entry to the right-click menu of Slot elements that explains slot IDs and shows which slot has which ID
-- Removed unsupported right-click menu options from Vanilla HUD elements
-- Removed unsupported element types in Spiffy layouts
-- Removed unsupported editor right-click menu options in Spiffy layouts
-- Made it more clear that Vanilla HUD elements can't be moved and that the user should use a Vanilla-like instead
-- Fixed log spam in editor when resizing or opening the editor screen
-- Fixed HUD size not updating when changing window size while in any screen (like Spiffy's edit overlay)
-- Fixed Air bar disappears when hiding the Food bar
+- Added "Overlay Remover" element to remove/hide overlay types like the pumpkin head overlay, powder snow overlay, world border vignette, etc.
+- 
