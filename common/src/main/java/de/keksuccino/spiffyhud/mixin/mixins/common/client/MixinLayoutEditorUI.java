@@ -40,6 +40,7 @@ public class MixinLayoutEditorUI {
             menu.removeEntry("close_audio");
             menu.removeEntry("manage_open_screen_actions");
             menu.removeEntry("manage_close_screen_actions");
+            menu.removeEntry("render_custom_elements_behind_vanilla");
         }
 
     }

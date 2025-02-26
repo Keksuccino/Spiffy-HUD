@@ -2,8 +2,10 @@ package de.keksuccino.spiffyhud.mixin.mixins.forge.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.spiffyhud.customization.SpiffyGui;
 import de.keksuccino.spiffyhud.customization.VanillaHudElements;
+import de.keksuccino.spiffyhud.customization.elements.overlayremover.OverlayRemoverElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
@@ -41,6 +43,8 @@ public class MixinForgeGui extends Gui {
 
         if (!Minecraft.getInstance().options.hideGui) {
             spiffyGui.render(graphics, -10000000, -10000000, partial);
+            RenderSystem.enableBlend();
+            RenderSystem.enableDepthTest();
         }
 
     }
@@ -118,6 +122,23 @@ public class MixinForgeGui extends Gui {
             return;
         }
         if ((overlay == VanillaGuiOverlay.POTION_ICONS.type()) && VanillaHudElements.isHidden(VanillaHudElements.EFFECTS_IDENTIFIER)) {
+            info.setReturnValue(true);
+        }
+
+        // OVERLAYS
+        if ((overlay == VanillaGuiOverlay.VIGNETTE.type()) && OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.VIGNETTE)) {
+            info.setReturnValue(true);
+        }
+        if ((overlay == VanillaGuiOverlay.FROSTBITE.type()) && OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.POWDER_SNOW)) {
+            info.setReturnValue(true);
+        }
+        if ((overlay == VanillaGuiOverlay.HELMET.type()) && OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.PUMPKIN)) {
+            info.setReturnValue(true);
+        }
+        if ((overlay == VanillaGuiOverlay.SPYGLASS.type()) && OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.SPYGLASS)) {
+            info.setReturnValue(true);
+        }
+        if ((overlay == VanillaGuiOverlay.PORTAL.type()) && OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.PORTAL)) {
             info.setReturnValue(true);
         }
 

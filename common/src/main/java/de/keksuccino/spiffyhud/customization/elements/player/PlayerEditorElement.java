@@ -11,7 +11,6 @@ public class PlayerEditorElement extends AbstractEditorElement {
 
         super(element, editor);
 
-        this.settings.setInEditorColorSupported(true);
         this.settings.setParallaxAllowed(false);
 
     }

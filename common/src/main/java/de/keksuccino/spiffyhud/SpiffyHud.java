@@ -21,18 +21,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpiffyHud {
 
-	//TODO disable Audio and MusicController elements in Spiffy layouts
-
-	//TODO change mod icon to Spiffy icon
-
-	//TODO change icon of customization button (is still Drippy icon)
-
-	//TODO add option to disable powder snow overlay
-
-	//TODO add option to disable pumpkin head overlay
-
-	//TODO add option to disable vignette
-
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final String VERSION = "3.0.0";

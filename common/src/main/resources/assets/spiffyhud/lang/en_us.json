@@ -70,5 +70,15 @@
   "spiffyhud.requirements.is_player_using_item": "Is Player Using Item",
   "spiffyhud.requirements.is_player_using_item.desc": "Returns true when the player is using an item.\nUsing an item means, for example, eating food,\ndrinking a potion, drawing a bow, etc.",
   "spiffyhud.elements.player": "[HUD] Player Mirror",
-  "spiffyhud.elements.player.desc": "Mirrors the client player like in the Inventory screen."
+  "spiffyhud.elements.player.desc": "Mirrors the client player like in the Inventory screen.",
+  "spiffyhud.elements.overlay_remover": "[HUD] Overlay Remover",
+  "spiffyhud.elements.overlay_remover.desc": "Lets you remove different types of HUD overlays,\nlike the pumpkin overlay, powder snow overlay or the vignette.",
+  "spiffyhud.elements.overlay_remover.overlay_type": "Overlay Type: %s",
+  "spiffyhud.elements.overlay_remover.overlay_type.powder_snow": "POWDER SNOW",
+  "spiffyhud.elements.overlay_remover.overlay_type.pumpkin": "PUMPKIN HEAD",
+  "spiffyhud.elements.overlay_remover.overlay_type.vignette": "WORLD BORDER VIGNETTE",
+  "spiffyhud.elements.overlay_remover.overlay_type.spyglass": "SPYGLASS",
+  "spiffyhud.elements.overlay_remover.overlay_type.portal": "PORTAL",
+  "spiffyhud.elements.overlay_remover.overlay_type.all": "ALL",
+  "spiffyhud.elements.overlay_remover.overlay_type.desc": "Sets the overlay type the element should remove."
 }

@@ -4,13 +4,16 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "client.IMixinGui",
+    "client.MixinAnchorPointOverlay",
     "client.MixinCustomizationOverlayUI",
     "client.MixinEditorElementSettings",
+    "client.MixinGui",
     "client.MixinLayoutEditorUI",
     "client.MixinMinecraft",
     "client.MixinScreenCustomization",
+    "client.MixinSpectatorGui",
     "client.MixinVanillaWidgetEditorElement",
-    "client.MixinAnchorPointOverlay"
+    "client.MixinLayout"
   ],
   "mixins": [
   ],

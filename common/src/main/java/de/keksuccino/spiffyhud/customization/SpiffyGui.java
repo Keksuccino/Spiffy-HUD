@@ -69,11 +69,8 @@ public class SpiffyGui implements Renderable {
 
     }
 
-    //TODO update to fit the HUD render defaults
     private void restoreRenderDefaults(@NotNull GuiGraphics graphics) {
         RenderingUtils.resetShaderColor(graphics);
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
     }
