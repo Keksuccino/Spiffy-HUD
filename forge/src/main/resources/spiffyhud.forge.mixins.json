@@ -6,7 +6,8 @@
   ],
   "client": [
     "client.MixinForgeGui",
-    "client.MixinGui"
+    "client.MixinGui",
+    "client.MixinVanillaWidgetEditorElement"
   ],
   "injectors": {
     "defaultRequire": 1
