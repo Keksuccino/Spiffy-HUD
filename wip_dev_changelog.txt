@@ -1,4 +1,4 @@
 Beta 3
 
 - Added "Chat Customizer" element to customize parts of the chat overlay
-- 
+- Fixed Slot element ignoring the opacity setting (please note that even with this fix, most items simply don't support opacity, so you will only be able to set the opacity for some item types)
