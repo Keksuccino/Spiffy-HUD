@@ -4,5 +4,5 @@ Beta 3
 - Added "Player NBT Data" placeholder to get NBT data values from the client player
 - Added "Player NBT Helper" element that basically only exists for you to have an easy way to get all NBT data paths for the client player
 - Fixed Slot element ignoring the opacity setting (please note that even with this fix, most items simply don't support opacity, so you will only be able to set the opacity for some item types)
-- Fixed all Vanilla-like elements ignoring the opacity setting (please note that some Vanilla-like elements still don't support opacity)
+- Fixed all Vanilla-like elements ignoring the opacity setting (please note that some Vanilla-like elements still don't fully support opacity)
 - Fixed custom HUD rendering twice on Fabric (forgot to remove some experiments ehem)
