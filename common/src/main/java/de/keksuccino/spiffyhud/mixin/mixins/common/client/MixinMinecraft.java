@@ -1,6 +1,7 @@
 package de.keksuccino.spiffyhud.mixin.mixins.common.client;
 
 import de.keksuccino.spiffyhud.customization.SpiffyGui;
+import de.keksuccino.spiffyhud.customization.elements.chatcustomizer.ChatCustomizerHandler;
 import de.keksuccino.spiffyhud.util.player.CameraRotationObserver;
 import de.keksuccino.spiffyhud.util.player.PlayerPositionObserver;
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ public class MixinMinecraft {
         if ((Minecraft.getInstance().level != null) && (Minecraft.getInstance().player != null)) {
             CameraRotationObserver.tick();
             PlayerPositionObserver.tick();
+            ChatCustomizerHandler.tick();
             SpiffyGui.INSTANCE.tick();
         }
     }

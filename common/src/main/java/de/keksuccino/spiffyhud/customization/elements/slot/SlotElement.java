@@ -6,6 +6,7 @@ import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.customization.placeholder.PlaceholderParser;
 import de.keksuccino.fancymenu.util.MathUtils;
+import de.keksuccino.fancymenu.util.rendering.DrawableColor;
 import de.keksuccino.fancymenu.util.rendering.ui.UIBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -108,8 +109,14 @@ public class SlotElement extends AbstractElement {
         float scale = Math.min(width, height) / 16.0F;
         pose.scale(scale, scale, 1.0F);
 
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+
         // Now render the item at (0,0) because the translation has been applied.
         graphics.renderItem(stack, 0, 0);
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         // Restore the previous transformation state.
         pose.popPose();
@@ -134,7 +141,7 @@ public class SlotElement extends AbstractElement {
         int scaledX = (int)((x / scaleFactor) + 19 - 2 - font.width(text));
         int scaledY = (int)((y / scaleFactor) + 6 + 3);
 
-        graphics.drawString(font, text, scaledX, scaledY, -1, true);
+        graphics.drawString(font, text, scaledX, scaledY, DrawableColor.WHITE.getColorIntWithAlpha(this.opacity), true);
         pose.popPose();
         pose.popPose();
 

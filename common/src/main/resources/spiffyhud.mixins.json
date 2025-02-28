@@ -5,17 +5,20 @@
   "client": [
     "client.IMixinGui",
     "client.MixinAnchorPointOverlay",
+    "client.MixinChatComponent",
+    "client.MixinChatScreen",
     "client.MixinCustomizationOverlayUI",
     "client.MixinEditorElementSettings",
     "client.MixinGui",
+    "client.MixinLayout",
     "client.MixinLayoutEditorUI",
     "client.MixinMinecraft",
     "client.MixinScreenCustomization",
     "client.MixinSpectatorGui",
-    "client.MixinVanillaWidgetEditorElement",
-    "client.MixinLayout"
+    "client.MixinVanillaWidgetEditorElement"
   ],
   "mixins": [
+    "client.IMixinSynchedEntityData"
   ],
   "injectors": {
     "defaultRequire": 1

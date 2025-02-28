@@ -93,6 +93,10 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
             return;
         }
 
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+
         // Get the player's armor value.
         int armorValue = player.getArmorValue();
         // For editor/demo mode, simulate an armor value.
@@ -156,6 +160,8 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
             }
 
         }
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     }
 

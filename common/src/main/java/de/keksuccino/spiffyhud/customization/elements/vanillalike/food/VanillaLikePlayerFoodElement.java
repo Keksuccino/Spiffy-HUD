@@ -91,6 +91,10 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
         Player player = getCameraPlayer();
         if (player == null) return;
 
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+
         FoodData foodData = player.getFoodData();
         int foodLevel = foodData.getFoodLevel();
 
@@ -156,6 +160,8 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
             }
 
         }
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     }
 

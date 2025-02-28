@@ -71,6 +71,10 @@ public class VanillaLikeHotbarElement extends AbstractElement {
             return;
         }
 
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+
         // Get the player's offhand item and determine the opposite of the main arm.
         ItemStack offhandItem = player.getOffhandItem();
         HumanoidArm oppositeMainArm = player.getMainArm().getOpposite();
@@ -119,6 +123,8 @@ public class VanillaLikeHotbarElement extends AbstractElement {
                 renderSlot(graphics, elementX + elementWidth + 10, slotY, partialTick, player, offhandItem, renderSeed++);
             }
         }
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     }
 

@@ -43,6 +43,7 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
 
     // When true, the hearts are drawn; when false, only the bar bounds are recorded.
     private boolean shouldRenderBar = false;
+    public boolean isUsedAsDummy = false;
 
     @NotNull
     public SpiffyAlignment spiffyAlignment = SpiffyAlignment.TOP_LEFT;
@@ -107,6 +108,10 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
             return;
         }
 
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+
         // Compute current health (rounded up) and determine blink status.
         int currentHealthCeil = Mth.ceil(player.getHealth());
         boolean heartBlink = (this.healthBlinkTime > (long)this.tickCount) &&
@@ -147,6 +152,14 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
             currentHealthCeil = 9;
             displayedHealth = 9;
             absorptionHalfHearts = 5;
+            totalHealthHearts = Mth.ceil(maxHealth / 2.0f);
+            totalHearts = totalHealthHearts + absorptionHalfHearts;
+        }
+        if (this.isUsedAsDummy) {
+            maxHealth = 20;
+            currentHealthCeil = 9;
+            displayedHealth = 9;
+            absorptionHalfHearts = 0;
             totalHealthHearts = Mth.ceil(maxHealth / 2.0f);
             totalHearts = totalHealthHearts + absorptionHalfHearts;
         }
@@ -270,6 +283,8 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
             this.barWidth = 1;
             this.barHeight = 9;
         }
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     }
 

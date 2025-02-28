@@ -63,6 +63,10 @@ public class VanillaLikeJumpMeterElement extends AbstractElement {
      */
     private void renderJumpMeter(GuiGraphics graphics, int elementX, int elementY, int elementWidth, int elementHeight) {
 
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+
         // Get the player's rideable jump vehicle, if any.
         PlayerRideableJumping rideable = Objects.requireNonNull(this.minecraft.player).jumpableVehicle();
 
@@ -82,6 +86,8 @@ public class VanillaLikeJumpMeterElement extends AbstractElement {
         else if (fillWidth > 0) {
             graphics.blit(GUI_ICONS_LOCATION, elementX, elementY, 0, 89, fillWidth, elementHeight);
         }
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     }
 

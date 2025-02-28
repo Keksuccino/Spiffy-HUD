@@ -108,6 +108,11 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
      * @param applyOffset If true, the computed offset is applied while drawing.
      */
     private void renderScoreboard(GuiGraphics graphics, int offsetX, int offsetY, boolean applyOffset) {
+
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+
         Scoreboard scoreboard = this.minecraft.level.getScoreboard();
         Objective objective = null;
         PlayerTeam playerTeam = scoreboard.getPlayersTeam(this.minecraft.player.getScoreboardName());
@@ -127,6 +132,9 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
         if (objectiveToRender != null) {
             displayScoreboardSidebar(graphics, objectiveToRender, offsetX, offsetY, applyOffset);
         }
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+
     }
 
     /**

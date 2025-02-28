@@ -5,6 +5,7 @@ import de.keksuccino.fancymenu.customization.layout.LayoutHandler;
 import de.keksuccino.fancymenu.customization.overlay.CustomizationOverlay;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
 import de.keksuccino.spiffyhud.customization.elements.Elements;
+import de.keksuccino.spiffyhud.customization.elements.playernbthelper.PlayerNbtPathHelpScreen;
 import de.keksuccino.spiffyhud.customization.elements.slot.SlotIdHelpScreen;
 import de.keksuccino.spiffyhud.customization.placeholders.Placeholders;
 import de.keksuccino.fancymenu.customization.ScreenCustomization;
@@ -47,6 +48,7 @@ public class SpiffyHud {
 
 			//Disable customization for all Spiffy screens that shouldn't be editable
 			ScreenCustomization.addScreenBlacklistRule(s -> s.equals(SlotIdHelpScreen.class.getName()));
+			ScreenCustomization.addScreenBlacklistRule(s -> s.equals(PlayerNbtPathHelpScreen.class.getName()));
 
 			//Register custom placeholders
 			Placeholders.registerAll();

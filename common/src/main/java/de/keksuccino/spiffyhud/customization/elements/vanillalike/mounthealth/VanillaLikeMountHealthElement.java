@@ -32,6 +32,7 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
 
     // When false, the drawing method only computes layout dimensions.
     private boolean shouldRenderBar = false;
+    public boolean isUsedAsDummy = false;
 
     @NotNull
     public SpiffyAlignment spiffyAlignment = SpiffyAlignment.TOP_LEFT;
@@ -116,9 +117,17 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
             totalHearts = 20;
             currentHealth = 9;
         }
+        if (this.isUsedAsDummy) {
+            totalHearts = 10;
+            currentHealth = 9;
+        }
         if (totalHearts == 0) {
             return;
         }
+
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
 
         final int heartsPerRow = 10;
         // For drawing alignment purposes, we always use a fixed row width.
@@ -216,6 +225,8 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
                 }
             }
         }
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     }
 

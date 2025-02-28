@@ -112,7 +112,7 @@ public class GuiEntityRenderer {
         Lighting.setupForEntityInInventory();
         // Enable blending and set the shader color with the desired opacity.
         RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, opacity);
+        graphics.setColor(1.0f, 1.0f, 1.0f, opacity);
 
         // Retrieve the entity render dispatcher and disable shadow rendering.
         EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
@@ -125,7 +125,7 @@ public class GuiEntityRenderer {
         dispatcher.setRenderShadow(true);
         graphics.pose().popPose();
         Lighting.setupFor3DItems();
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         // Restore the entity's original rotation values.
         entity.yBodyRot = origYBodyRot;

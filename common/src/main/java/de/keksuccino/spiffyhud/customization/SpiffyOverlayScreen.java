@@ -1,46 +1,60 @@
 package de.keksuccino.spiffyhud.customization;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.ScreenCustomization;
+import de.keksuccino.fancymenu.customization.element.anchor.ElementAnchorPoints;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.fancymenu.util.rendering.ui.widget.RendererWidget;
+import de.keksuccino.spiffyhud.customization.elements.Elements;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.air.VanillaLikePlayerAirElement;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.armor.VanillaLikePlayerArmorElement;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.bossbars.VanillaLikeBossOverlayElement;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.effects.VanillaLikeEffectsElement;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.experience.VanillaLikeExperienceElement;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.food.VanillaLikePlayerFoodElement;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.hotbar.VanillaLikeHotbarElement;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.jumpmeter.VanillaLikeJumpMeterElement;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.mounthealth.VanillaLikeMountHealthElement;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.playerhealth.VanillaLikePlayerHealthElement;
+import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.MobEffectTextureManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.HumanoidArm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class SpiffyOverlayScreen extends Screen {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
     private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
-    private static final ResourceLocation BARS_LOCATION = new ResourceLocation("textures/gui/bars.png");
+
+    private static final VanillaLikeHotbarElement HOTBAR_ELEMENT = Elements.VANILLA_LIKE_HOTBAR.buildDefaultInstance();
+    private static final VanillaLikeJumpMeterElement JUMP_METER_ELEMENT = Elements.VANILLA_LIKE_JUMP_METER.buildDefaultInstance();
+    private static final VanillaLikeExperienceElement EXPERIENCE_ELEMENT = Elements.VANILLA_LIKE_EXPERIENCE.buildDefaultInstance();
+    private static final VanillaLikePlayerFoodElement FOOD_ELEMENT = Elements.VANILLA_LIKE_PLAYER_FOOD.buildDefaultInstance();
+    private static final VanillaLikePlayerArmorElement ARMOR_ELEMENT = Elements.VANILLA_LIKE_PLAYER_ARMOR.buildDefaultInstance();
+    private static final VanillaLikePlayerAirElement AIR_ELEMENT = Elements.VANILLA_LIKE_PLAYER_AIR.buildDefaultInstance();
+    private static final VanillaLikeMountHealthElement MOUNT_HEALTH_ELEMENT = Elements.VANILLA_LIKE_MOUNT_HEALTH.buildDefaultInstance();
+    private static final VanillaLikePlayerHealthElement PLAYER_HEALTH_ELEMENT = Elements.VANILLA_LIKE_PLAYER_HEALTH.buildDefaultInstance();
+    private static final VanillaLikeBossOverlayElement BOSS_OVERLAY_ELEMENT = Elements.VANILLA_LIKE_BOSS_OVERLAY.buildDefaultInstance();
+    private static final VanillaLikeEffectsElement EFFECTS_ELEMENT = Elements.VANILLA_LIKE_EFFECTS.buildDefaultInstance();
 
     public final boolean showFancyMenuOverlay;
+    protected final Font font = Minecraft.getInstance().font;
+    protected final Minecraft minecraft = Minecraft.getInstance();
 
     public SpiffyOverlayScreen(boolean showFancyMenuOverlay) {
         super(Component.empty());
@@ -95,6 +109,20 @@ public class SpiffyOverlayScreen extends Screen {
     }
 
     @Override
+    public void render(@NotNull GuiGraphics $$0, int $$1, int $$2, float $$3) {
+
+        //Don't render widgets when not in the editor
+        if (!(Minecraft.getInstance().screen instanceof LayoutEditorScreen)) return;
+
+        this.children().forEach(guiEventListener -> {
+            if (guiEventListener instanceof Renderable renderable) {
+                renderable.render($$0, $$1, $$2, $$3);
+            }
+        });
+
+    }
+
+    @Override
     public void renderBackground(@NotNull GuiGraphics $$0) {
     }
 
@@ -105,22 +133,10 @@ public class SpiffyOverlayScreen extends Screen {
         int widgetWidth = 182;
         int widgetHeight = 22;
         return new SpiffyRendererWidget(x, y, widgetWidth, widgetHeight, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            RenderSystem.enableBlend();
-            // Draw the hotbar background
-            graphics.blit(WIDGETS_LOCATION, screenCenter - 91, this.height - 22, 0, 0, 182, 22, 256, 256);
-            // Draw selection overlay for the selected slot
-            int selected = Minecraft.getInstance().player.getInventory().selected;
-            graphics.blit(WIDGETS_LOCATION, screenCenter - 91 - 1 + selected * 20, this.height - 22 - 1, 0, 22, 24, 22, 256, 256);
-            // Draw offhand element if available
-            if (!Minecraft.getInstance().player.getOffhandItem().isEmpty()) {
-                boolean leftHanded = Minecraft.getInstance().player.getMainArm() == HumanoidArm.LEFT;
-                if (leftHanded) {
-                    graphics.blit(WIDGETS_LOCATION, screenCenter - 91 - 29, this.height - 23, 24, 22, 29, 24, 256, 256);
-                } else {
-                    graphics.blit(WIDGETS_LOCATION, screenCenter + 91, this.height - 23, 53, 22, 29, 24, 256, 256);
-                }
-            }
-            RenderingUtils.resetShaderColor(graphics);
+            HOTBAR_ELEMENT.anchorPoint = ElementAnchorPoints.TOP_LEFT;
+            HOTBAR_ELEMENT.posOffsetX = gx;
+            HOTBAR_ELEMENT.posOffsetY = gy - 2;
+            HOTBAR_ELEMENT.render(graphics, mX, mY, partial);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.HOTBAR_IDENTIFIER);
     }
 
@@ -131,13 +147,10 @@ public class SpiffyOverlayScreen extends Screen {
         int width = 182;
         int height = 5;
         return new SpiffyRendererWidget(x, y, width, height, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            RenderSystem.enableBlend();
-            // Draw jump meter background (using GUI_ICONS_LOCATION as in the older Gui.renderJumpMeter)
-            graphics.blit(GUI_ICONS_LOCATION, gx, gy, 0, 84, gwidth, gheight, 256, 256);
-            // Draw progress overlay (dummy fixed progress of 50%)
-            int progressWidth = (int)(0.5F * 183.0f);
-            graphics.blit(GUI_ICONS_LOCATION, gx, gy, 0, 89, progressWidth, gheight, 256, 256);
-            RenderingUtils.resetShaderColor(graphics);
+            JUMP_METER_ELEMENT.anchorPoint = ElementAnchorPoints.TOP_LEFT;
+            JUMP_METER_ELEMENT.posOffsetX = gx;
+            JUMP_METER_ELEMENT.posOffsetY = gy;
+            JUMP_METER_ELEMENT.render(graphics, mX, mY, partial);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.JUMP_METER_IDENTIFIER);
     }
 
@@ -148,25 +161,15 @@ public class SpiffyOverlayScreen extends Screen {
         int width = 182;
         int height = 5;
         return new SpiffyRendererWidget(x, y, width, height, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            RenderSystem.enableBlend();
-            // Draw experience bar background from GUI_ICONS_LOCATION
-            graphics.blit(GUI_ICONS_LOCATION, gx, gy, 0, 64, gwidth, gheight, 256, 256);
-            // Draw progress (dummy progress of 50%)
-            int progressWidth = (int)(0.5F * 183.0f);
-            graphics.blit(GUI_ICONS_LOCATION, gx, gy, 0, 69, progressWidth, gheight, 256, 256);
-            // Draw dummy level text ("42")
-            String levelString = "42";
-            Font font = Minecraft.getInstance().font;
-            int textX = gx + (gwidth / 2) - (font.width(levelString) / 2);
-            int textY = gy - 6;
-            graphics.drawString(Minecraft.getInstance().font, levelString, textX, textY, 8453920);
-            RenderingUtils.resetShaderColor(graphics);
+            EXPERIENCE_ELEMENT.anchorPoint = ElementAnchorPoints.TOP_LEFT;
+            EXPERIENCE_ELEMENT.posOffsetX = gx;
+            EXPERIENCE_ELEMENT.posOffsetY = gy;
+            EXPERIENCE_ELEMENT.render(graphics, mX, mY, partial);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.EXPERIENCE_BAR_IDENTIFIER);
     }
 
     protected RendererWidget buildSelectedItemNameWidget() {
 
-        Font font = Minecraft.getInstance().font;
         MutableComponent mutableComponent = Component.empty().append(Component.translatable("spiffyhud.elements.dummy.selected_item_name")).withStyle(ChatFormatting.LIGHT_PURPLE);
         int textWidth = font.width(mutableComponent);
         int textX = (this.width - textWidth) / 2;
@@ -186,8 +189,6 @@ public class SpiffyOverlayScreen extends Screen {
     protected RendererWidget buildScoreboardSidebarWidget() {
 
         String spacer = ": ";
-        Minecraft minecraft = Minecraft.getInstance();
-        Font font = Minecraft.getInstance().font;
 
         //Build line entries
         record DisplayEntry(Component name, Component score, int scoreWidth) {}
@@ -248,81 +249,66 @@ public class SpiffyOverlayScreen extends Screen {
     protected RendererWidget buildFoodBarWidget() {
         int barX = this.width / 2 + 91;
         int barY = (this.height - 39) - 5;
-        return new SpiffyRendererWidget(barX - 90, barY, 90, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            RenderSystem.enableBlend();
-            // Draw 10 food icons using GUI_ICONS_LOCATION:
-            for (int i = 0; i < 10; i++) {
-                int offsetX = barX - i * 8 - 9;
-                // Empty food icon
-                graphics.blit(GUI_ICONS_LOCATION, offsetX, barY, 16, 27, 9, 9, 256, 256);
-                // Full
-                graphics.blit(GUI_ICONS_LOCATION, offsetX, barY, 52, 27, 9, 9, 256, 256);
-            }
-            RenderingUtils.resetShaderColor(graphics);
+        return new SpiffyRendererWidget(barX - 80, barY, 80, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
+            FOOD_ELEMENT.anchorPoint = ElementAnchorPoints.TOP_LEFT;
+            FOOD_ELEMENT.posOffsetX = gx;
+            FOOD_ELEMENT.posOffsetY = gy;
+            FOOD_ELEMENT.spiffyAlignment = SpiffyAlignment.MID_RIGHT;
+            FOOD_ELEMENT.render(graphics, mX, mY, partial);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.FOOD_BAR_IDENTIFIER);
     }
 
     protected RendererWidget buildArmorBarWidget() {
         int barX = this.width / 2 - 91;
         int barY = (this.height - 39 - 10) - 5;
-        return new SpiffyRendererWidget(barX, barY, 90, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            RenderSystem.enableBlend();
-            // Draw 10 armor icons
-            for (int i = 0; i < 10; i++) {
-                int offsetX = barX + i * 8;
-                graphics.blit(GUI_ICONS_LOCATION, offsetX, barY, 34, 9, 9, 9, 256, 256);
-            }
-            RenderingUtils.resetShaderColor(graphics);
+        return new SpiffyRendererWidget(barX, barY, 80, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
+            ARMOR_ELEMENT.anchorPoint = ElementAnchorPoints.TOP_LEFT;
+            ARMOR_ELEMENT.posOffsetX = gx;
+            ARMOR_ELEMENT.posOffsetY = gy;
+            ARMOR_ELEMENT.spiffyAlignment = SpiffyAlignment.MID_LEFT;
+            ARMOR_ELEMENT.render(graphics, mX, mY, partial);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.ARMOR_BAR_IDENTIFIER);
     }
 
     protected RendererWidget buildAirBarWidget() {
         int barX = this.width / 2 + 91;
         int barY = (this.height - 39 - 10) - 5;
-        return new SpiffyRendererWidget(barX - 90, barY, 90, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            RenderSystem.enableBlend();
-            // Draw 10 air bubble icons
-            for (int i = 0; i < 10; i++) {
-                int offsetX = barX - i * 8 - 9;
-                graphics.blit(GUI_ICONS_LOCATION, offsetX, barY, 16, 18, 9, 9, 256, 256);
-            }
-            RenderingUtils.resetShaderColor(graphics);
+        return new SpiffyRendererWidget(barX - 80, barY, 80, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
+            AIR_ELEMENT.anchorPoint = ElementAnchorPoints.TOP_LEFT;
+            AIR_ELEMENT.posOffsetX = gx;
+            AIR_ELEMENT.posOffsetY = gy;
+            AIR_ELEMENT.spiffyAlignment = SpiffyAlignment.MID_RIGHT;
+            AIR_ELEMENT.render(graphics, mX, mY, partial);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.AIR_BAR_IDENTIFIER);
     }
 
     protected RendererWidget buildMountHealthBarWidget() {
         int barX = this.width / 2 + 91;
         int barY = (this.height - 39 - 10) - 15;
-        return new SpiffyRendererWidget(barX - 90, barY, 90, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            RenderSystem.enableBlend();
-            // Draw dummy mount health icons
-            for (int i = 0; i < 10; i++) {
-                int offsetX = barX - i * 8 - 9;
-                graphics.blit(GUI_ICONS_LOCATION, offsetX, barY, 52, 9, 9, 9, 256, 256);
-                graphics.blit(GUI_ICONS_LOCATION, offsetX, barY, 88, 9, 9, 9, 256, 256);
-            }
-            RenderingUtils.resetShaderColor(graphics);
+        return new SpiffyRendererWidget(barX - 80, barY, 80, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
+            MOUNT_HEALTH_ELEMENT.anchorPoint = ElementAnchorPoints.TOP_LEFT;
+            MOUNT_HEALTH_ELEMENT.posOffsetX = gx;
+            MOUNT_HEALTH_ELEMENT.posOffsetY = gy;
+            MOUNT_HEALTH_ELEMENT.spiffyAlignment = SpiffyAlignment.MID_RIGHT;
+            MOUNT_HEALTH_ELEMENT.isUsedAsDummy = true;
+            MOUNT_HEALTH_ELEMENT.render(graphics, mX, mY, partial);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.MOUNT_HEALTH_BAR_IDENTIFIER);
     }
 
     protected RendererWidget buildHealthBarWidget() {
         int barX = this.width / 2 - 91;
         int barY = (this.height - 39) - 5;
-        return new SpiffyRendererWidget(barX, barY, 90, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            Gui.HeartType heartType = Gui.HeartType.forPlayer(Minecraft.getInstance().player);
-            RenderSystem.enableBlend();
-            // Draw dummy player health bar
-            for (int i = 0; i < 10; i++) {
-                int posX = barX + i * 8;
-                graphics.blit(GUI_ICONS_LOCATION, posX, barY, Gui.HeartType.CONTAINER.getX(false, false), 0, 9, 9);
-                graphics.blit(GUI_ICONS_LOCATION, posX, barY, heartType.getX(false, false), 0, 9, 9);
-            }
-            RenderingUtils.resetShaderColor(graphics);
+        return new SpiffyRendererWidget(barX, barY, 80, 9, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
+            PLAYER_HEALTH_ELEMENT.anchorPoint = ElementAnchorPoints.TOP_LEFT;
+            PLAYER_HEALTH_ELEMENT.posOffsetX = gx;
+            PLAYER_HEALTH_ELEMENT.posOffsetY = gy;
+            PLAYER_HEALTH_ELEMENT.spiffyAlignment = SpiffyAlignment.MID_LEFT;
+            PLAYER_HEALTH_ELEMENT.isUsedAsDummy = true;
+            PLAYER_HEALTH_ELEMENT.render(graphics, mX, mY, partial);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.PLAYER_HEALTH_BAR_IDENTIFIER);
     }
 
     protected RendererWidget buildOverlayMessageWidget() {
-        Font font = Minecraft.getInstance().font;
         Component message = Component.literal("Overlay Message");
         int messageWidth = font.width(message);
         int textX = (this.width / 2) - (messageWidth / 2);
@@ -387,7 +373,6 @@ public class SpiffyOverlayScreen extends Screen {
 
     protected RendererWidget buildTitleWidget() {
 
-        Font font = Minecraft.getInstance().font;
         Component title = Component.translatable("spiffyhud.elements.dummy.title");
         int titleWidth = font.width(title);
         int totalWidth = titleWidth * 4;
@@ -414,7 +399,6 @@ public class SpiffyOverlayScreen extends Screen {
     }
 
     protected RendererWidget buildSubtitleWidget() {
-        Font font = Minecraft.getInstance().font;
         Component subtitle = Component.literal("Subtitle");
         int subtitleWidth = font.width(subtitle);
         int totalWidth = subtitleWidth * 2;
@@ -435,76 +419,26 @@ public class SpiffyOverlayScreen extends Screen {
     }
 
     protected RendererWidget buildBossBarWidget() {
-        Font font = Minecraft.getInstance().font;
-        Component bossName = Component.literal("Boss Bar");
-        int bossNameWidth = font.width(bossName);
         int barX = this.width / 2 - 91;
         int barY = 12;
         int totalY = barY - 9;
         int totalHeight = 53;
         return new SpiffyRendererWidget(barX, totalY, 182, totalHeight, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            RenderSystem.enableBlend();
-            int yPos = barY;
-            for (int i = 0; i < 3; i++) {
-                // Draw boss bar background and progress using BARS_LOCATION
-                graphics.blit(BARS_LOCATION, barX, yPos, 0, 0, 182, 5, 256, 256);
-                graphics.blit(BARS_LOCATION, barX, yPos, 0, 5, 182 / 2, 5, 256, 256);
-                int n = this.width / 2 - bossNameWidth / 2;
-                int o = yPos - 9;
-                graphics.drawString(Minecraft.getInstance().font, bossName, n, o, 0xFFFFFF);
-                yPos += 10 + font.lineHeight;
-            }
-            RenderingUtils.resetShaderColor(graphics);
+            BOSS_OVERLAY_ELEMENT.anchorPoint = ElementAnchorPoints.TOP_LEFT;
+            BOSS_OVERLAY_ELEMENT.posOffsetX = gx;
+            BOSS_OVERLAY_ELEMENT.posOffsetY = gy;
+            BOSS_OVERLAY_ELEMENT.spiffyAlignment = SpiffyAlignment.TOP_CENTERED;
+            BOSS_OVERLAY_ELEMENT.render(graphics, mX, mY, partial);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.BOSS_BARS_IDENTIFIER);
     }
 
     protected RendererWidget buildEffectsWidget() {
-        return new SpiffyRendererWidget(this.width - 75, 1, 75, 50, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            Collection<MobEffectInstance> effects = List.of(new MobEffectInstance(MobEffects.LUCK, 300), new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 300), new MobEffectInstance(MobEffects.BAD_OMEN, 300));
-            RenderSystem.enableBlend();
-            int i = 0;
-            int j = 0;
-            MobEffectTextureManager mobEffectTextureManager = this.minecraft.getMobEffectTextures();
-            ArrayList<Runnable> list = Lists.newArrayListWithExpectedSize(effects.size());
-            for (MobEffectInstance effect : Ordering.natural().reverse().sortedCopy(effects)) {
-                int n;
-                MobEffect mobEffect = effect.getEffect();
-                if (!effect.showIcon()) continue;
-                int effectX = this.width;
-                int effectY = 1;
-                if (this.minecraft.isDemo()) {
-                    effectY += 15;
-                }
-                if (mobEffect.isBeneficial()) {
-                    effectX -= 25 * ++i;
-                } else {
-                    effectX -= 25 * ++j;
-                    effectY += 26;
-                }
-                float f = 1.0f;
-                if (effect.isAmbient()) {
-                    graphics.blit(AbstractContainerScreen.INVENTORY_LOCATION, effectX, effectY, 165, 166, 24, 24);
-                } else {
-                    graphics.blit(AbstractContainerScreen.INVENTORY_LOCATION, effectX, effectY, 141, 166, 24, 24);
-                    if (effect.endsWithin(200)) {
-                        int m = effect.getDuration();
-                        n = 10 - m / 20;
-                        f = Mth.clamp((float)m / 10.0f / 5.0f * 0.5f, 0.0f, 0.5f) + Mth.cos((float)m * (float)Math.PI / 5.0f) * Mth.clamp((float)n / 10.0f * 0.25f, 0.0f, 0.25f);
-                    }
-                }
-                TextureAtlasSprite textureAtlasSprite = mobEffectTextureManager.get(mobEffect);
-                n = effectX;
-                int o = effectY;
-                float g = f;
-                int finalN = n;
-                list.add(() -> {
-                    graphics.setColor(1.0f, 1.0f, 1.0f, g);
-                    graphics.blit(finalN + 3, o + 3, 0, 18, 18, textureAtlasSprite);
-                    graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-                });
-            }
-            list.forEach(Runnable::run);
-            RenderingUtils.resetShaderColor(graphics);
+        return new SpiffyRendererWidget(this.width - 50 - 1, 1, 50, 50, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
+            EFFECTS_ELEMENT.anchorPoint = ElementAnchorPoints.TOP_LEFT;
+            EFFECTS_ELEMENT.posOffsetX = gx;
+            EFFECTS_ELEMENT.posOffsetY = gy;
+            EFFECTS_ELEMENT.spiffyAlignment = SpiffyAlignment.TOP_RIGHT;
+            EFFECTS_ELEMENT.render(graphics, mX, mY, partial);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.EFFECTS_IDENTIFIER);
     }
 

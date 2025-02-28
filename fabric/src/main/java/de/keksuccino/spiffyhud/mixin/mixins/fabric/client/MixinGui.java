@@ -72,17 +72,6 @@ public abstract class MixinGui {
 
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderEffects(Lnet/minecraft/client/gui/GuiGraphics;)V", shift = At.Shift.AFTER))
-    private void after_renderEffects_Spiffy(GuiGraphics graphics, float partial, CallbackInfo info) {
-
-        if (this.spiffyGui == null) this.spiffyGui = SpiffyGui.INSTANCE;
-
-        if (!Minecraft.getInstance().options.hideGui) {
-            spiffyGui.render(graphics, -10000000, -10000000, partial);
-        }
-
-    }
-
     /**
      * @reason Hide the hotbar when hidden by Spiffy HUD.
      */

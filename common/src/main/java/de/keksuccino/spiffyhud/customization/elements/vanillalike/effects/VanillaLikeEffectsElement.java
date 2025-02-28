@@ -137,6 +137,10 @@ public class VanillaLikeEffectsElement extends AbstractElement {
 
         RenderSystem.enableBlend();
 
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+
         // Separate effects into beneficial and harmful lists (sorted in reverse order).
         List<MobEffectInstance> beneficialEffects = new ArrayList<>();
         List<MobEffectInstance> harmfulEffects = new ArrayList<>();
@@ -229,7 +233,7 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             recorder.updateY(beneficialRowY);
             final int iconX = finalIconX;
             final int iconY = beneficialRowY;
-            final float iconTransparency = iconAlpha;
+            final float iconTransparency = (iconAlpha > this.opacity) ? this.opacity : iconAlpha;
             if (this.shouldRenderBar) {
                 renderTasks.add(() -> {
                     graphics.setColor(1.0f, 1.0f, 1.0f, iconTransparency);
@@ -264,7 +268,7 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             recorder.updateY(harmfulRowY);
             final int iconX = finalIconX;
             final int iconY = harmfulRowY;
-            final float iconTransparency = iconAlpha;
+            final float iconTransparency = (iconAlpha > this.opacity) ? this.opacity : iconAlpha;
             if (this.shouldRenderBar) {
                 renderTasks.add(() -> {
                     graphics.setColor(1.0f, 1.0f, 1.0f, iconTransparency);
@@ -280,6 +284,9 @@ public class VanillaLikeEffectsElement extends AbstractElement {
 
         // Execute all rendering tasks.
         renderTasks.forEach(Runnable::run);
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+
     }
 
     @Override

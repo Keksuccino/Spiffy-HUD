@@ -142,20 +142,32 @@ public class VanillaLikeBossOverlayElement extends AbstractElement {
      * @param bossEvents The boss events to render.
      */
     private void renderBossBars(GuiGraphics graphics, int offsetX, int offsetY, Iterable<LerpingBossEvent> bossEvents) {
+
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+
         int currentY = offsetY + 12; // Start at the same relative Y as used in updateBodySizeAndPosCache.
         for (LerpingBossEvent bossEvent : bossEvents) {
             // Draw the boss bar background at local X = 0 (plus offset).
             int barPosX = offsetX;
             int barPosY = currentY;
+            RenderSystem.enableBlend();
+            graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
             drawBar(graphics, barPosX, barPosY, bossEvent);
             // Center the boss bar text within the computed element width.
             Component eventName = bossEvent.getName();
             int textWidth = this.minecraft.font.width(eventName);
             int textPosX = offsetX + (getAbsoluteWidth() - textWidth) / 2;
             int textPosY = barPosY - 9;
+            RenderSystem.enableBlend();
+            graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
             graphics.drawString(this.minecraft.font, eventName, textPosX, textPosY, 0xFFFFFF);
             currentY += 10 + this.minecraft.font.lineHeight;
         }
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+
     }
 
     /**

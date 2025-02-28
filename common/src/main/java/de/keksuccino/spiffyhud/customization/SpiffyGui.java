@@ -26,9 +26,6 @@ public class SpiffyGui implements Renderable {
     private static boolean initialized = false;
     private static SpiffyOverlayScreen spiffyOverlayScreen = new SpiffyOverlayScreen(false);
 
-    private int lastScreenWidth = 0;
-    private int lastScreenHeight = 0;
-
     private SpiffyGui() {
 
         if (!initialized) {
@@ -37,8 +34,6 @@ public class SpiffyGui implements Renderable {
         }
 
         this.setNewOverlayScreen();
-        this.lastScreenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-        this.lastScreenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         this.initOverlayScreen(false);
         this.tick();
 
@@ -90,8 +85,6 @@ public class SpiffyGui implements Renderable {
 
     public void onResize() {
         try {
-            //TODO remove debug
-            LOGGER.info("################## Window resized! Re-initializing HUD overlay!");
             this.initOverlayScreen(true);
         } catch (Exception ex) {
             LOGGER.error("[SPIFFY HUD] Failed to resize SpiffyGui!", ex);
@@ -102,8 +95,6 @@ public class SpiffyGui implements Renderable {
         try {
             if (Shared.reInitHudLayouts) {
                 Shared.reInitHudLayouts = false;
-                //TODO remove debug
-                LOGGER.info("################## Re-initialized HUD overlay, because Shared.reInitHudLayouts was TRUE!");
                 this.initOverlayScreen(true);
             }
         } catch (Exception ex) {

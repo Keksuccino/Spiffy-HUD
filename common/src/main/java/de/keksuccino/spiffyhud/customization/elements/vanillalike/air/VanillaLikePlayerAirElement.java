@@ -112,6 +112,10 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
             return;
         }
 
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+
         // Get the maximum and current air supply.
         int maxAir = player.getMaxAirSupply();
         int currentAir = Math.min(player.getAirSupply(), maxAir);
@@ -171,6 +175,8 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
         // When called in dry-run mode (offsetX == 0, offsetY == 0) these values help position the bar within the element.
         this.barWidth = totalBarWidth;
         this.barHeight = BUBBLE_SIZE;
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     }
 

@@ -76,6 +76,10 @@ public class VanillaLikeExperienceElement extends AbstractElement {
         var player = this.minecraft.player;
         if (player == null) return;
 
+        // Enable blending and set the shader color with the desired opacity.
+        RenderSystem.enableBlend();
+        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+
         // Only draw the bar if the player requires XP for the next level.
         int xpNeeded = player.getXpNeededForNextLevel();
         if ((xpNeeded > 0) || isEditor()) {
@@ -118,6 +122,8 @@ public class VanillaLikeExperienceElement extends AbstractElement {
             graphics.drawString(this.getFont(), levelText, textX, textY, 8453920, false);
 
         }
+
+        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     }
 
