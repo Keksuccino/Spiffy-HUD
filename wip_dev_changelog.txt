@@ -8,6 +8,7 @@ Beta 3
 - Added "Highlighted Item Time" placeholder that returns the remaining display time of the Vanilla highlighted item text in ticks
 - Added "Player NBT Data" placeholder to get NBT data values from the client player
 - Added "Player NBT Helper" element that basically only exists for you to have an easy way to get all NBT data paths for the client player
+- Added "Is Player In Structure" requirement to check if the player is in a specific structure (Spiffy needs to be installed on the server for this to work!)
 - Renamed "Overlay Message" Vanilla element to "Action Bar Message"
 - Fixed Slot element ignoring the opacity setting (please note that even with this fix, most items simply don't support opacity, so you will only be able to set the opacity for some item types)
 - Fixed all Vanilla-like elements ignoring the opacity setting (please note that some Vanilla-like elements still don't fully support opacity)
