@@ -1,5 +1,6 @@
 Beta 3
 
+- Added "Vanilla-Like Attack Indicator" element
 - Added "Chat Customizer" element to customize parts of the chat overlay
 - Added "Single-Line Text" element that supports Minecraft's JSON component text system to display fancy text in the HUD
 - Added "Action Bar Message" placeholder to get the current action bar message
