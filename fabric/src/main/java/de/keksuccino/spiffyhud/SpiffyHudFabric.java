@@ -10,6 +10,9 @@ public class SpiffyHudFabric implements ModInitializer {
     
     @Override
     public void onInitialize() {
+
+        SpiffyHud.init();
+
     }
 
 }

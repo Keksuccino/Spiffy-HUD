@@ -4,6 +4,7 @@ import java.io.File;
 import de.keksuccino.fancymenu.customization.layout.LayoutHandler;
 import de.keksuccino.fancymenu.customization.overlay.CustomizationOverlay;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
+import de.keksuccino.spiffyhud.customization.actions.Actions;
 import de.keksuccino.spiffyhud.customization.elements.Elements;
 import de.keksuccino.spiffyhud.customization.elements.playernbthelper.PlayerNbtPathHelpScreen;
 import de.keksuccino.spiffyhud.customization.elements.slot.SlotIdHelpScreen;
@@ -12,6 +13,7 @@ import de.keksuccino.fancymenu.customization.ScreenCustomization;
 import de.keksuccino.fancymenu.customization.screen.identifier.UniversalScreenIdentifierRegistry;
 import de.keksuccino.fancymenu.util.event.acara.EventHandler;
 import de.keksuccino.spiffyhud.customization.requirements.Requirements;
+import de.keksuccino.spiffyhud.networking.packets.Packets;
 import de.keksuccino.spiffyhud.platform.Services;
 import de.keksuccino.fancymenu.util.file.FileUtils;
 import de.keksuccino.fancymenu.util.file.GameDirectoryUtils;
@@ -31,7 +33,7 @@ public class SpiffyHud {
 
 	private static Options options;
 
-	public static void earlyInit() {
+	public static void init() {
 
 		if (Services.PLATFORM.isOnClient()) {
 			LOGGER.info("[SPIFFY HUD] Loading v" + VERSION + " in client-side mode on " + MOD_LOADER.toUpperCase() + "!");
@@ -59,6 +61,9 @@ public class SpiffyHud {
 			//Register custom element types
 			Elements.registerAll();
 
+			//Register custom actions
+			Actions.registerAll();
+
 			//Disable universal layouts for the HUD / Spiffy Overlay
 			LayoutHandler.registerUniversalLayoutInclusionRule(screenIdentifier -> !SpiffyUtils.isSpiffyIdentifier(screenIdentifier));
 
@@ -68,7 +73,11 @@ public class SpiffyHud {
 				return true;
 			});
 
+			EventHandler.INSTANCE.registerListenersOf(new Test());
+
 		}
+
+		Packets.registerAll();
 
 	}
 

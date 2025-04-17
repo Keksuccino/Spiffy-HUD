@@ -26,10 +26,16 @@ public class SingleLineTextElement extends AbstractElement {
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
 
-        if (this.shouldRender() && (this.text != null)) {
+        if (this.shouldRender()) {
 
-            Component c = ComponentUtils.fromJsonOrPlainText(this.text);
+            Component c = (this.text != null) ? ComponentUtils.fromJsonOrPlainText(this.text) : Component.literal("--------------------");
+            if (c.getString().isBlank() && isEditor()) {
+                c = Component.literal("--------------------");
+            }
             this.baseWidth = Minecraft.getInstance().font.width(c);
+            if ((this.baseWidth < 10) && isEditor()) {
+                this.baseWidth = 10;
+            }
 
             graphics.drawString(Minecraft.getInstance().font, c, this.getAbsoluteX(), this.getAbsoluteY(), DrawableColor.WHITE.getColorIntWithAlpha(this.opacity));
 

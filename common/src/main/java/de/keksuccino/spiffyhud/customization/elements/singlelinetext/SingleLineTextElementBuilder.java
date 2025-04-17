@@ -6,6 +6,7 @@ import de.keksuccino.fancymenu.customization.element.SerializedElement;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.air.VanillaLikePlayerAirElement;
 import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +26,8 @@ public class SingleLineTextElementBuilder extends ElementBuilder<SingleLineTextE
         SingleLineTextElement i = new SingleLineTextElement(this);
         i.baseWidth = 100;
         i.baseHeight = 100;
+        i.stickyAnchor = true;
+        i.stayOnScreen = false;
         return i;
     }
 
@@ -37,6 +40,16 @@ public class SingleLineTextElementBuilder extends ElementBuilder<SingleLineTextE
 
         return element;
 
+    }
+
+    @Override
+    public @Nullable SingleLineTextElement deserializeElementInternal(@NotNull SerializedElement serialized) {
+        SingleLineTextElement e = super.deserializeElementInternal(serialized);
+        if (e != null) {
+            // Fix "Stay on Screen" resetting itself for element types that have it disabled by default
+            e.stayOnScreen = this.deserializeBoolean(e.stayOnScreen, serialized.getValue("stay_on_screen"));
+        }
+        return e;
     }
 
     @Override

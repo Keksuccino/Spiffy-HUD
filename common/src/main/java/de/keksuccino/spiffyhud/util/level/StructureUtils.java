@@ -1,0 +1,157 @@
+package de.keksuccino.spiffyhud.util.level;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.core.registries.Registries;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * Utility class for structure-related operations.
+ */
+public class StructureUtils {
+
+    /**
+     * Checks if a BlockPos is within a specific structure.
+     *
+     * @param level The server level to check in
+     * @param pos The position to check
+     * @param structure The structure key to check for
+     * @return true if the position is within the structure, false otherwise
+     */
+    public static boolean isInStructure(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull ResourceKey<Structure> structure) {
+        if (!level.isLoaded(pos)) {
+            return false; // Position not loaded, can't check
+        }
+        // Get the structure at the position and check if it's valid
+        return level.structureManager().getStructureWithPieceAt(pos, structure).isValid();
+    }
+
+    /**
+     * Gets the ResourceKey of a structure at a specific BlockPos.
+     *
+     * @param level The server level to check in
+     * @param pos The position to check
+     * @return The ResourceKey of the structure at this position, or null if no structure is present
+     */
+    @Nullable
+    public static ResourceKey<Structure> getStructureAt(@NotNull ServerLevel level, @NotNull BlockPos pos) {
+
+        if (!level.isLoaded(pos)) {
+            return null; // Position not loaded, can't check
+        }
+
+        // Get all structures in the registry
+        Registry<Structure> structureRegistry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
+
+        // Check each structure to see if the position is within it
+        for (ResourceKey<Structure> key : structureRegistry.registryKeySet()) {
+            if (level.structureManager().getStructureWithPieceAt(pos, key).isValid()) {
+                return key;
+            }
+        }
+
+        return null; // No structure found at this position
+
+    }
+
+    /**
+     * Gets all structures at a specific BlockPos.
+     *
+     * @param level The server level to check in
+     * @param pos The position to check
+     * @return A list of ResourceKeys for all structures at this position
+     */
+    @NotNull
+    public static List<ResourceKey<Structure>> getAllStructuresAt(@NotNull ServerLevel level, @NotNull BlockPos pos) {
+
+        if (!level.isLoaded(pos)) {
+            return List.of(); // Position not loaded, can't check
+        }
+
+        // Get all structures in the registry
+        Registry<Structure> structureRegistry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
+
+        // Check each structure to see if the position is within it
+        return structureRegistry.registryKeySet().stream()
+                .filter(key -> level.structureManager().getStructureWithPieceAt(pos, key).isValid())
+                .collect(Collectors.toList());
+
+    }
+
+    /**
+     * Gets a structure resource key from a string identifier.
+     *
+     * @param structureId The structure identifier (e.g., "minecraft:mansion")
+     * @return The ResourceKey for the structure
+     */
+    @NotNull
+    public static ResourceKey<Structure> getStructureKey(@NotNull String structureId) {
+        ResourceLocation resourceLocation = new ResourceLocation(structureId);
+        return getStructureKey(resourceLocation);
+    }
+
+    /**
+     * Gets a structure resource key from a ResourceLocation.
+     *
+     * @param location The ResourceLocation for the structure
+     * @return The ResourceKey for the structure
+     */
+    @NotNull
+    public static ResourceKey<Structure> getStructureKey(@NotNull ResourceLocation location) {
+        return ResourceKey.create(Registries.STRUCTURE, location);
+    }
+
+    /**
+     * Gets all available structure resource keys from the registry.
+     *
+     * @param registryAccess The registry access to get structures from
+     * @return A list of all structure resource keys
+     */
+    @NotNull
+    public static List<ResourceKey<Structure>> getAllStructureKeys(@NotNull RegistryAccess registryAccess) {
+        Registry<Structure> structureRegistry = registryAccess.registryOrThrow(Registries.STRUCTURE);
+        return new ArrayList<>(structureRegistry.registryKeySet());
+    }
+
+    /**
+     * Tries to find a structure key by name, returning an Optional result.
+     *
+     * @param registryAccess The registry access to search in
+     * @param structureName The name of the structure to find
+     * @return An Optional containing the structure key if found, or empty if not found
+     */
+    @NotNull
+    public static Optional<ResourceKey<Structure>> findStructureKey(@NotNull RegistryAccess registryAccess, @NotNull String structureName) {
+        try {
+            ResourceLocation resourceLocation = new ResourceLocation(structureName);
+            ResourceKey<Structure> key = ResourceKey.create(Registries.STRUCTURE, resourceLocation);
+            // Verify the key exists in the registry
+            Registry<Structure> structureRegistry = registryAccess.registryOrThrow(Registries.STRUCTURE);
+            if (structureRegistry.containsKey(key)) {
+                return Optional.of(key);
+            }
+            return Optional.empty();
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    @NotNull
+    public static List<String> convertStructureKeysToStrings(@NotNull List<ResourceKey<Structure>> keys) {
+        List<String> stringKeys = new ArrayList<>();
+        keys.forEach(structureResourceKey -> stringKeys.add(structureResourceKey.location().toString()));
+        return stringKeys;
+    }
+
+}

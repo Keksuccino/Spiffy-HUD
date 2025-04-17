@@ -35,6 +35,11 @@ public class SlotEditorElement extends AbstractEditorElement {
                 (slotEditorElement, aBoolean) -> slotEditorElement.getElement().useSelectedSlot = aBoolean,
                 "spiffyhud.elements.slot.selected");
 
+        this.addToggleContextMenuEntryTo(this.rightClickMenu, "show_durability", SlotEditorElement.class,
+                consumes -> consumes.getElement().showDurability,
+                (slotEditorElement, aBoolean) -> slotEditorElement.getElement().showDurability = aBoolean,
+                "spiffyhud.elements.slot.show_durability");
+
         this.rightClickMenu.addSeparatorEntry("separator_before_slot_id_help");
 
         this.rightClickMenu.addClickableEntry("slot_id_help", Component.translatable("spiffyhud.elements.slot.slot_id_help"), (menu, entry) -> {

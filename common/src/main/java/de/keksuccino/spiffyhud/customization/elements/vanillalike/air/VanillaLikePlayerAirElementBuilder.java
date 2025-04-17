@@ -40,6 +40,16 @@ public class VanillaLikePlayerAirElementBuilder extends ElementBuilder<VanillaLi
     }
 
     @Override
+    public @Nullable VanillaLikePlayerAirElement deserializeElementInternal(@NotNull SerializedElement serialized) {
+        VanillaLikePlayerAirElement e = super.deserializeElementInternal(serialized);
+        if (e != null) {
+            // Fix "Stay on Screen" resetting itself for element types that have it disabled by default
+            e.stayOnScreen = this.deserializeBoolean(e.stayOnScreen, serialized.getValue("stay_on_screen"));
+        }
+        return e;
+    }
+
+    @Override
     protected SerializedElement serializeElement(@NotNull VanillaLikePlayerAirElement element, @NotNull SerializedElement serializeTo) {
 
         serializeTo.putProperty("body_alignment", element.spiffyAlignment.getName());

@@ -48,6 +48,7 @@
   "spiffyhud.elements.slot.desc": "Displays the item in the given inventory slot\nor the selected hotbar slot item.",
   "spiffyhud.elements.slot.slot": "Set Slot ID",
   "spiffyhud.elements.slot.selected": "Use Selected Hotbar Slot: %s",
+  "spiffyhud.elements.slot.show_durability": "Show Durability: %s",
   "spiffyhud.elements.slot.slot_id_help": "Slot IDs Explained",
   "spiffyhud.elements.slot.slot_id_help.text": "\n^^^\n\n# Important Slot IDs for the Player Inventory\n \n \n## Hotbar\n\n - **Slot IDs:** 0 to 8\n - The first hotbar slot is 0.\n\n## Main Inventory\n\n  - **Slot IDs:** 9 to 35\n  - The top-left main inventory slot is 9.\n\n## Armor Slots\n\n  - **Slot IDs:** 36 to 39\n  - 36 (boots), 37 (leggings), 38 (chestplate), 39 (helmet)\n\n## Offhand Slot\n\n  - **Slot ID:** 40\n \n \n![](https://raw.githubusercontent.com/Keksuccino/Spiffy-HUD/refs/heads/main/mod_resources/inv_slots_1.20.1_small.png)\n\n^^^",
   "spiffyhud.elements.dummy.display.cant_move_vanilla_elements": "You can't move Vanilla HUD elements!\nDelete the Vanilla element and add a Vanilla-like custom one instead!",
@@ -102,9 +103,14 @@
   "spiffyhud.placeholders.action_bar_message": "Action Bar Message",
   "spiffyhud.placeholders.action_bar_message.desc": "Gets the current action bar message (the text above the hotbar).\nReturns an empty text when no action bar message is displayed.",
   "spiffyhud.placeholders.slot_item_display_name": "Slot Item Display Name",
-  "spiffyhud.placeholders.slot_item_display_name.desc": "Gets the display name of an item in a specific slot.",
+  "spiffyhud.placeholders.slot_item_display_name.desc": "Gets the display name of an item in a specific slot.\nSetting 'ignore_spectator' to 'true' will ignore Spectator GUI slots in Spectator mode.",
   "spiffyhud.placeholders.action_bar_message_time": "Action Bar Message Time",
   "spiffyhud.placeholders.action_bar_message_time.desc": "The time left in ticks that the original Vanilla\naction bar message gets displayed.",
   "spiffyhud.placeholders.highlighted_item_time": "Highlighted Item Time",
-  "spiffyhud.placeholders.highlighted_item_time.desc": "The time left in ticks that the original Vanilla\nhighlighted item's name gets displayed above the hotbar."
+  "spiffyhud.placeholders.highlighted_item_time.desc": "The time left in ticks that the original Vanilla\nhighlighted item's name gets displayed above the hotbar.",
+  "spiffyhud.requirements.is_player_in_structure": "Is Player In Structure",
+  "spiffyhud.requirements.is_player_in_structure.desc": "Checks if the player is currently in a specific structure type.\n§xSpiffy needs to be installed on the server for this to work!",
+  "spiffyhud.requirements.is_player_in_structure.key": "Structure key to check for:",
+  "spiffyhud.elements.vanillalike.attack_indicator": "[HUD] Vanilla-Like Attack Indicator",
+  "spiffyhud.elements.vanillalike.attack_indicator.is_hotbar": "Use Hotbar Indicator Type: %s"
 }

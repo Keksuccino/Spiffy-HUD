@@ -9,6 +9,7 @@ import de.keksuccino.spiffyhud.customization.elements.singlelinetext.SingleLineT
 import de.keksuccino.spiffyhud.customization.elements.slot.SlotElementBuilder;
 import de.keksuccino.spiffyhud.customization.elements.vanillalike.air.VanillaLikePlayerAirElementBuilder;
 import de.keksuccino.spiffyhud.customization.elements.vanillalike.armor.VanillaLikePlayerArmorElementBuilder;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.attackindicator.VanillaLikeAttackIndicatorElementBuilder;
 import de.keksuccino.spiffyhud.customization.elements.vanillalike.bossbars.VanillaLikeBossOverlayElementBuilder;
 import de.keksuccino.spiffyhud.customization.elements.vanillalike.effects.VanillaLikeEffectsElementBuilder;
 import de.keksuccino.spiffyhud.customization.elements.vanillalike.experience.VanillaLikeExperienceElementBuilder;
@@ -32,6 +33,7 @@ public class Elements {
     public static final VanillaLikeMountHealthElementBuilder VANILLA_LIKE_MOUNT_HEALTH = new VanillaLikeMountHealthElementBuilder();
     public static final VanillaLikeEffectsElementBuilder VANILLA_LIKE_EFFECTS = new VanillaLikeEffectsElementBuilder();
     public static final VanillaLikeBossOverlayElementBuilder VANILLA_LIKE_BOSS_OVERLAY = new VanillaLikeBossOverlayElementBuilder();
+    public static final VanillaLikeAttackIndicatorElementBuilder VANILLA_LIKE_ATTACK_INDICATOR = new VanillaLikeAttackIndicatorElementBuilder();
 
     public static final SlotElementBuilder INVENTORY_SLOT = new SlotElementBuilder();
     public static final PlayerElementBuilder PLAYER = new PlayerElementBuilder();
@@ -53,6 +55,7 @@ public class Elements {
         ElementRegistry.register(VANILLA_LIKE_MOUNT_HEALTH);
         ElementRegistry.register(VANILLA_LIKE_EFFECTS);
         ElementRegistry.register(VANILLA_LIKE_BOSS_OVERLAY);
+        ElementRegistry.register(VANILLA_LIKE_ATTACK_INDICATOR);
 
         ElementRegistry.register(INVENTORY_SLOT);
         ElementRegistry.register(PLAYER);

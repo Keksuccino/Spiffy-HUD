@@ -3,7 +3,7 @@ package de.keksuccino.spiffyhud.customization.placeholders;
 import de.keksuccino.fancymenu.customization.placeholder.DeserializedPlaceholderString;
 import de.keksuccino.fancymenu.customization.placeholder.Placeholder;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
-import de.keksuccino.spiffyhud.util.entity.EntityNbtUtils;
+import de.keksuccino.spiffyhud.util.level.EntityNbtUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;

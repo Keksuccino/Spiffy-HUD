@@ -4,9 +4,12 @@ import de.keksuccino.fancymenu.customization.placeholder.DeserializedPlaceholder
 import de.keksuccino.fancymenu.customization.placeholder.Placeholder;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
 import de.keksuccino.fancymenu.util.MathUtils;
+import de.keksuccino.fancymenu.util.SerializationUtils;
+import de.keksuccino.spiffyhud.mixin.mixins.common.client.IMixinSpectatorGui;
 import de.keksuccino.spiffyhud.util.ComponentUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.spectator.SpectatorMenu;
+import net.minecraft.client.gui.spectator.SpectatorMenuItem;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,13 +28,17 @@ public class SlotItemDisplayNamePlaceholder extends Placeholder {
     @Override
     public String getReplacementFor(DeserializedPlaceholderString dps) {
         String slot = dps.values.get("slot");
+        boolean ignoreSpectator = SerializationUtils.deserializeBoolean(false, dps.values.get("ignore_spectator"));
         if ((slot != null) && MathUtils.isInteger(slot) && (Minecraft.getInstance().player != null)) {
-            ItemStack stack = Minecraft.getInstance().player.getInventory().getItem(Integer.parseInt(slot));
-            if (!stack.isEmpty()) {
+            int slotInt = Integer.parseInt(slot);
+            ItemStack stack = Minecraft.getInstance().player.getInventory().getItem(slotInt);
+            if (Minecraft.getInstance().player.isSpectator() && (slotInt >= 0) && (slotInt <= 8) && !ignoreSpectator) { // If slot is a hotbar slot and player is Spectator, return Spectator GUI slot names
+                IMixinSpectatorGui accessor = (IMixinSpectatorGui) Minecraft.getInstance().gui.getSpectatorGui();
+                SpectatorMenuItem spectatorMenuItem = accessor.get_menu_Spiffy().getSelectedItem();
+                MutableComponent mutableComponent = (MutableComponent) ((spectatorMenuItem == SpectatorMenu.EMPTY_SLOT) ? accessor.get_menu_Spiffy().getSelectedCategory().getPrompt() : spectatorMenuItem.getName());
+                return ComponentUtils.toJson(mutableComponent);
+            } else if (!stack.isEmpty()) {
                 MutableComponent mutableComponent = Component.empty().append(stack.getHoverName()).withStyle(stack.getRarity().color);
-                if (stack.hasCustomHoverName()) {
-                    mutableComponent.withStyle(ChatFormatting.ITALIC);
-                }
                 return ComponentUtils.toJson(mutableComponent);
             }
         }
@@ -40,7 +47,7 @@ public class SlotItemDisplayNamePlaceholder extends Placeholder {
 
     @Override
     public @Nullable List<String> getValueNames() {
-        return List.of("slot");
+        return List.of("slot", "ignore_spectator");
     }
 
     @Override
@@ -62,6 +69,7 @@ public class SlotItemDisplayNamePlaceholder extends Placeholder {
     public @NotNull DeserializedPlaceholderString getDefaultPlaceholderString() {
         LinkedHashMap<String, String> values = new LinkedHashMap<>();
         values.put("slot", "slot_number");
+        values.put("ignore_spectator", "false");
         return new DeserializedPlaceholderString(this.getIdentifier(), values, "");
     }
 

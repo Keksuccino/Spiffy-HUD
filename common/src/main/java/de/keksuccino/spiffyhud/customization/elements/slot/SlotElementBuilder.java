@@ -5,7 +5,6 @@ import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.customization.element.SerializedElement;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
-import de.keksuccino.fancymenu.util.SerializationUtils;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
 import net.minecraft.network.chat.Component;
@@ -13,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.awt.*;
 import java.util.Objects;
 
@@ -42,10 +40,21 @@ public class SlotElementBuilder extends ElementBuilder<SlotElement, SlotEditorEl
         SlotElement element = this.buildDefaultInstance();
 
         element.slot = Objects.requireNonNullElse(serialized.getValue("inventory_slot"), element.slot);
-        element.useSelectedSlot = SerializationUtils.deserializeBoolean(element.useSelectedSlot, serialized.getValue("use_selected_slot"));
+        element.useSelectedSlot = deserializeBoolean(element.useSelectedSlot, serialized.getValue("use_selected_slot"));
+        element.showDurability = deserializeBoolean(element.showDurability, serialized.getValue("show_durability"));
 
         return element;
 
+    }
+
+    @Override
+    public @Nullable SlotElement deserializeElementInternal(@NotNull SerializedElement serialized) {
+        SlotElement e = super.deserializeElementInternal(serialized);
+        if (e != null) {
+            // Fix "Stay on Screen" resetting itself for element types that have it disabled by default
+            e.stayOnScreen = this.deserializeBoolean(e.stayOnScreen, serialized.getValue("stay_on_screen"));
+        }
+        return e;
     }
 
     @Override
@@ -53,6 +62,7 @@ public class SlotElementBuilder extends ElementBuilder<SlotElement, SlotEditorEl
 
         serializeTo.putProperty("inventory_slot", element.slot);
         serializeTo.putProperty("use_selected_slot", "" + element.useSelectedSlot);
+        serializeTo.putProperty("show_durability", "" + element.showDurability);
 
         return serializeTo;
 

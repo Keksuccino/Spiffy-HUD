@@ -5,6 +5,7 @@ import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.customization.element.SerializedElement;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
+import de.keksuccino.spiffyhud.customization.elements.vanillalike.air.VanillaLikePlayerAirElement;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,16 @@ public class VanillaLikeBossOverlayElementBuilder extends ElementBuilder<Vanilla
 
         return element;
 
+    }
+
+    @Override
+    public @Nullable VanillaLikeBossOverlayElement deserializeElementInternal(@NotNull SerializedElement serialized) {
+        VanillaLikeBossOverlayElement e = super.deserializeElementInternal(serialized);
+        if (e != null) {
+            // Fix "Stay on Screen" resetting itself for element types that have it disabled by default
+            e.stayOnScreen = this.deserializeBoolean(e.stayOnScreen, serialized.getValue("stay_on_screen"));
+        }
+        return e;
     }
 
     @Override

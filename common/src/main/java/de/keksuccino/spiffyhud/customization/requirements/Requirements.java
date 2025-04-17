@@ -5,10 +5,12 @@ import de.keksuccino.fancymenu.customization.loadingrequirement.LoadingRequireme
 public class Requirements {
 
     public static final IsPlayerUsingItemRequirement IS_PLAYER_USING_ITEM = new IsPlayerUsingItemRequirement();
+    public static final IsPlayerInStructureRequirement IS_PLAYER_IN_STRUCTURE = new IsPlayerInStructureRequirement();
 
     public static void registerAll() {
 
         LoadingRequirementRegistry.register(IS_PLAYER_USING_ITEM);
+        LoadingRequirementRegistry.register(IS_PLAYER_IN_STRUCTURE);
 
     }
 

@@ -11,6 +11,7 @@ import de.keksuccino.fancymenu.util.rendering.ui.UIBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +27,7 @@ public class SlotElement extends AbstractElement {
     public String slot = "0";
     public int parsedSlot = 0;
     public boolean useSelectedSlot = false;
+    public boolean showDurability = true;
 
     protected final Font font = Minecraft.getInstance().font;
 
@@ -115,6 +117,28 @@ public class SlotElement extends AbstractElement {
 
         // Now render the item at (0,0) because the translation has been applied.
         graphics.renderItem(stack, 0, 0);
+
+        // Render durability bar if enabled and needed
+        if (this.showDurability && stack.isBarVisible()) {
+            int barWidth = stack.getBarWidth();
+            int barColor = stack.getBarColor();
+            
+            // Position the bar - using the same positioning logic as in GuiGraphics
+            int barX = 2;
+            int barY = 13;
+            
+            // Draw the background (black)
+            graphics.fill(RenderType.guiOverlay(),
+                          barX, barY, 
+                          barX + 13, barY + 2, 
+                          -16777216);
+            
+            // Draw the colored part of the bar
+            graphics.fill(RenderType.guiOverlay(),
+                          barX, barY, 
+                          barX + barWidth, barY + 1, 
+                          barColor | 0xFF000000);
+        }
 
         graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
