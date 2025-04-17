@@ -1,17 +1,13 @@
-Beta 3
+Release Candidate 1
 
-- Added "Vanilla-Like Attack Indicator" element
-- Added "Chat Customizer" element to customize parts of the chat overlay
-- Added "Single-Line Text" element that supports Minecraft's JSON component text system to display fancy text in the HUD
-- Added "Action Bar Message" placeholder to get the current action bar message
-- Added "Action Bar Message Time" placeholder that returns the remaining display time of the Vanilla action bar message in ticks
-- Added "Slot Item Display Name" placeholder
-- Added "Highlighted Item Time" placeholder that returns the remaining display time of the Vanilla highlighted item text in ticks
-- Added "Player NBT Data" placeholder to get NBT data values from the client player
-- Added "Player NBT Helper" element that basically only exists for you to have an easy way to get all NBT data paths for the client player
-- Added "Is Player In Structure" requirement to check if the player is in a specific structure (Spiffy needs to be installed on the server for this to work!)
-- Renamed "Overlay Message" Vanilla element to "Action Bar Message"
-- Fixed Slot element ignoring the opacity setting (please note that even with this fix, most items simply don't support opacity, so you will only be able to set the opacity for some item types)
-- Fixed all Vanilla-like elements ignoring the opacity setting (please note that some Vanilla-like elements still don't fully support opacity)
-- Fixed custom HUD rendering twice on Fabric (forgot to remove some experiments ehem)
-- Fixed "Stay on Screen" resetting itself in some cases
+- The "Slot Item Display Name" placeholder now shows the Spectator GUI slot display name for the hotbar slots, when in Spectator mode
+  - Can be disabled in the placeholder (Add a new placeholder to see how to ignore Spectator mode)
+- Fixed Slot element not showing item durability
+- Fixed "Highlighted Item Time" placeholder returning 0 as value when in Spectator mode
+- Added German localization
+- Added Japanese localization
+- Added Chinese localization
+- Added Korean localization
+- Added Spanish (Spain) localization
+- Added Spanish (Mexico) localization
+- Added Russian localization
