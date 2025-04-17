@@ -2,7 +2,7 @@ Release Candidate 1
 
 - The "Slot Item Display Name" placeholder now shows the Spectator GUI slot display name for the hotbar slots, when in Spectator mode
   - Can be disabled in the placeholder (Add a new placeholder to see how to ignore Spectator mode)
-- Fixed Slot element not showing item durability
+- Fixed Slot element not showing item durability (now has toggleable option to show/hide durability)
 - Fixed "Highlighted Item Time" placeholder returning 0 as value when in Spectator mode
 - Added German localization
 - Added Japanese localization
