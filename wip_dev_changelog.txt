@@ -1,3 +1,4 @@
 Release Candidate 2
 
+- The "Highlighted Item Time" placeholder now returns 0 in Spectator mode when the Spectator GUI is hidden (because this is how Vanilla handles it)
 - Fixed crash when opening editor in Spectator mode
