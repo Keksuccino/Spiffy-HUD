@@ -34,9 +34,12 @@ public class SlotItemDisplayNamePlaceholder extends Placeholder {
             ItemStack stack = Minecraft.getInstance().player.getInventory().getItem(slotInt);
             if (Minecraft.getInstance().player.isSpectator() && (slotInt >= 0) && (slotInt <= 8) && !ignoreSpectator) { // If slot is a hotbar slot and player is Spectator, return Spectator GUI slot names
                 IMixinSpectatorGui accessor = (IMixinSpectatorGui) Minecraft.getInstance().gui.getSpectatorGui();
-                SpectatorMenuItem spectatorMenuItem = accessor.get_menu_Spiffy().getSelectedItem();
-                MutableComponent mutableComponent = (MutableComponent) ((spectatorMenuItem == SpectatorMenu.EMPTY_SLOT) ? accessor.get_menu_Spiffy().getSelectedCategory().getPrompt() : spectatorMenuItem.getName());
-                return ComponentUtils.toJson(mutableComponent);
+                SpectatorMenu menu = accessor.get_menu_Spiffy();
+                if (menu != null) {
+                    SpectatorMenuItem spectatorMenuItem = menu.getSelectedItem();
+                    MutableComponent mutableComponent = (MutableComponent) ((spectatorMenuItem == SpectatorMenu.EMPTY_SLOT) ? menu.getSelectedCategory().getPrompt() : spectatorMenuItem.getName());
+                    return ComponentUtils.toJson(mutableComponent);
+                }
             } else if (!stack.isEmpty()) {
                 MutableComponent mutableComponent = Component.empty().append(stack.getHoverName()).withStyle(stack.getRarity().color);
                 return ComponentUtils.toJson(mutableComponent);
