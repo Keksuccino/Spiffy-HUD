@@ -4,6 +4,7 @@ import de.keksuccino.fancymenu.customization.placeholder.DeserializedPlaceholder
 import de.keksuccino.fancymenu.customization.placeholder.Placeholder;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
 import de.keksuccino.spiffyhud.mixin.mixins.common.client.IMixinGui;
+import de.keksuccino.spiffyhud.mixin.mixins.common.client.IMixinSpectatorGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,11 @@ public class HighlightedItemTimePlaceholder extends Placeholder {
     public String getReplacementFor(DeserializedPlaceholderString dps) {
         int time = ((IMixinGui)Minecraft.getInstance().gui).get_toolHighlightTimer_Spiffy();
         if ((Minecraft.getInstance().player) != null && (Minecraft.getInstance().player.isSpectator())) {
-            time = (int)(40.0 * Minecraft.getInstance().options.notificationDisplayTime().get());
+            if (((IMixinSpectatorGui)Minecraft.getInstance().gui.getSpectatorGui()).invoke_getHotbarAlpha_Spiffy() > 0) {
+                time = (int) (40.0 * Minecraft.getInstance().options.notificationDisplayTime().get());
+            } else {
+                time = 0;
+            }
         }
         return "" + time;
     }
