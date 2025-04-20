@@ -7,10 +7,11 @@ import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.customization.placeholder.PlaceholderParser;
 import de.keksuccino.fancymenu.util.MathUtils;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiRenderTypes;
 import de.keksuccino.fancymenu.util.rendering.ui.UIBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -128,13 +129,13 @@ public class SlotElement extends AbstractElement {
             int barY = 13;
             
             // Draw the background (black)
-            graphics.fill(RenderType.guiOverlay(),
+            graphics.fill(GuiRenderTypes.guiOverlay(),
                           barX, barY, 
                           barX + 13, barY + 2, 
                           -16777216);
             
             // Draw the colored part of the bar
-            graphics.fill(RenderType.guiOverlay(),
+            graphics.fill(GuiRenderTypes.guiOverlay(),
                           barX, barY, 
                           barX + barWidth, barY + 1, 
                           barColor | 0xFF000000);

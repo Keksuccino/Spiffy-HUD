@@ -1,6 +1,6 @@
 package de.keksuccino.spiffyhud.util.rendering;
 
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
 
 public class ElementMobilizer {

@@ -2,10 +2,13 @@ package de.keksuccino.spiffyhud.customization;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.keksuccino.fancymenu.customization.ScreenCustomization;
 import de.keksuccino.fancymenu.customization.element.anchor.ElementAnchorPoints;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
+import de.keksuccino.fancymenu.util.rendering.gui.ModernScreen;
+import de.keksuccino.fancymenu.util.rendering.gui.Renderable;
 import de.keksuccino.fancymenu.util.rendering.ui.widget.RendererWidget;
 import de.keksuccino.spiffyhud.customization.elements.Elements;
 import de.keksuccino.spiffyhud.customization.elements.vanillalike.air.VanillaLikePlayerAirElement;
@@ -22,9 +25,8 @@ import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.screens.Screen;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpiffyOverlayScreen extends Screen {
+public class SpiffyOverlayScreen extends ModernScreen {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -117,6 +119,8 @@ public class SpiffyOverlayScreen extends Screen {
         this.children().forEach(guiEventListener -> {
             if (guiEventListener instanceof Renderable renderable) {
                 renderable.render($$0, $$1, $$2, $$3);
+            } else if (guiEventListener instanceof Widget w) {
+                w.render($$0.pose(), $$1, $$2, $$3);
             }
         });
 
@@ -444,15 +448,33 @@ public class SpiffyOverlayScreen extends Screen {
 
     public static class SpiffyRendererWidget extends RendererWidget {
 
-        public SpiffyRendererWidget(int x, int y, int width, int height, @NotNull RendererWidgetBody body) {
+        public SpiffyRendererWidget(int x, int y, int width, int height, @NotNull SpiffyRendererWidgetBody body) {
             super(x, y, width, height, body);
         }
 
-        @Override
         public void render(@NotNull GuiGraphics $$0, int $$1, int $$2, float $$3) {
             //Don't render widgets when not in the editor
             if (!(Minecraft.getInstance().screen instanceof LayoutEditorScreen)) return;
-            super.render($$0, $$1, $$2, $$3);
+            super.render($$0.pose(), $$1, $$2, $$3);
+        }
+
+        @Override
+        @Deprecated
+        public final void render(PoseStack $$0, int $$1, int $$2, float $$3) {
+            this.render(GuiGraphics.currentGraphics(), $$1, $$2, $$3);
+        }
+
+    }
+
+    @FunctionalInterface
+    public interface SpiffyRendererWidgetBody extends RendererWidget.RendererWidgetBody {
+
+        void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial, int x, int y, int width, int height, @NotNull RendererWidget renderer);
+
+        @Override
+        @Deprecated
+        default void render(@NotNull PoseStack pose, int mouseX, int mouseY, float partial, int x, int y, int width, int height, @NotNull RendererWidget renderer) {
+            this.render(GuiGraphics.currentGraphics(), mouseX, mouseY, partial, x, y, width, height, renderer);
         }
 
     }

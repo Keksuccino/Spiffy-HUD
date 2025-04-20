@@ -5,8 +5,9 @@ import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PlayerRideableJumping;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,9 +68,6 @@ public class VanillaLikeJumpMeterElement extends AbstractElement {
         RenderSystem.enableBlend();
         graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
 
-        // Get the player's rideable jump vehicle, if any.
-        PlayerRideableJumping rideable = Objects.requireNonNull(this.minecraft.player).jumpableVehicle();
-
         // Calculate the jump riding scale and determine the width of the jump meter fill.
         float jumpScale = this.minecraft.player.getJumpRidingScale();
         int fillWidth = (int) (jumpScale * elementWidth);
@@ -78,12 +76,8 @@ public class VanillaLikeJumpMeterElement extends AbstractElement {
         // Draw the jump meter background (texture region starting at y = 84).
         graphics.blit(GUI_ICONS_LOCATION, elementX, elementY, 0, 84, elementWidth, elementHeight);
 
-        // If the player is riding an entity with jump cooldown, render the cooldown overlay (texture region at y = 74).
-        if ((rideable != null && rideable.getJumpCooldown() > 0) && !isEditor()) {
-            graphics.blit(GUI_ICONS_LOCATION, elementX, elementY, 0, 74, elementWidth, elementHeight);
-        }
-        // Otherwise, if there is a jump meter fill value, render the filled portion (texture region at y = 89).
-        else if (fillWidth > 0) {
+        // If there is a jump meter fill value, render the filled portion (texture region at y = 89).
+        if (fillWidth > 0) {
             graphics.blit(GUI_ICONS_LOCATION, elementX, elementY, 0, 89, fillWidth, elementHeight);
         }
 

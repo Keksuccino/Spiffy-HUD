@@ -1,8 +1,6 @@
 package de.keksuccino.spiffyhud.mixin.mixins.common.client;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.minecraft.client.gui.components.spectator.SpectatorGui;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,9 +11,9 @@ public class MixinSpectatorGui {
     /**
      * @reason Patch out the Z -90 translate() call that seems pretty useless (could be wrong tho) and breaks Spiffy.
      */
-    @WrapOperation(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
-    private void wrap_translate_in_renderHotbar_Spiffy(PoseStack instance, float $$0, float $$1, float $$2, Operation<Void> original) {
-        original.call(instance, 0.0F, 0.0F, 0.0F);
+    @WrapWithCondition(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/spectator/SpectatorGui;setBlitOffset(I)V"))
+    private boolean wrap_translate_in_renderHotbar_Spiffy(SpectatorGui instance, int i) {
+        return false;
     }
 
 }

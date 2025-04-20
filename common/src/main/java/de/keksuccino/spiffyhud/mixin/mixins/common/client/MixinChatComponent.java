@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.OptionInstance;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -40,12 +39,12 @@ public abstract class MixinChatComponent {
      * Modify chat translation to position it correctly based on corner setting
      * This only handles LEFT vs RIGHT positioning
      */
-    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 0))
-    private void modifyChatTranslation_Spiffy(PoseStack poseStack, float x, float y, float z, Operation<Void> original) {
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(DDD)V", ordinal = 0))
+    private void modifyChatTranslation_Spiffy(PoseStack poseStack, double x, double y, double z, Operation<Void> original) {
         if (ChatCustomizerHandler.isChatRightAligned()) {
             // For right-aligned chat, adjust x position
             float chatWidth = (float) this.getWidth() / (float) this.getScale();
-            float newX = minecraft.getWindow().getGuiScaledWidth() - chatWidth - 8;
+            double newX = minecraft.getWindow().getGuiScaledWidth() - chatWidth - 8;
             original.call(poseStack, newX, y, z);
         } else {
             // Default position
@@ -78,8 +77,8 @@ public abstract class MixinChatComponent {
     /**
      * Customize chat background fill color
      */
-    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V", ordinal = 0))
-    private void customizeBackgroundFill_Spiffy(GuiGraphics graphics, int minX, int minY, int maxX, int maxY, int color, Operation<Void> original) {
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;fill(Lcom/mojang/blaze3d/vertex/PoseStack;IIIII)V", ordinal = 0))
+    private void customizeBackgroundFill_Spiffy(PoseStack poseStack, int minX, int minY, int maxX, int maxY, int color, Operation<Void> original) {
         if (ChatCustomizerHandler.chatBackgroundColor != null) {
             int customColor = ChatCustomizerHandler.chatBackgroundColor.getColorInt();
             // Apply fade effect using the captured fade factor
@@ -92,9 +91,9 @@ public abstract class MixinChatComponent {
                 // Create a new color with the faded alpha
                 customColor = (customColor & 0x00FFFFFF) | (fadedAlpha << 24);
             }
-            original.call(graphics, minX, minY, maxX, maxY, customColor);
+            original.call(poseStack, minX, minY, maxX, maxY, customColor);
         } else {
-            original.call(graphics, minX, minY, maxX, maxY, color);
+            original.call(poseStack, minX, minY, maxX, maxY, color);
         }
     }
 

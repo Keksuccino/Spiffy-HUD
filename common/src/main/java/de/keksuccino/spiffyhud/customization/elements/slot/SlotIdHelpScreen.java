@@ -3,17 +3,18 @@ package de.keksuccino.spiffyhud.customization.elements.slot;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
+import de.keksuccino.fancymenu.util.rendering.gui.ModernScreen;
 import de.keksuccino.fancymenu.util.rendering.text.markdown.ScrollableMarkdownRenderer;
 import de.keksuccino.fancymenu.util.rendering.ui.UIBase;
 import de.keksuccino.fancymenu.util.rendering.ui.widget.button.ExtendedButton;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-public class SlotIdHelpScreen extends Screen {
+public class SlotIdHelpScreen extends ModernScreen {
 
     protected Screen parent;
     protected ScrollableMarkdownRenderer markdownRenderer;
@@ -28,6 +29,7 @@ public class SlotIdHelpScreen extends Screen {
         this.parent = parent;
     }
 
+    @Override
     protected void init() {
 
         int centerX = this.width / 2;
@@ -48,6 +50,7 @@ public class SlotIdHelpScreen extends Screen {
 
     }
 
+    @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
 
         if (!this.textSet) {
@@ -69,14 +72,17 @@ public class SlotIdHelpScreen extends Screen {
 
     }
 
+    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
         return this.markdownRenderer.mouseScrolled(mouseX, mouseY, scrollDelta);
     }
 
+    @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         return this.markdownRenderer.mouseReleased(mouseX, mouseY, button);
     }
 
+    @Override
     public void onClose() {
         Minecraft.getInstance().setScreen(this.parent);
     }

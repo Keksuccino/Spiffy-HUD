@@ -16,7 +16,7 @@ public class PlayerPosStructuresPacketLogic {
     private static final Logger LOGGER = LogManager.getLogger();
 
     protected static boolean handleOnServer(@NotNull PlayerPosStructuresPacket packet, @NotNull ServerPlayer sender) {
-        if (sender.level() instanceof ServerLevel level) {
+        if (sender.level instanceof ServerLevel level) {
             PlayerPosStructuresPacket answer = new PlayerPosStructuresPacket();
             answer.structures = StructureUtils.convertStructureKeysToStrings(StructureUtils.getAllStructuresAt(level, sender.blockPosition()));
             PacketHandler.sendToClient(sender, answer);

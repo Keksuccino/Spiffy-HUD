@@ -9,7 +9,7 @@ import de.keksuccino.fancymenu.util.ObjectUtils;
 import de.keksuccino.fancymenu.util.rendering.ui.UIBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -40,7 +40,7 @@ public abstract class MixinVanillaWidgetEditorElement extends ButtonEditorElemen
         super(null, null);
     }
 
-    @Inject(method = "renderDraggingNotAllowedOverlay", at = @At(value = "INVOKE", target = "Lde/keksuccino/fancymenu/customization/element/elements/button/custombutton/ButtonEditorElement;renderDraggingNotAllowedOverlay(Lnet/minecraft/client/gui/GuiGraphics;)V"))
+    @Inject(method = "renderDraggingNotAllowedOverlay", at = @At(value = "INVOKE", target = "Lde/keksuccino/fancymenu/customization/element/elements/button/custombutton/ButtonEditorElement;renderDraggingNotAllowedOverlay(Lde/keksuccino/fancymenu/util/rendering/gui/GuiGraphics;)V"))
     private void after_adding_display_lines_Spiffy(GuiGraphics graphics, CallbackInfo info) {
 
         if (this.isSpiffyDummyElement_Spiffy()) {

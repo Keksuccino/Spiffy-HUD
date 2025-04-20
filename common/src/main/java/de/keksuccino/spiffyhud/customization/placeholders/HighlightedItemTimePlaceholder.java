@@ -22,7 +22,7 @@ public class HighlightedItemTimePlaceholder extends Placeholder {
         int time = ((IMixinGui)Minecraft.getInstance().gui).get_toolHighlightTimer_Spiffy();
         if ((Minecraft.getInstance().player) != null && (Minecraft.getInstance().player.isSpectator())) {
             if (((IMixinSpectatorGui)Minecraft.getInstance().gui.getSpectatorGui()).invoke_getHotbarAlpha_Spiffy() > 0) {
-                time = (int) (40.0 * Minecraft.getInstance().options.notificationDisplayTime().get());
+                time = 40;
             } else {
                 time = 0;
             }

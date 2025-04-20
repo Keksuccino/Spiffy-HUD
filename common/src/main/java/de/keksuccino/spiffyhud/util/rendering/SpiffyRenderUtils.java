@@ -2,10 +2,10 @@ package de.keksuccino.spiffyhud.util.rendering;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.math.Matrix4f;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Matrix4f;
 
 public class SpiffyRenderUtils {
 

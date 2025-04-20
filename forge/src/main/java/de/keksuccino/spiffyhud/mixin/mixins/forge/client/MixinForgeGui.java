@@ -3,13 +3,14 @@ package de.keksuccino.spiffyhud.mixin.mixins.forge.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.keksuccino.spiffyhud.customization.SpiffyGui;
 import de.keksuccino.spiffyhud.customization.VanillaHudElements;
 import de.keksuccino.spiffyhud.customization.elements.overlayremover.OverlayRemoverElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
@@ -37,12 +38,12 @@ public class MixinForgeGui extends Gui {
      * @reason Renders Spiffy's overlay to the HUD.
      */
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;setSeed(J)V"))
-    private void before_setSeed_in_render_Spiffy(GuiGraphics graphics, float partial, CallbackInfo info) {
+    private void before_setSeed_in_render_Spiffy(PoseStack poseStack, float partial, CallbackInfo ci) {
 
         if (this.spiffyGui == null) this.spiffyGui = SpiffyGui.INSTANCE;
 
         if (!Minecraft.getInstance().options.hideGui) {
-            spiffyGui.render(graphics, -10000000, -10000000, partial);
+            spiffyGui.render(GuiGraphics.currentGraphics(), -10000000, -10000000, partial);
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
         }
@@ -52,22 +53,22 @@ public class MixinForgeGui extends Gui {
     /**
      * @reason Hides the title and subtitle if they are hidden in Spiffy HUD.
      */
-    @WrapOperation(method = "renderTitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/util/FormattedCharSequence;IIIZ)I"))
-    private int wrap_drawString_in_renderTitle_Spiffy(GuiGraphics instance, Font font, FormattedCharSequence sequence, int x, int y, int color, boolean shadow, Operation<Integer> original) {
+    @WrapOperation(method = "renderTitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;drawShadow(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/util/FormattedCharSequence;FFI)I"))
+    private int wrap_drawString_in_renderTitle_Spiffy(Font instance, PoseStack pose, FormattedCharSequence sequence, float p_92747_, float p_92748_, int p_92749_, Operation<Integer> original) {
         if (this.title != null) {
             if ((sequence == this.title.getVisualOrderText()) && VanillaHudElements.isHidden(VanillaHudElements.TITLE_IDENTIFIER)) return 0;
         }
         if (this.subtitle != null) {
             if ((sequence == this.subtitle.getVisualOrderText()) && VanillaHudElements.isHidden(VanillaHudElements.SUBTITLE_IDENTIFIER)) return 0;
         }
-        return original.call(instance, font, sequence, x, y, color, shadow);
+        return original.call(instance, pose, sequence, p_92747_, p_92748_, p_92749_);
     }
 
     /**
      * @reason Returns { true } to cancel rendering of overlay elements if they are hidden in Spiffy HUD.
      */
     @Inject(method = "pre", at = @At("HEAD"), cancellable = true, remap = false) //use HEAD to stop mods from rendering custom stuff to overlay elements if the element is hidden
-    private void head_Pre_Spiffy(NamedGuiOverlay overlay, GuiGraphics graphics, CallbackInfoReturnable<Boolean> info) {
+    private void head_Pre_Spiffy(NamedGuiOverlay overlay, PoseStack poseStack, CallbackInfoReturnable<Boolean> info) {
 
         if ((overlay == VanillaGuiOverlay.HOTBAR.type()) && VanillaHudElements.isHidden(VanillaHudElements.HOTBAR_IDENTIFIER)) {
             info.setReturnValue(true);

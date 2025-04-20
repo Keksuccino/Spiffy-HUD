@@ -2,15 +2,16 @@ package de.keksuccino.spiffyhud.util.rendering;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiMatrix4f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 
 public class GuiEntityRenderer {
 
@@ -100,9 +101,9 @@ public class GuiEntityRenderer {
         // Translate to the center of the target box.
         graphics.pose().translate(posX + boxWidth / 2.0, posY + boxHeight / 2.0, 50.0);
         // Apply uniform scaling (note: negative on Z to mirror correctly).
-        graphics.pose().mulPoseMatrix(new Matrix4f().scaling(uniformScale, uniformScale, -uniformScale));
+        graphics.pose().mulPoseMatrix(new GuiMatrix4f().scaling(uniformScale, uniformScale, -uniformScale));
         // Apply a base rotation: rotate 180° about the Z-axis so the entity faces the viewer.
-        Quaternionf baseRotation = new Quaternionf().rotateZ((float) Math.PI);
+        Quaternion baseRotation = new Quaternion(new Vector3f(0.0f, 0.0f, 1.0f), (float) Math.PI, false);
         graphics.pose().mulPose(baseRotation);
         // Shift upward so that the entity's bounding box is vertically centered.
         // Since the pivot is at the feet, translate upward by half of the entity's height.

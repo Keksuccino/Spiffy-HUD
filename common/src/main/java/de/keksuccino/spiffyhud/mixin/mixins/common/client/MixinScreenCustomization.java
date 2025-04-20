@@ -12,13 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ScreenCustomization.class)
 public class MixinScreenCustomization {
 
-//    @Inject(method = "init", at = @At(value = "INVOKE", target = "Lde/keksuccino/fancymenu/customization/element/elements/Elements;registerAll()V", shift = At.Shift.AFTER), remap = false)
-//    private static void after_registerElements_in_init_Spiffy(CallbackInfo info) {
-//
-//        SpiffyHud.earlyInit();
-//
-//    }
-
     //If HUD gets re-initialized, don't use normal re-init logic
     @Inject(method = "reInitCurrentScreen", at = @At("HEAD"), remap = false, cancellable = true)
     private static void headReInitCurrentScreen_Spiffy(CallbackInfo info) {

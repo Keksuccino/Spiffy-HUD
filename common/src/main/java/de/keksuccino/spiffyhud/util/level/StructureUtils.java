@@ -6,11 +6,11 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.core.registries.Registries;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -52,7 +52,7 @@ public class StructureUtils {
         }
 
         // Get all structures in the registry
-        Registry<Structure> structureRegistry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
+        Registry<Structure> structureRegistry = level.registryAccess().registryOrThrow(BuiltinRegistries.STRUCTURES.key());
 
         List<ResourceKey<Structure>> keys = new ArrayList<>();
         level.structureManager().getAllStructuresAt(pos).forEach((structure, longs) -> {
@@ -83,7 +83,7 @@ public class StructureUtils {
      */
     @NotNull
     public static ResourceKey<Structure> getStructureKey(@NotNull ResourceLocation location) {
-        return ResourceKey.create(Registries.STRUCTURE, location);
+        return ResourceKey.create(BuiltinRegistries.STRUCTURES.key(), location);
     }
 
     /**
@@ -94,7 +94,7 @@ public class StructureUtils {
      */
     @NotNull
     public static List<ResourceKey<Structure>> getAllStructureKeys(@NotNull RegistryAccess registryAccess) {
-        Registry<Structure> structureRegistry = registryAccess.registryOrThrow(Registries.STRUCTURE);
+        Registry<Structure> structureRegistry = registryAccess.registryOrThrow(BuiltinRegistries.STRUCTURES.key());
         return new ArrayList<>(structureRegistry.registryKeySet());
     }
 
@@ -109,9 +109,9 @@ public class StructureUtils {
     public static Optional<ResourceKey<Structure>> findStructureKey(@NotNull RegistryAccess registryAccess, @NotNull String structureName) {
         try {
             ResourceLocation resourceLocation = new ResourceLocation(structureName);
-            ResourceKey<Structure> key = ResourceKey.create(Registries.STRUCTURE, resourceLocation);
+            ResourceKey<Structure> key = ResourceKey.create(BuiltinRegistries.STRUCTURES.key(), resourceLocation);
             // Verify the key exists in the registry
-            Registry<Structure> structureRegistry = registryAccess.registryOrThrow(Registries.STRUCTURE);
+            Registry<Structure> structureRegistry = registryAccess.registryOrThrow(BuiltinRegistries.STRUCTURES.key());
             if (structureRegistry.containsKey(key)) {
                 return Optional.of(key);
             }

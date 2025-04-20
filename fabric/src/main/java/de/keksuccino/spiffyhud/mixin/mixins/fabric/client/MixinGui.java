@@ -4,13 +4,14 @@ import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.keksuccino.spiffyhud.customization.SpiffyGui;
 import de.keksuccino.spiffyhud.customization.VanillaHudElements;
 import de.keksuccino.spiffyhud.customization.elements.overlayremover.OverlayRemoverElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.gui.components.BossHealthOverlay;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -46,26 +47,26 @@ public abstract class MixinGui {
 
     @Shadow @Final private static ResourceLocation POWDER_SNOW_OUTLINE_LOCATION;
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/spectator/SpectatorGui;renderHotbar(Lnet/minecraft/client/gui/GuiGraphics;)V"))
-    private void beforeRenderSpectatorHotbar_Spiffy(GuiGraphics graphics, float partial, CallbackInfo info) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/spectator/SpectatorGui;renderHotbar(Lcom/mojang/blaze3d/vertex/PoseStack;)V"))
+    private void beforeRenderSpectatorHotbar_Spiffy(PoseStack pose, float partial, CallbackInfo info) {
 
         if (this.spiffyGui == null) this.spiffyGui = SpiffyGui.INSTANCE;
 
         if (!Minecraft.getInstance().options.hideGui) {
-            spiffyGui.render(graphics, -10000000, -10000000, partial);
+            spiffyGui.render(GuiGraphics.currentGraphics(), -10000000, -10000000, partial);
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
         }
 
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHotbar(FLnet/minecraft/client/gui/GuiGraphics;)V"))
-    private void beforeRenderNormalHotbar_Spiffy(GuiGraphics graphics, float partial, CallbackInfo info) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHotbar(FLcom/mojang/blaze3d/vertex/PoseStack;)V"))
+    private void beforeRenderNormalHotbar_Spiffy(PoseStack pose, float partial, CallbackInfo info) {
 
         if (this.spiffyGui == null) this.spiffyGui = SpiffyGui.INSTANCE;
 
         if (!Minecraft.getInstance().options.hideGui) {
-            spiffyGui.render(graphics, -10000000, -10000000, partial);
+            spiffyGui.render(GuiGraphics.currentGraphics(), -10000000, -10000000, partial);
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
         }
@@ -75,78 +76,78 @@ public abstract class MixinGui {
     /**
      * @reason Hide the hotbar when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHotbar(FLnet/minecraft/client/gui/GuiGraphics;)V"))
-    private boolean wrap_renderHotbar_in_render_Spiffy(Gui instance, float partial, GuiGraphics graphics) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHotbar(FLcom/mojang/blaze3d/vertex/PoseStack;)V"))
+    private boolean wrap_renderHotbar_in_render_Spiffy(Gui instance, float l1, PoseStack j1) {
         return !VanillaHudElements.isHidden(VanillaHudElements.HOTBAR_IDENTIFIER);
     }
 
     /**
      * @reason Hide the jump meter when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderJumpMeter(Lnet/minecraft/world/entity/PlayerRideableJumping;Lnet/minecraft/client/gui/GuiGraphics;I)V"))
-    private boolean wrap_renderJumpMeter_in_render_Spiffy(Gui instance, PlayerRideableJumping $$0, GuiGraphics $$1, int $$2) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderJumpMeter(Lcom/mojang/blaze3d/vertex/PoseStack;I)V"))
+    private boolean wrap_renderJumpMeter_in_render_Spiffy(Gui instance, PoseStack p_93034_, int p_93035_) {
         return !VanillaHudElements.isHidden(VanillaHudElements.JUMP_METER_IDENTIFIER);
     }
 
     /**
      * @reason Hide the EXP bar when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderExperienceBar(Lnet/minecraft/client/gui/GuiGraphics;I)V"))
-    private boolean wrap_renderExperienceBar_in_render_Spiffy(Gui instance, GuiGraphics $$0, int $$1) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderExperienceBar(Lcom/mojang/blaze3d/vertex/PoseStack;I)V"))
+    private boolean wrap_renderExperienceBar_in_render_Spiffy(Gui instance, PoseStack k, int l) {
         return !VanillaHudElements.isHidden(VanillaHudElements.EXPERIENCE_BAR_IDENTIFIER);
     }
 
     /**
      * @reason Hide the selected item name when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V"))
-    private boolean wrap_renderSelectedItemName_in_render_Spiffy(Gui instance, GuiGraphics $$0) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderSelectedItemName(Lcom/mojang/blaze3d/vertex/PoseStack;)V"))
+    private boolean wrap_renderSelectedItemName_in_render_Spiffy(Gui instance, PoseStack mutablecomponent) {
         return !VanillaHudElements.isHidden(VanillaHudElements.SELECTED_ITEM_NAME_IDENTIFIER);
     }
 
     /**
      * @reason Hide the scoreboard sidebar when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;displayScoreboardSidebar(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/scores/Objective;)V"))
-    private boolean wrap_displayScoreboardSidebar_in_render_Spiffy(Gui instance, GuiGraphics $$0, Objective $$1) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;displayScoreboardSidebar(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/scores/Objective;)V"))
+    private boolean wrap_displayScoreboardSidebar_in_render_Spiffy(Gui instance, PoseStack component1, Objective score) {
         return !VanillaHudElements.isHidden(VanillaHudElements.SCOREBOARD_SIDEBAR_IDENTIFIER);
     }
 
     /**
      * @reason Hide the crosshair when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;)V"))
-    private boolean wrap_renderCrosshair_in_render_Spiffy(Gui instance, GuiGraphics $$0) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderCrosshair(Lcom/mojang/blaze3d/vertex/PoseStack;)V"))
+    private boolean wrap_renderCrosshair_in_render_Spiffy(Gui instance, PoseStack posestack) {
         return !VanillaHudElements.isHidden(VanillaHudElements.CROSSHAIR_IDENTIFIER);
     }
 
     /**
      * @reason Hide the boss overlay when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/BossHealthOverlay;render(Lnet/minecraft/client/gui/GuiGraphics;)V"))
-    private boolean wrap_BossOverlay_render_in_render_Spiffy(BossHealthOverlay instance, GuiGraphics $$0) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/BossHealthOverlay;render(Lcom/mojang/blaze3d/vertex/PoseStack;)V"))
+    private boolean wrap_BossOverlay_render_in_render_Spiffy(BossHealthOverlay instance, PoseStack l) {
         return !VanillaHudElements.isHidden(VanillaHudElements.BOSS_BARS_IDENTIFIER);
     }
 
     /**
      * @reason Hide the mount health bar when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderVehicleHealth(Lnet/minecraft/client/gui/GuiGraphics;)V"))
-    private boolean wrap_renderVehicleHealth_in_render_Spiffy(Gui instance, GuiGraphics $$0) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderVehicleHealth(Lcom/mojang/blaze3d/vertex/PoseStack;)V"))
+    private boolean wrap_renderVehicleHealth_in_render_Spiffy(Gui instance, PoseStack j2) {
         return !VanillaHudElements.isHidden(VanillaHudElements.MOUNT_HEALTH_BAR_IDENTIFIER);
     }
 
     /**
      * @reason Hide the overlay message, title and subtitle when hidden by Spiffy HUD.
      */
-    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;III)I"))
-    private int wrap_drawString_in_render_Spiffy(GuiGraphics instance, Font font, Component component, int x, int y, int color, Operation<Integer> original) {
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;drawShadow(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/network/chat/Component;FFI)I"))
+    private int wrap_drawString_in_render_Spiffy(Font instance, PoseStack pose, Component component, float p_92766_, float p_92767_, int p_92768_, Operation<Integer> original) {
         if (component != null) {
             if ((component == this.overlayMessageString) && VanillaHudElements.isHidden(VanillaHudElements.OVERLAY_MESSAGE_IDENTIFIER)) return 0;
             if ((component == this.title) && VanillaHudElements.isHidden(VanillaHudElements.TITLE_IDENTIFIER)) return 0;
             if ((component == this.subtitle) && VanillaHudElements.isHidden(VanillaHudElements.SUBTITLE_IDENTIFIER)) return 0;
         }
-        return original.call(instance, font, component, x, y, color);
+        return original.call(instance, pose, component, p_92766_, p_92767_, p_92768_);
     }
 
     /**
@@ -196,16 +197,16 @@ public abstract class MixinGui {
     /**
      * @reason Hide the player health bar when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHearts(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V"))
-    private boolean wrap_renderHearts_in_renderPlayerHealth_Spiffy(Gui instance, GuiGraphics $$0, Player $$1, int $$2, int $$3, int $$4, int $$5, float $$6, int $$7, int $$8, int $$9, boolean $$10) {
+    @WrapWithCondition(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHearts(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V"))
+    private boolean wrap_renderHearts_in_renderPlayerHealth_Spiffy(Gui instance, PoseStack k2, Player flag2, int flag3, int j1, int k1, int l1, float i2, int j2, int flag, int i1, boolean b) {
         return !VanillaHudElements.isHidden(VanillaHudElements.PLAYER_HEALTH_BAR_IDENTIFIER);
     }
 
     /**
      * @reason Hide the effects overlay when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderEffects(Lnet/minecraft/client/gui/GuiGraphics;)V"))
-    private boolean wrap_renderEffects_in_render_Spiffy(Gui instance, GuiGraphics $$0) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderEffects(Lcom/mojang/blaze3d/vertex/PoseStack;)V"))
+    private boolean wrap_renderEffects_in_render_Spiffy(Gui instance, PoseStack k) {
         return !VanillaHudElements.isHidden(VanillaHudElements.EFFECTS_IDENTIFIER);
     }
 
@@ -230,24 +231,24 @@ public abstract class MixinGui {
     /**
      * @reason Hide the vignette overlay when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderVignette(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/entity/Entity;)V"))
-    private boolean wrap_renderVignette_in_render_Spiffy(Gui instance, GuiGraphics $$0, Entity $$1) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderVignette(Lnet/minecraft/world/entity/Entity;)V"))
+    private boolean wrap_renderVignette_in_render_Spiffy(Gui instance, Entity entity) {
         return !OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.VIGNETTE);
     }
 
     /**
      * @reason Hide the spyglass overlay when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderSpyglassOverlay(Lnet/minecraft/client/gui/GuiGraphics;F)V"))
-    private boolean wrap_renderSpyglassOverlay_in_render_Spiffy(Gui instance, GuiGraphics $$0, float $$1) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderSpyglassOverlay(F)V"))
+    private boolean wrap_renderSpyglassOverlay_in_render_Spiffy(Gui instance, float p_168676_) {
         return !OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.SPYGLASS);
     }
 
     /**
      * @reason Hide the pumpkin overlay when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderTextureOverlay(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/resources/ResourceLocation;F)V"))
-    private boolean wrap_pumpkin_overlay_rendering_in_render_Spiffy(Gui instance, GuiGraphics graphics, ResourceLocation location, float f) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderTextureOverlay(Lnet/minecraft/resources/ResourceLocation;F)V"))
+    private boolean wrap_pumpkin_overlay_rendering_in_render_Spiffy(Gui instance, ResourceLocation location, float p_168710_) {
         if (location == PUMPKIN_BLUR_LOCATION) {
             return !OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.PUMPKIN);
         }
@@ -257,8 +258,8 @@ public abstract class MixinGui {
     /**
      * @reason Hide the powder snow overlay when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderTextureOverlay(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/resources/ResourceLocation;F)V"))
-    private boolean wrap_powder_snow_overlay_rendering_in_render_Spiffy(Gui instance, GuiGraphics graphics, ResourceLocation location, float f) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderTextureOverlay(Lnet/minecraft/resources/ResourceLocation;F)V"))
+    private boolean wrap_powder_snow_overlay_rendering_in_render_Spiffy(Gui instance, ResourceLocation location, float p_168710_) {
         if (location == POWDER_SNOW_OUTLINE_LOCATION) {
             return !OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.POWDER_SNOW);
         }
@@ -268,8 +269,8 @@ public abstract class MixinGui {
     /**
      * @reason Hide the portal overlay when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderPortalOverlay(Lnet/minecraft/client/gui/GuiGraphics;F)V"))
-    private boolean wrap_renderPortalOverlay_in_render_Spiffy(Gui instance, GuiGraphics $$0, float $$1) {
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderPortalOverlay(F)V"))
+    private boolean wrap_renderPortalOverlay_in_render_Spiffy(Gui instance, float p_93008_) {
         return !OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.PORTAL);
     }
 

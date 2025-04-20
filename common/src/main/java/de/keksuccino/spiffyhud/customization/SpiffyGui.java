@@ -8,9 +8,9 @@ import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.events.screen.*;
 import de.keksuccino.fancymenu.util.event.acara.EventHandler;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
+import de.keksuccino.fancymenu.util.rendering.gui.Renderable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Renderable;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,10 +53,10 @@ public class SpiffyGui implements Renderable {
 
             this.restoreRenderDefaults(graphics);
 
-            EventHandler.INSTANCE.postEvent(new RenderScreenEvent.Pre(spiffyOverlayScreen, graphics, mouseX, mouseY, partial));
+            EventHandler.INSTANCE.postEvent(new RenderScreenEvent.Pre(spiffyOverlayScreen, graphics.pose(), mouseX, mouseY, partial));
             spiffyOverlayScreen.render(graphics, mouseX, mouseY, partial);
             this.restoreRenderDefaults(graphics);
-            EventHandler.INSTANCE.postEvent(new RenderScreenEvent.Post(spiffyOverlayScreen, graphics, mouseX, mouseY, partial));
+            EventHandler.INSTANCE.postEvent(new RenderScreenEvent.Post(spiffyOverlayScreen, graphics.pose(), mouseX, mouseY, partial));
 
             this.restoreRenderDefaults(graphics);
 

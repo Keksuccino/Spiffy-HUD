@@ -11,7 +11,7 @@ import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -178,7 +178,7 @@ public class VanillaLikePlayerHealthElement extends AbstractElement {
 
         // Determine heart type.
         Gui.HeartType baseHeartType = Gui.HeartType.forPlayer(player);
-        int textureYOffset = 9 * (player.level().getLevelData().isHardcore() ? 5 : 0);
+        int textureYOffset = 9 * (player.level.getLevelData().isHardcore() ? 5 : 0);
 
         // Recorder to capture the bounds of the hearts bar.
         SizeAndPositionRecorder recorder = new SizeAndPositionRecorder();

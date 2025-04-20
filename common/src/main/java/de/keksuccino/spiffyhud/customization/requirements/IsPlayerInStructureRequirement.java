@@ -11,7 +11,7 @@ import de.keksuccino.fancymenu.util.rendering.ui.widget.editbox.EditBoxSuggestio
 import de.keksuccino.spiffyhud.networking.packets.structure.playerpos.PlayerPosStructuresPacket;
 import de.keksuccino.spiffyhud.networking.packets.structure.structures.StructuresPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -141,7 +141,7 @@ public class IsPlayerInStructureRequirement extends LoadingRequirement {
         @Override
         public void render(GuiGraphics graphics, int mouseX, int mouseY, float partial) {
             super.render(graphics, mouseX, mouseY, partial);
-            this.structureKeySuggestions.render(graphics, mouseX, mouseY);
+            this.structureKeySuggestions.render(graphics.pose(), mouseX, mouseY);
         }
 
         @Override

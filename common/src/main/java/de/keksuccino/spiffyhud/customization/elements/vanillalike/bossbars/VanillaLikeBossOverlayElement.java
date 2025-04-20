@@ -7,7 +7,7 @@ import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.spiffyhud.util.SizeAndPositionRecorder;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

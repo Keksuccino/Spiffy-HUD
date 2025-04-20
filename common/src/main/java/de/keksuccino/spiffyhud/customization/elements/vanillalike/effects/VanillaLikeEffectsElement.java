@@ -10,7 +10,8 @@ import de.keksuccino.spiffyhud.SpiffyUtils;
 import de.keksuccino.spiffyhud.util.SizeAndPositionRecorder;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
@@ -219,7 +220,7 @@ public class VanillaLikeEffectsElement extends AbstractElement {
                     graphics.blit(AbstractContainerScreen.INVENTORY_LOCATION, finalIconX, beneficialRowY, 165, 166, 24, 24);
                 } else {
                     graphics.blit(AbstractContainerScreen.INVENTORY_LOCATION, finalIconX, beneficialRowY, 141, 166, 24, 24);
-                    if (effectInstance.endsWithin(200)) {
+                    if (effectInstance.getDuration() <= 200) {
                         int duration = effectInstance.getDuration();
                         int fadeFactor = 10 - duration / 20;
                         iconAlpha = Mth.clamp((float) duration / 10.0f / 5.0f * 0.5f, 0.0f, 0.5f)
@@ -236,9 +237,14 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             final float iconTransparency = (iconAlpha > this.opacity) ? this.opacity : iconAlpha;
             if (this.shouldRenderBar) {
                 renderTasks.add(() -> {
-                    graphics.setColor(1.0f, 1.0f, 1.0f, iconTransparency);
-                    graphics.blit(iconX + 3, iconY + 3, 0, 18, 18, effectSprite);
-                    graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+//                    graphics.setColor(1.0f, 1.0f, 1.0f, iconTransparency);
+//                    graphics.blit(iconX + 3, iconY + 3, 0, 18, 18, effectSprite);
+//                    graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+                    RenderSystem.setShaderTexture(0, effectSprite.atlas().location());
+                    RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, iconTransparency);
+                    Gui.blit(graphics.pose(), iconX + 3, iconY + 3, 0, 18, 18, effectSprite);
+                    RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+                    graphics.flush();
                 });
             }
         }
@@ -254,7 +260,7 @@ public class VanillaLikeEffectsElement extends AbstractElement {
                     graphics.blit(AbstractContainerScreen.INVENTORY_LOCATION, finalIconX, harmfulRowY, 165, 166, 24, 24);
                 } else {
                     graphics.blit(AbstractContainerScreen.INVENTORY_LOCATION, finalIconX, harmfulRowY, 141, 166, 24, 24);
-                    if (effectInstance.endsWithin(200)) {
+                    if (effectInstance.getDuration() <= 200) {
                         int duration = effectInstance.getDuration();
                         int fadeFactor = 10 - duration / 20;
                         iconAlpha = Mth.clamp((float) duration / 10.0f / 5.0f * 0.5f, 0.0f, 0.5f)
@@ -271,9 +277,14 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             final float iconTransparency = (iconAlpha > this.opacity) ? this.opacity : iconAlpha;
             if (this.shouldRenderBar) {
                 renderTasks.add(() -> {
-                    graphics.setColor(1.0f, 1.0f, 1.0f, iconTransparency);
-                    graphics.blit(iconX + 3, iconY + 3, 0, 18, 18, effectSprite);
-                    graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+//                    graphics.setColor(1.0f, 1.0f, 1.0f, iconTransparency);
+//                    graphics.blit(iconX + 3, iconY + 3, 0, 18, 18, effectSprite);
+//                    graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+                    RenderSystem.setShaderTexture(0, effectSprite.atlas().location());
+                    RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, iconTransparency);
+                    Gui.blit(graphics.pose(), iconX + 3, iconY + 3, 0, 18, 18, effectSprite);
+                    RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+                    graphics.flush();
                 });
             }
         }

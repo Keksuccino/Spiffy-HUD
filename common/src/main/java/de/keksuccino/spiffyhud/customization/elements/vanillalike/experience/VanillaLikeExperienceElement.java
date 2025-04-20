@@ -3,10 +3,11 @@ package de.keksuccino.spiffyhud.customization.elements.vanillalike.experience;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
+import de.keksuccino.fancymenu.util.rendering.DrawableColor;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -114,12 +115,12 @@ public class VanillaLikeExperienceElement extends AbstractElement {
             int textY = y - 6;
 
             // Draw a shadow around the text for better readability.
-            graphics.drawString(this.getFont(), levelText, textX + 1, textY, 0, false);
-            graphics.drawString(this.getFont(), levelText, textX - 1, textY, 0, false);
-            graphics.drawString(this.getFont(), levelText, textX, textY + 1, 0, false);
-            graphics.drawString(this.getFont(), levelText, textX, textY - 1, 0, false);
+            graphics.drawString(this.getFont(), levelText, textX + 1, textY, DrawableColor.BLACK.getColorIntWithAlpha(this.opacity), false);
+            graphics.drawString(this.getFont(), levelText, textX - 1, textY, DrawableColor.BLACK.getColorIntWithAlpha(this.opacity), false);
+            graphics.drawString(this.getFont(), levelText, textX, textY + 1, DrawableColor.BLACK.getColorIntWithAlpha(this.opacity), false);
+            graphics.drawString(this.getFont(), levelText, textX, textY - 1, DrawableColor.BLACK.getColorIntWithAlpha(this.opacity), false);
             // Draw the main level number in yellow (color code 8453920).
-            graphics.drawString(this.getFont(), levelText, textX, textY, 8453920, false);
+            graphics.drawString(this.getFont(), levelText, textX, textY, DrawableColor.of(8453920).getColorIntWithAlpha(this.opacity), false);
 
         }
 
