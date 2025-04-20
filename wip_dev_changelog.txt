@@ -1,4 +1,4 @@
-Release Candidate 2
+Release Candidate 3
 
-- The "Highlighted Item Time" placeholder now returns 0 in Spectator mode when the Spectator GUI is hidden (because this is how Vanilla handles it)
-- Fixed crash when opening editor in Spectator mode
+- Ported Spiffy v3 to MC 1.21.1
+- Improved the structure detection for structure-related things like the "Is Player In Structure" requirement
