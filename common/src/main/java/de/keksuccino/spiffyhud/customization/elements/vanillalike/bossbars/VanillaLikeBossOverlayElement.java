@@ -11,7 +11,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.BossEvent.BossBarOverlay;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -22,8 +24,40 @@ public class VanillaLikeBossOverlayElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // Texture used for boss bars.
-    private static final ResourceLocation GUI_BARS_LOCATION = new ResourceLocation("textures/gui/bars.png");
+    // Sprite resources for boss bars in 1.21.1
+    private static final ResourceLocation[] BAR_BACKGROUND_SPRITES = new ResourceLocation[]{
+        ResourceLocation.withDefaultNamespace("boss_bar/pink_background"),
+        ResourceLocation.withDefaultNamespace("boss_bar/blue_background"),
+        ResourceLocation.withDefaultNamespace("boss_bar/red_background"),
+        ResourceLocation.withDefaultNamespace("boss_bar/green_background"),
+        ResourceLocation.withDefaultNamespace("boss_bar/yellow_background"),
+        ResourceLocation.withDefaultNamespace("boss_bar/purple_background"),
+        ResourceLocation.withDefaultNamespace("boss_bar/white_background")
+    };
+    
+    private static final ResourceLocation[] BAR_PROGRESS_SPRITES = new ResourceLocation[]{
+        ResourceLocation.withDefaultNamespace("boss_bar/pink_progress"),
+        ResourceLocation.withDefaultNamespace("boss_bar/blue_progress"),
+        ResourceLocation.withDefaultNamespace("boss_bar/red_progress"),
+        ResourceLocation.withDefaultNamespace("boss_bar/green_progress"),
+        ResourceLocation.withDefaultNamespace("boss_bar/yellow_progress"),
+        ResourceLocation.withDefaultNamespace("boss_bar/purple_progress"),
+        ResourceLocation.withDefaultNamespace("boss_bar/white_progress")
+    };
+    
+    private static final ResourceLocation[] OVERLAY_BACKGROUND_SPRITES = new ResourceLocation[]{
+        ResourceLocation.withDefaultNamespace("boss_bar/notched_6_background"),
+        ResourceLocation.withDefaultNamespace("boss_bar/notched_10_background"),
+        ResourceLocation.withDefaultNamespace("boss_bar/notched_12_background"),
+        ResourceLocation.withDefaultNamespace("boss_bar/notched_20_background")
+    };
+    
+    private static final ResourceLocation[] OVERLAY_PROGRESS_SPRITES = new ResourceLocation[]{
+        ResourceLocation.withDefaultNamespace("boss_bar/notched_6_progress"),
+        ResourceLocation.withDefaultNamespace("boss_bar/notched_10_progress"),
+        ResourceLocation.withDefaultNamespace("boss_bar/notched_12_progress"),
+        ResourceLocation.withDefaultNamespace("boss_bar/notched_20_progress")
+    };
 
     // Dummy events for editor mode.
     private static final List<LerpingBossEvent> DUMMY_EVENTS = List.of(
@@ -180,33 +214,32 @@ public class VanillaLikeBossOverlayElement extends AbstractElement {
      */
     private void drawBar(GuiGraphics graphics, int barX, int barY, BossEvent bossEvent) {
         // Draw the background (default width = 182).
-        drawBar(graphics, barX, barY, bossEvent, 182, 0);
+        drawBar(graphics, barX, barY, bossEvent, 182, BAR_BACKGROUND_SPRITES, OVERLAY_BACKGROUND_SPRITES);
         // Calculate and draw the filled portion based on progress.
-        int filledWidth = (int) (bossEvent.getProgress() * 183.0f);
+        int filledWidth = Mth.lerpDiscrete(bossEvent.getProgress(), 0, 182);
         if (filledWidth > 0) {
-            drawBar(graphics, barX, barY, bossEvent, filledWidth, 5);
+            drawBar(graphics, barX, barY, bossEvent, filledWidth, BAR_PROGRESS_SPRITES, OVERLAY_PROGRESS_SPRITES);
         }
     }
 
     /**
-     * Draws a segment of a boss bar from the texture atlas.
+     * Draws a segment of a boss bar using sprite resources.
      *
-     * @param graphics       The graphics context.
-     * @param barX           The X coordinate for drawing.
-     * @param barY           The Y coordinate for drawing.
-     * @param bossEvent      The boss event providing styling.
-     * @param width          The width of the segment.
-     * @param textureYOffset The Y offset in the texture atlas.
+     * @param graphics      The graphics context.
+     * @param barX          The X coordinate for drawing.
+     * @param barY          The Y coordinate for drawing.
+     * @param bossEvent     The boss event providing styling.
+     * @param barSprites    Array of bar sprites for different colors.
+     * @param overlaySprites Array of overlay sprites for different notch patterns.
      */
-    private void drawBar(GuiGraphics graphics, int barX, int barY, BossEvent bossEvent, int width, int textureYOffset) {
-        graphics.blit(GUI_BARS_LOCATION, barX, barY, 0,
-                bossEvent.getColor().ordinal() * 5 * 2 + textureYOffset, width, 5);
-        if (bossEvent.getOverlay() != BossEvent.BossBarOverlay.PROGRESS) {
-            RenderSystem.enableBlend();
-            graphics.blit(GUI_BARS_LOCATION, barX, barY, 0,
-                    80 + (bossEvent.getOverlay().ordinal() - 1) * 5 * 2 + textureYOffset, width, 5);
-            RenderSystem.disableBlend();
+    private void drawBar(GuiGraphics graphics, int barX, int barY, BossEvent bossEvent, int progress, 
+                         ResourceLocation[] barSprites, ResourceLocation[] overlaySprites) {
+        RenderSystem.enableBlend();
+        graphics.blitSprite(barSprites[bossEvent.getColor().ordinal()], 182, 5, 0, 0, barX, barY, progress, 5);
+        if (bossEvent.getOverlay() != BossBarOverlay.PROGRESS) {
+            graphics.blitSprite(overlaySprites[bossEvent.getOverlay().ordinal() - 1], 182, 5, 0, 0, barX, barY, progress, 5);
         }
+        RenderSystem.disableBlend();
     }
 
     /**
@@ -225,10 +258,4 @@ public class VanillaLikeBossOverlayElement extends AbstractElement {
         return this.barHeight;
     }
 
-    /**
-     * Compatibility method for editor mode.
-     */
-    protected boolean isInEditor() {
-        return isEditor();
-    }
 }

@@ -15,8 +15,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class VanillaLikeHotbarElement extends AbstractElement {
 
-    // The location of the widgets texture used for the hotbar.
-    private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
+    // Sprite resources for the hotbar in 1.21.1
+    private static final ResourceLocation HOTBAR_SPRITE = ResourceLocation.withDefaultNamespace("hud/hotbar");
+    private static final ResourceLocation HOTBAR_SELECTION_SPRITE = ResourceLocation.withDefaultNamespace("hud/hotbar_selection");
+    private static final ResourceLocation HOTBAR_OFFHAND_LEFT_SPRITE = ResourceLocation.withDefaultNamespace("hud/hotbar_offhand_left");
+    private static final ResourceLocation HOTBAR_OFFHAND_RIGHT_SPRITE = ResourceLocation.withDefaultNamespace("hud/hotbar_offhand_right");
 
     private static final int BAR_WIDTH = 182;
     private static final int BAR_HEIGHT = 22;
@@ -80,28 +83,28 @@ public class VanillaLikeHotbarElement extends AbstractElement {
         HumanoidArm oppositeMainArm = player.getMainArm().getOpposite();
 
         // Draw the hotbar background using the element's bounds.
-        graphics.blit(WIDGETS_LOCATION, elementX, elementY, 0, 0, elementWidth, elementHeight);
+        graphics.blitSprite(HOTBAR_SPRITE, elementX, elementY, elementWidth, elementHeight);
 
         // Draw the selection highlight around the currently selected hotbar slot.
         int selectedSlot = player.getInventory().selected;
         // The highlight is drawn with a 1-pixel offset relative to the hotbar background.
-        graphics.blit(WIDGETS_LOCATION, elementX - 1 + selectedSlot * 20, elementY - 1, 0, BAR_HEIGHT, 24, BAR_HEIGHT);
+        graphics.blitSprite(HOTBAR_SELECTION_SPRITE, elementX - 1 + selectedSlot * 20, elementY - 1, 24, 23);
 
         // Render offhand icons if applicable.
         if (!isEditor()) {
             if (!offhandItem.isEmpty()) {
                 if (oppositeMainArm == HumanoidArm.LEFT) {
                     // Render offhand icon on the left side of the hotbar.
-                    graphics.blit(WIDGETS_LOCATION, elementX - 29, elementY - 1, 24, BAR_HEIGHT, 29, 24);
+                    graphics.blitSprite(HOTBAR_OFFHAND_LEFT_SPRITE, elementX - 29, elementY - 1, 29, 24);
                 } else {
                     // Render offhand icon on the right side of the hotbar.
-                    graphics.blit(WIDGETS_LOCATION, elementX + elementWidth, elementY - 1, 53, BAR_HEIGHT, 29, 24);
+                    graphics.blitSprite(HOTBAR_OFFHAND_RIGHT_SPRITE, elementX + elementWidth, elementY - 1, 29, 24);
                 }
             }
         } else {
             // In editor mode, display both offhand icons for demonstration purposes.
-            graphics.blit(WIDGETS_LOCATION, elementX - 29, elementY - 1, 24, BAR_HEIGHT, 29, 24);
-            graphics.blit(WIDGETS_LOCATION, elementX + elementWidth, elementY - 1, 53, BAR_HEIGHT, 29, 24);
+            graphics.blitSprite(HOTBAR_OFFHAND_LEFT_SPRITE, elementX - 29, elementY - 1, 29, 24);
+            graphics.blitSprite(HOTBAR_OFFHAND_RIGHT_SPRITE, elementX + elementWidth, elementY - 1, 29, 24);
         }
 
         // Calculate starting positions for rendering the 9 hotbar slots.

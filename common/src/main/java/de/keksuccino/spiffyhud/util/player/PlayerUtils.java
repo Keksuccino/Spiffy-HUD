@@ -20,7 +20,7 @@ public class PlayerUtils {
         }
 
         // Get the total duration of the use action (e.g., eating, drawing a bow).
-        int totalDuration = stack.getUseDuration();
+        int totalDuration = stack.getUseDuration(player);
         // Get how many ticks remain until the use is complete.
         int remainingTicks = player.getUseItemRemainingTicks();
 

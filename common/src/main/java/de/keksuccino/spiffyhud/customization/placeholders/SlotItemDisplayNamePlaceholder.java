@@ -41,7 +41,7 @@ public class SlotItemDisplayNamePlaceholder extends Placeholder {
                     return ComponentUtils.toJson(mutableComponent);
                 }
             } else if (!stack.isEmpty()) {
-                MutableComponent mutableComponent = Component.empty().append(stack.getHoverName()).withStyle(stack.getRarity().color);
+                MutableComponent mutableComponent = Component.empty().append(stack.getHoverName()).withStyle(stack.getRarity().color());
                 return ComponentUtils.toJson(mutableComponent);
             }
         }

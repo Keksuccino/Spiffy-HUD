@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpiffyEvents {
 
-    private static final ResourceLocation EDIT_BUTTON_TEXTURE = new ResourceLocation("spiffyhud", "textures/edit_button.png");
+    private static final ResourceLocation EDIT_BUTTON_TEXTURE = ResourceLocation.fromNamespaceAndPath("spiffyhud", "textures/edit_button.png");
 
     private ExtendedButton spiffyButton;
 

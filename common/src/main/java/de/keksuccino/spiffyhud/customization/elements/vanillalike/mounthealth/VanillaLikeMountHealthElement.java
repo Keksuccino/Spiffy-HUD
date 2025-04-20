@@ -21,7 +21,9 @@ import org.jetbrains.annotations.Nullable;
 public class VanillaLikeMountHealthElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+    private static final ResourceLocation HEART_VEHICLE_CONTAINER_SPRITE = ResourceLocation.withDefaultNamespace("hud/heart/vehicle_container");
+    private static final ResourceLocation HEART_VEHICLE_FULL_SPRITE = ResourceLocation.withDefaultNamespace("hud/heart/vehicle_full");
+    private static final ResourceLocation HEART_VEHICLE_HALF_SPRITE = ResourceLocation.withDefaultNamespace("hud/heart/vehicle_half");
 
     private final Minecraft minecraft = Minecraft.getInstance();
     protected int tickCount;
@@ -200,25 +202,25 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
                 if (this.shouldRenderBar) {
                     // Draw empty heart background.
                     if (mirrorHearts) {
-                        SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, heartX, heartY, 0, 52, 9, 9, 9, 256, 256);
+                        SpiffyRenderUtils.blitSpriteMirrored(graphics, HEART_VEHICLE_CONTAINER_SPRITE, heartX, heartY, 9, 9);
                     } else {
-                        graphics.blit(GUI_ICONS_LOCATION, heartX, heartY, 52, 9, 9, 9);
+                        graphics.blitSprite(HEART_VEHICLE_CONTAINER_SPRITE, heartX, heartY, 9, 9);
                     }
                     // Each heart represents 2 health points.
                     int heartThreshold = overallHeartIndex * 2 + 1;
                     if (heartThreshold < currentHealth) {
                         // Render full heart.
                         if (mirrorHearts) {
-                            SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, heartX, heartY, 0, 88, 9, 9, 9, 256, 256);
+                            SpiffyRenderUtils.blitSpriteMirrored(graphics, HEART_VEHICLE_FULL_SPRITE, heartX, heartY, 9, 9);
                         } else {
-                            graphics.blit(GUI_ICONS_LOCATION, heartX, heartY, 88, 9, 9, 9);
+                            graphics.blitSprite(HEART_VEHICLE_FULL_SPRITE, heartX, heartY, 9, 9);
                         }
                     } else if (heartThreshold == currentHealth) {
                         // Render half heart.
                         if (mirrorHearts) {
-                            SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, heartX, heartY, 0, 97, 9, 9, 9, 256, 256);
+                            SpiffyRenderUtils.blitSpriteMirrored(graphics, HEART_VEHICLE_HALF_SPRITE, heartX, heartY, 9, 9);
                         } else {
-                            graphics.blit(GUI_ICONS_LOCATION, heartX, heartY, 97, 9, 9, 9);
+                            graphics.blitSprite(HEART_VEHICLE_HALF_SPRITE, heartX, heartY, 9, 9);
                         }
                     }
                     // Otherwise, leave the empty heart.

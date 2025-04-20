@@ -12,15 +12,13 @@ import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +27,9 @@ import java.util.Objects;
 
 public class VanillaLikeEffectsElement extends AbstractElement {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    // Sprite resources for effect backgrounds in 1.21.1
+    private static final ResourceLocation EFFECT_BACKGROUND_AMBIENT_SPRITE = ResourceLocation.withDefaultNamespace("hud/effect_background_ambient");
+    private static final ResourceLocation EFFECT_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/effect_background");
 
     private final Minecraft minecraft = Minecraft.getInstance();
     protected int tickCount;
@@ -146,7 +146,7 @@ public class VanillaLikeEffectsElement extends AbstractElement {
         List<MobEffectInstance> harmfulEffects = new ArrayList<>();
         for (MobEffectInstance effectInstance : Ordering.natural().reverse().sortedCopy(activeEffects)) {
             if (!effectInstance.showIcon()) continue;
-            if (effectInstance.getEffect().isBeneficial()) {
+            if (effectInstance.getEffect().value().isBeneficial()) {
                 beneficialEffects.add(effectInstance);
             } else {
                 harmfulEffects.add(effectInstance);
@@ -216,9 +216,9 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             if (this.shouldRenderBar) {
                 // Render background for the effect icon.
                 if (effectInstance.isAmbient()) {
-                    graphics.blit(AbstractContainerScreen.INVENTORY_LOCATION, finalIconX, beneficialRowY, 165, 166, 24, 24);
+                    graphics.blitSprite(EFFECT_BACKGROUND_AMBIENT_SPRITE, finalIconX, beneficialRowY, 24, 24);
                 } else {
-                    graphics.blit(AbstractContainerScreen.INVENTORY_LOCATION, finalIconX, beneficialRowY, 141, 166, 24, 24);
+                    graphics.blitSprite(EFFECT_BACKGROUND_SPRITE, finalIconX, beneficialRowY, 24, 24);
                     if (effectInstance.endsWithin(200)) {
                         int duration = effectInstance.getDuration();
                         int fadeFactor = 10 - duration / 20;
@@ -251,9 +251,9 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             float iconAlpha = 1.0f;
             if (this.shouldRenderBar) {
                 if (effectInstance.isAmbient()) {
-                    graphics.blit(AbstractContainerScreen.INVENTORY_LOCATION, finalIconX, harmfulRowY, 165, 166, 24, 24);
+                    graphics.blitSprite(EFFECT_BACKGROUND_AMBIENT_SPRITE, finalIconX, harmfulRowY, 24, 24);
                 } else {
-                    graphics.blit(AbstractContainerScreen.INVENTORY_LOCATION, finalIconX, harmfulRowY, 141, 166, 24, 24);
+                    graphics.blitSprite(EFFECT_BACKGROUND_SPRITE, finalIconX, harmfulRowY, 24, 24);
                     if (effectInstance.endsWithin(200)) {
                         int duration = effectInstance.getDuration();
                         int fadeFactor = 10 - duration / 20;

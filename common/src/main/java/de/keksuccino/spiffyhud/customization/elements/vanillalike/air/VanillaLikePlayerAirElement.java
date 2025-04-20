@@ -20,8 +20,9 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // The texture containing the air bubble icons.
-    private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+    // In 1.21.1, dedicated sprite resources are used instead of texture coordinates
+    private static final ResourceLocation AIR_SPRITE = ResourceLocation.withDefaultNamespace("hud/air");
+    private static final ResourceLocation AIR_BURSTING_SPRITE = ResourceLocation.withDefaultNamespace("hud/air_bursting");
 
     // Define constants for bubble dimensions.
     private static final int BUBBLE_SIZE = 9;      // The width (and height) of a bubble in pixels.
@@ -89,7 +90,6 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
         this.renderPlayerAir(graphics, barAbsX, barAbsY);
 
         RenderingUtils.resetShaderColor(graphics);
-
     }
 
     /**
@@ -159,14 +159,13 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
             boolean isFullBubble = (i < fullAirBubbles);
 
             if (this.shouldRenderBar) {
+                // In 1.21.1, use sprite rendering instead of texture coordinates
                 if (isFullBubble) {
-                    // Render a full air bubble.
-                    // Texture coordinates: (16,18) with size BUBBLE_SIZE x BUBBLE_SIZE.
-                    graphics.blit(GUI_ICONS_LOCATION, bubbleAbsX, bubbleAbsY, 16, 18, BUBBLE_SIZE, BUBBLE_SIZE);
+                    // Render a full air bubble using AIR_SPRITE
+                    graphics.blitSprite(AIR_SPRITE, bubbleAbsX, bubbleAbsY, BUBBLE_SIZE, BUBBLE_SIZE);
                 } else {
-                    // Render an empty air bubble.
-                    // Texture coordinates: (25,18) with size BUBBLE_SIZE x BUBBLE_SIZE.
-                    graphics.blit(GUI_ICONS_LOCATION, bubbleAbsX, bubbleAbsY, 25, 18, BUBBLE_SIZE, BUBBLE_SIZE);
+                    // Render an empty/bursting air bubble using AIR_BURSTING_SPRITE
+                    graphics.blitSprite(AIR_BURSTING_SPRITE, bubbleAbsX, bubbleAbsY, BUBBLE_SIZE, BUBBLE_SIZE);
                 }
             }
         }
@@ -177,7 +176,6 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
         this.barHeight = BUBBLE_SIZE;
 
         graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-
     }
 
     @Nullable
@@ -194,5 +192,4 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
     public int getAbsoluteHeight() {
         return TOTAL_BAR_HEIGHT;
     }
-
 }

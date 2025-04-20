@@ -17,8 +17,10 @@ public class VanillaLikeJumpMeterElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // Texture containing GUI icons.
-    private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+    // Sprite resources for jump meter in 1.21.1
+    private static final ResourceLocation JUMP_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/jump_bar_background");
+    private static final ResourceLocation JUMP_BAR_COOLDOWN_SPRITE = ResourceLocation.withDefaultNamespace("hud/jump_bar_cooldown");
+    private static final ResourceLocation JUMP_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/jump_bar_progress");
 
     private static final int BAR_WIDTH = 182;
     private static final int BAR_HEIGHT = 5;
@@ -75,16 +77,16 @@ public class VanillaLikeJumpMeterElement extends AbstractElement {
         int fillWidth = (int) (jumpScale * elementWidth);
         if (isEditor()) fillWidth = BAR_WIDTH / 2;
 
-        // Draw the jump meter background (texture region starting at y = 84).
-        graphics.blit(GUI_ICONS_LOCATION, elementX, elementY, 0, 84, elementWidth, elementHeight);
+        // Draw the jump meter background
+        graphics.blitSprite(JUMP_BAR_BACKGROUND_SPRITE, elementX, elementY, elementWidth, elementHeight);
 
-        // If the player is riding an entity with jump cooldown, render the cooldown overlay (texture region at y = 74).
+        // If the player is riding an entity with jump cooldown, render the cooldown overlay
         if ((rideable != null && rideable.getJumpCooldown() > 0) && !isEditor()) {
-            graphics.blit(GUI_ICONS_LOCATION, elementX, elementY, 0, 74, elementWidth, elementHeight);
+            graphics.blitSprite(JUMP_BAR_COOLDOWN_SPRITE, elementX, elementY, elementWidth, elementHeight);
         }
-        // Otherwise, if there is a jump meter fill value, render the filled portion (texture region at y = 89).
+        // Otherwise, if there is a jump meter fill value, render the filled portion
         else if (fillWidth > 0) {
-            graphics.blit(GUI_ICONS_LOCATION, elementX, elementY, 0, 89, fillWidth, elementHeight);
+            graphics.blitSprite(JUMP_BAR_PROGRESS_SPRITE, elementWidth, elementHeight, 0, 0, elementX, elementY, fillWidth, elementHeight);
         }
 
         graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);

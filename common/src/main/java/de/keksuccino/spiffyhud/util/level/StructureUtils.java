@@ -3,8 +3,6 @@ package de.keksuccino.spiffyhud.util.level;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -14,7 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.core.registries.Registries;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Utility class for structure-related operations.
@@ -33,36 +30,11 @@ public class StructureUtils {
         if (!level.isLoaded(pos)) {
             return false; // Position not loaded, can't check
         }
-        // Get the structure at the position and check if it's valid
-        return level.structureManager().getStructureWithPieceAt(pos, structure).isValid();
-    }
-
-    /**
-     * Gets the ResourceKey of a structure at a specific BlockPos.
-     *
-     * @param level The server level to check in
-     * @param pos The position to check
-     * @return The ResourceKey of the structure at this position, or null if no structure is present
-     */
-    @Nullable
-    public static ResourceKey<Structure> getStructureAt(@NotNull ServerLevel level, @NotNull BlockPos pos) {
-
-        if (!level.isLoaded(pos)) {
-            return null; // Position not loaded, can't check
+        List<ResourceKey<Structure>> structures = getAllStructuresAt(level, pos);
+        for (ResourceKey<Structure> key : structures) {
+            if (key.toString().equals(structure.toString())) return true;
         }
-
-        // Get all structures in the registry
-        Registry<Structure> structureRegistry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
-
-        // Check each structure to see if the position is within it
-        for (ResourceKey<Structure> key : structureRegistry.registryKeySet()) {
-            if (level.structureManager().getStructureWithPieceAt(pos, key).isValid()) {
-                return key;
-            }
-        }
-
-        return null; // No structure found at this position
-
+        return false;
     }
 
     /**
@@ -82,10 +54,12 @@ public class StructureUtils {
         // Get all structures in the registry
         Registry<Structure> structureRegistry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
 
-        // Check each structure to see if the position is within it
-        return structureRegistry.registryKeySet().stream()
-                .filter(key -> level.structureManager().getStructureWithPieceAt(pos, key).isValid())
-                .collect(Collectors.toList());
+        List<ResourceKey<Structure>> keys = new ArrayList<>();
+        level.structureManager().getAllStructuresAt(pos).forEach((structure, longs) -> {
+            var structureKey = structureRegistry.getResourceKey(structure);
+            structureKey.ifPresent(keys::add);
+        });
+        return keys;
 
     }
 
@@ -97,7 +71,7 @@ public class StructureUtils {
      */
     @NotNull
     public static ResourceKey<Structure> getStructureKey(@NotNull String structureId) {
-        ResourceLocation resourceLocation = new ResourceLocation(structureId);
+        ResourceLocation resourceLocation = ResourceLocation.parse(structureId);
         return getStructureKey(resourceLocation);
     }
 
@@ -134,7 +108,7 @@ public class StructureUtils {
     @NotNull
     public static Optional<ResourceKey<Structure>> findStructureKey(@NotNull RegistryAccess registryAccess, @NotNull String structureName) {
         try {
-            ResourceLocation resourceLocation = new ResourceLocation(structureName);
+            ResourceLocation resourceLocation = ResourceLocation.parse(structureName);
             ResourceKey<Structure> key = ResourceKey.create(Registries.STRUCTURE, resourceLocation);
             // Verify the key exists in the registry
             Registry<Structure> structureRegistry = registryAccess.registryOrThrow(Registries.STRUCTURE);

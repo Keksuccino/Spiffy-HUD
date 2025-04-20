@@ -89,14 +89,17 @@ public class PlayerNbtPathHelpScreen extends Screen {
 
     }
 
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
-        return this.markdownRenderer.mouseScrolled(mouseX, mouseY, scrollDelta);
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDeltaX, double scrollDeltaY) {
+        return this.markdownRenderer.mouseScrolled(mouseX, mouseY, scrollDeltaX, scrollDeltaY);
     }
 
+    @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         return this.markdownRenderer.mouseReleased(mouseX, mouseY, button);
     }
 
+    @Override
     public void onClose() {
         Minecraft.getInstance().setScreen(this.parent);
     }

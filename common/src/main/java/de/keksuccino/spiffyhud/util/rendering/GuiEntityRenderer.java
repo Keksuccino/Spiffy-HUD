@@ -52,8 +52,8 @@ public class GuiEntityRenderer {
         // Obtain the entity's bounding dimensions using Pose.STANDING.
         EntityDimensions dimensions = entity.getDimensions(Pose.STANDING);
         // Compute scale factors so that the entity's bounding box fits entirely within the target box.
-        float scaleFromWidth = (float) boxWidth / dimensions.width;
-        float scaleFromHeight = (float) boxHeight / dimensions.height;
+        float scaleFromWidth = (float) boxWidth / dimensions.width();
+        float scaleFromHeight = (float) boxHeight / dimensions.height();
         float uniformScale = Math.min(scaleFromWidth, scaleFromHeight);
 
         // Save original rotation values for later restoration.
@@ -100,13 +100,13 @@ public class GuiEntityRenderer {
         // Translate to the center of the target box.
         graphics.pose().translate(posX + boxWidth / 2.0, posY + boxHeight / 2.0, 50.0);
         // Apply uniform scaling (note: negative on Z to mirror correctly).
-        graphics.pose().mulPoseMatrix(new Matrix4f().scaling(uniformScale, uniformScale, -uniformScale));
+        graphics.pose().mulPose(new Matrix4f().scaling(uniformScale, uniformScale, -uniformScale));
         // Apply a base rotation: rotate 180° about the Z-axis so the entity faces the viewer.
         Quaternionf baseRotation = new Quaternionf().rotateZ((float) Math.PI);
         graphics.pose().mulPose(baseRotation);
         // Shift upward so that the entity's bounding box is vertically centered.
         // Since the pivot is at the feet, translate upward by half of the entity's height.
-        graphics.pose().translate(0.0, -(dimensions.height / 2.0f), 0.0);
+        graphics.pose().translate(0.0, -(dimensions.height() / 2.0f), 0.0);
 
         // Setup lighting for GUI entity rendering.
         Lighting.setupForEntityInInventory();

@@ -1,9 +1,7 @@
 package de.keksuccino.spiffyhud.customization.elements.vanillalike.scoreboard;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.datafixers.util.Pair;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
@@ -16,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.numbers.StyledFormat;
 import net.minecraft.world.scores.*;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.apache.logging.log4j.LogManager;
@@ -23,12 +22,15 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Comparator;
 
 public class VanillaLikeScoreboardElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String SPACER = ": ";
+    private static final Comparator<PlayerScoreEntry> SCORE_DISPLAY_ORDER = Comparator.comparing(PlayerScoreEntry::value)
+            .reversed()
+            .thenComparing(PlayerScoreEntry::owner, String.CASE_INSENSITIVE_ORDER);
 
     // Minecraft instance for accessing game state
     private final Minecraft minecraft = Minecraft.getInstance();
@@ -56,8 +58,8 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
     /**
      * Main render method.
      *
-     * First, it calls renderScoreboard (with no offset) to update the sidebar’s dimensions and original position.
-     * Then, it calculates an aligned position based on the element’s absolute bounds and renders the scoreboard
+     * First, it calls renderScoreboard (with no offset) to update the sidebar's dimensions and original position.
+     * Then, it calculates an aligned position based on the element's absolute bounds and renders the scoreboard
      * with an offset so that it appears inside the element.
      */
     @Override
@@ -116,32 +118,39 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
         Scoreboard scoreboard = this.minecraft.level.getScoreboard();
         Objective objective = null;
         PlayerTeam playerTeam = scoreboard.getPlayersTeam(this.minecraft.player.getScoreboardName());
-        int colorId = -1;
+        
         if (playerTeam != null) {
-            colorId = playerTeam.getColor().getId();
+            DisplaySlot displaySlot = DisplaySlot.teamColorToSlot(playerTeam.getColor());
+            if (displaySlot != null) {
+                objective = scoreboard.getDisplayObjective(displaySlot);
+            }
         }
-        if (playerTeam != null && colorId >= 0) {
-            objective = scoreboard.getDisplayObjective(3 + colorId);
-        }
-        // Fallback to display objective 1 if necessary.
-        Objective objectiveToRender = (objective != null) ? objective : scoreboard.getDisplayObjective(1);
-        // In editor mode, use a dummy objective.
+        
+        // Fallback to SIDEBAR display objective if necessary
+        Objective objectiveToRender = (objective != null) ? objective : scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR);
+        
+        // In editor mode, use a dummy objective
         if (isEditor()) {
-            objectiveToRender = new Objective(scoreboard, "", ObjectiveCriteria.DUMMY, Component.empty(), ObjectiveCriteria.RenderType.INTEGER);
+            objectiveToRender = new DummyObjective(scoreboard);
         }
+        
         if (objectiveToRender != null) {
             displayScoreboardSidebar(graphics, objectiveToRender, offsetX, offsetY, applyOffset);
         }
 
         graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-
     }
+
+    /**
+     * Record class to hold display entry information
+     */
+    private record DisplayEntry(Component name, Component score, int scoreWidth) {}
 
     /**
      * Renders the scoreboard sidebar.
      *
      * All drawing coordinates (for background, score lines, and title) are adjusted by (offsetX, offsetY)
-     * if applyOffset is true. This ensures that the sidebar is drawn inside the element’s bounds.
+     * if applyOffset is true. This ensures that the sidebar is drawn inside the element's bounds.
      *
      * @param guiGraphics The graphics context.
      * @param objective   The scoreboard objective to render.
@@ -150,49 +159,54 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
      * @param applyOffset If true, the offset is added to all drawing coordinates.
      */
     private void displayScoreboardSidebar(GuiGraphics guiGraphics, Objective objective, int offsetX, int offsetY, boolean applyOffset) {
-
         Scoreboard scoreboard = objective.getScoreboard();
-
-        // Filter out invalid scores and limit to 15 entries
-        Collection<Score> rawScores = scoreboard.getPlayerScores(objective);
-        List<Score> validScores = rawScores.stream()
-                .filter(score -> (score.getOwner() != null) && !score.getOwner().startsWith("#"))
-                .collect(Collectors.toList());
-        List<Score> scoresToDisplay = validScores.size() > 15
-                ? Lists.newArrayList(Iterables.skip(validScores, validScores.size() - 15))
-                : validScores;
-
-        // Build a list pairing each score with its formatted display name
-        ArrayList<Pair<Score, MutableComponent>> scoreComponents = Lists.newArrayListWithCapacity(scoresToDisplay.size());
+        
+        // List to hold display entries
+        DisplayEntry[] displayEntries;
         Component title = objective.getDisplayName();
-
+        
         // In editor mode, use dummy values
         if (isEditor()) {
             title = Component.translatable("spiffyhud.elements.dummy.scoreboard_sidebar.title").withStyle(ChatFormatting.BOLD);
-            List<Score> dummyEntries = new ArrayList<>();
             String dummyLineText = I18n.get("spiffyhud.elements.dummy.scoreboard_sidebar.line");
+            displayEntries = new DisplayEntry[6];
             for (int i = 0; i < 6; i++) {
-                dummyEntries.add(new DummyScore(objective, dummyLineText, 0));
+                Component name = Component.literal(dummyLineText);
+                Component score = Component.literal("" + i);
+                displayEntries[i] = new DisplayEntry(name, score, this.getFont().width(score));
             }
-            dummyEntries.add(new DummyScore(objective, "", 0));
-            scoresToDisplay = dummyEntries;
+        } else {
+            // Get player scores using the 1.21.1 API
+            displayEntries = scoreboard.listPlayerScores(objective)
+                .stream()
+                .filter(entry -> !entry.isHidden())
+                .sorted(SCORE_DISPLAY_ORDER)
+                .limit(15)
+                .map(entry -> {
+                    PlayerTeam team = scoreboard.getPlayersTeam(entry.owner());
+                    Component name = entry.ownerName();
+                    Component formattedName = PlayerTeam.formatNameForTeam(team, name);
+                    Component scoreText = entry.formatValue(objective.numberFormatOrDefault(StyledFormat.SIDEBAR_DEFAULT));
+                    int scoreWidth = this.getFont().width(scoreText);
+                    return new DisplayEntry(formattedName, scoreText, scoreWidth);
+                })
+                .toArray(DisplayEntry[]::new);
         }
 
         // Determine the maximum width required by the title or any score entry.
         int titleWidth = this.getFont().width(title);
-        int spacerWidth = this.getFont().width(SPACER);
         int maxEntryWidth = titleWidth;
-        for (Score scoreEntry : scoresToDisplay) {
-            PlayerTeam team = scoreboard.getPlayersTeam(scoreEntry.getOwner());
-            MutableComponent scoreComponent = PlayerTeam.formatNameForTeam(team, Component.literal(scoreEntry.getOwner()));
-            scoreComponents.add(Pair.of(scoreEntry, scoreComponent));
-            int entryWidth = this.getFont().width(scoreComponent) + spacerWidth + this.getFont().width(Integer.toString(scoreEntry.getScore()));
+        int spacerWidth = this.getFont().width(SPACER);
+
+        for (DisplayEntry entry : displayEntries) {
+            int entryWidth = this.getFont().width(entry.name) + (entry.scoreWidth > 0 ? spacerWidth + entry.scoreWidth : 0);
             maxEntryWidth = Math.max(maxEntryWidth, entryWidth);
         }
 
         // Compute base positions using screen dimensions.
-        int numberOfLines = scoresToDisplay.size();
-        int totalLineHeight = numberOfLines * this.getFont().lineHeight;
+        int numberOfLines = displayEntries.length;
+        int lineHeight = 9; // Standard line height for scoreboard
+        int totalLineHeight = numberOfLines * lineHeight;
         int baseY = getScreenHeight() / 2 + totalLineHeight / 3;
         int baseX = getScreenWidth() - maxEntryWidth - 3;
 
@@ -207,12 +221,12 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
         }
 
         // Compute the top Y position of the sidebar
-        int topY = baseY - numberOfLines * this.getFont().lineHeight;
+        int topY = baseY - numberOfLines * lineHeight;
         // Record sidebar dimensions and original position (before applying any offset)
         this.sidebarWidth = Math.max(1, maxEntryWidth + 4); // adding padding
-        this.sidebarHeight = Math.max(1, baseY - (topY - this.getFont().lineHeight - 1));
+        this.sidebarHeight = Math.max(1, baseY - (topY - lineHeight - 1));
         this.sidebarOriginalX = baseX - 2;
-        this.sidebarOriginalY = topY - this.getFont().lineHeight - 1;
+        this.sidebarOriginalY = topY - lineHeight - 1;
 
         // Apply offset if needed
         int effectiveBaseX = baseX + (applyOffset ? offsetX : 0);
@@ -220,33 +234,40 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
 
         // If we are in rendering mode, draw each score line and then the title background.
         if (this.renderSidebar) {
-            int lineIndex = 0;
-            for (Pair<Score, MutableComponent> scorePair : scoreComponents) {
-                lineIndex++;
-                Score currentScore = scorePair.getFirst();
-                Component entryComponent = scorePair.getSecond();
-                String scoreText = "" + ChatFormatting.RED + currentScore.getScore();
-                // Compute positions for this line
-                int lineX = effectiveBaseX;
-                int lineY = effectiveBaseY - lineIndex * 9;
-                // rightX is computed from the screen width and offset as well
+            guiGraphics.pose().pushPose();
+            
+            // Draw managed to ensure blending and other state is properly handled
+            int finalLineBackgroundColor = lineBackgroundColor;
+            int finalTitleBackgroundColor = titleBackgroundColor;
+            int finalMaxEntryWidth = maxEntryWidth;
+            Component finalTitle = title;
+            guiGraphics.drawManaged(() -> {
                 int rightX = (getScreenWidth() - 3 + 2) + (applyOffset ? offsetX : 0);
-                // Draw background for this score line
-                guiGraphics.fill(lineX - 2, lineY, rightX, lineY + 9, lineBackgroundColor);
-                // Draw the player's name and score
-                guiGraphics.drawString(this.getFont(), entryComponent, lineX, lineY, -1, false);
-                guiGraphics.drawString(this.getFont(), scoreText, rightX - this.getFont().width(scoreText), lineY, -1, false);
-                // On the last line, also draw the title background and title text
-                if (lineIndex == scoresToDisplay.size()) {
-                    guiGraphics.fill(lineX - 2, lineY - 9 - 1, rightX, lineY - 1, titleBackgroundColor);
-                    guiGraphics.fill(lineX - 2, lineY - 1, rightX, lineY, lineBackgroundColor);
-                    Font font = this.getFont();
-                    int titleX = lineX + maxEntryWidth / 2 - titleWidth / 2;
-                    guiGraphics.drawString(font, title, titleX, lineY - 9, -1, false);
+                
+                for (int i = 0; i < displayEntries.length; i++) {
+                    DisplayEntry entry = displayEntries[i];
+                    int lineY = effectiveBaseY - (i + 1) * lineHeight;
+                    
+                    // Draw background for this score line
+                    guiGraphics.fill(effectiveBaseX - 2, lineY, rightX, lineY + lineHeight, finalLineBackgroundColor);
+                    
+                    // Draw the player's name and score
+                    guiGraphics.drawString(this.getFont(), entry.name, effectiveBaseX, lineY, -1, false);
+                    guiGraphics.drawString(this.getFont(), entry.score, rightX - entry.scoreWidth, lineY, -1, false);
+                    
+                    // On the last line, also draw the title background and title text
+                    if (i == displayEntries.length - 1) {
+                        guiGraphics.fill(effectiveBaseX - 2, lineY - lineHeight - 1, rightX, lineY - 1, finalTitleBackgroundColor);
+                        guiGraphics.fill(effectiveBaseX - 2, lineY - 1, rightX, lineY, finalLineBackgroundColor);
+                        Font font = this.getFont();
+                        int titleX = effectiveBaseX + finalMaxEntryWidth / 2 - titleWidth / 2;
+                        guiGraphics.drawString(font, finalTitle, titleX, lineY - lineHeight, -1, false);
+                    }
                 }
-            }
+            });
+            
+            guiGraphics.pose().popPose();
         }
-
     }
 
     /**
@@ -273,20 +294,21 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
     }
 
     /**
-     * DummyScore is used in editor mode to simulate scoreboard entries.
+     * DummyObjective is used in editor mode to simulate a scoreboard objective.
      */
-    private static class DummyScore extends Score {
-        int score;
-
-        public DummyScore(Objective objective, String display, int score) {
-            super(objective.getScoreboard(), objective, display);
-            this.score = score;
-        }
-
-        @Override
-        public int getScore() {
-            return this.score;
+    private static class DummyObjective extends Objective {
+        public DummyObjective(Scoreboard scoreboard) {
+            // Constructor parameters in 1.21.1:
+            // scoreboard, name, criteria, displayName, renderType, displayAutoUpdate, numberFormat
+            super(
+                scoreboard, 
+                "dummy", 
+                ObjectiveCriteria.DUMMY,
+                Component.literal("Scoreboard"), 
+                ObjectiveCriteria.RenderType.INTEGER,
+                false, 
+                null
+            );
         }
     }
-
 }

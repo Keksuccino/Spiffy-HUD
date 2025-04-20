@@ -16,8 +16,9 @@ public class VanillaLikeExperienceElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // Texture used for drawing the experience bar icons.
-    private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+    // Sprite resources for the experience bar in 1.21.1
+    private static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_background");
+    private static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_progress");
 
     private static final int BAR_WIDTH = 182;
     private static final int BAR_HEIGHT = 5;
@@ -89,13 +90,12 @@ public class VanillaLikeExperienceElement extends AbstractElement {
             if (isEditor()) filledBarWidth = BAR_WIDTH / 2;
 
             // Draw the empty (background) experience bar.
-            // The texture coordinates (0,64) define the location of the empty bar in the icons texture.
-            graphics.blit(GUI_ICONS_LOCATION, x, y, 0, 64, width, height);
+            graphics.blitSprite(EXPERIENCE_BAR_BACKGROUND_SPRITE, x, y, width, height);
 
             // Draw the filled part of the bar if any XP has been gained.
             if (filledBarWidth > 0) {
-                // Texture coordinates (0,69) define the filled portion of the bar.
-                graphics.blit(GUI_ICONS_LOCATION, x, y, 0, 69, filledBarWidth, height);
+                // In 1.21.1, we use the progress sprite with specified dimensions
+                graphics.blitSprite(EXPERIENCE_BAR_PROGRESS_SPRITE, width, height, 0, 0, x, y, filledBarWidth, height);
             }
         }
 

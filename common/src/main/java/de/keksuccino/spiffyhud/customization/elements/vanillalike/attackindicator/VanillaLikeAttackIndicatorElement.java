@@ -16,8 +16,12 @@ public class VanillaLikeAttackIndicatorElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // Texture used for drawing the experience bar icons.
-    private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+    // Sprite resources for attack indicators in 1.21.1
+    private static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE = ResourceLocation.withDefaultNamespace("hud/crosshair_attack_indicator_full");
+    private static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/crosshair_attack_indicator_background");
+    private static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/crosshair_attack_indicator_progress");
+    private static final ResourceLocation HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/hotbar_attack_indicator_background");
+    private static final ResourceLocation HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/hotbar_attack_indicator_progress");
 
     private final Minecraft minecraft = Minecraft.getInstance();
 
@@ -82,19 +86,18 @@ public class VanillaLikeAttackIndicatorElement extends AbstractElement {
             // Render hotbar version (only shown when not fully charged)
             if (attackStrength < 1.0f) {
                 // First render the background
-                graphics.blit(GUI_ICONS_LOCATION, x, y, width, height, 0, 94, 18, 18, 256, 256);
+                graphics.blitSprite(HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE, x, y, width, height);
 
                 // Then render the foreground based on attack strength
                 int fillHeight = (int)(height * attackStrength);
                 if (fillHeight > 0) {
-                    // Calculate the texture offset based on the fill height proportion
-                    int textureFillHeight = (int)(18 * attackStrength);
-                    graphics.blit(GUI_ICONS_LOCATION,
-                            x, y + height - fillHeight,
-                            width, fillHeight,
-                            18, 112 - textureFillHeight,
-                            18, textureFillHeight,
-                            256, 256);
+                    // For hotbar indicator, the original sprite is 18x18 and fills from bottom
+                    graphics.blitSprite(HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE, 
+                        width, height,  // Full widget size
+                        0, height - fillHeight,  // Start from the bottom
+                        x, y + height - fillHeight,  // Position at the bottom
+                        width, fillHeight  // Fill portion from bottom
+                    );
                 }
             }
         } else {
@@ -109,7 +112,7 @@ public class VanillaLikeAttackIndicatorElement extends AbstractElement {
 
             if (readyToAttack) {
                 // Render the "ready to attack" indicator
-                graphics.blit(GUI_ICONS_LOCATION, x, y, width, height, 68, 94, 16, 16, 256, 256);
+                graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE, x, y, width, height);
             } else if (attackStrength < 1.0f) {
                 // Determine a proper height for the progress bar (maintaining aspect ratio)
                 int barHeight = height;
@@ -118,19 +121,18 @@ public class VanillaLikeAttackIndicatorElement extends AbstractElement {
                 }
 
                 // First render the background bar
-                graphics.blit(GUI_ICONS_LOCATION, x, y, width, barHeight, 36, 94, 16, 4, 256, 256);
+                graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE, x, y, width, barHeight);
 
                 // Then render the foreground based on attack strength
                 int fillWidth = (int)(width * attackStrength);
                 if (fillWidth > 0) {
-                    // The texture width is 17 for the fill bar
-                    int textureWidth = (int)(17 * attackStrength);
-                    graphics.blit(GUI_ICONS_LOCATION,
-                            x, y,
-                            fillWidth, barHeight,
-                            52, 94,
-                            textureWidth, 4,
-                            256, 256);
+                    // For crosshair indicator, the original sprite is 16x4 and fills from left
+                    graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE, 
+                        width, barHeight,  // Full widget size
+                        0, 0,  // Start from top-left
+                        x, y,  // Position at top-left
+                        fillWidth, barHeight  // Fill portion from left
+                    );
                 }
             }
         }

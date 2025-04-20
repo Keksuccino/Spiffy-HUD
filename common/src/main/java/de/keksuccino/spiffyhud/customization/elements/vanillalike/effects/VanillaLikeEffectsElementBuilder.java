@@ -5,7 +5,6 @@ import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.customization.element.SerializedElement;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
-import de.keksuccino.spiffyhud.customization.elements.vanillalike.air.VanillaLikePlayerAirElement;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;

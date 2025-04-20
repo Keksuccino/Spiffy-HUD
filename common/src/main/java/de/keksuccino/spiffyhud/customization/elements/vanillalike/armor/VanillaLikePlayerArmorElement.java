@@ -20,8 +20,10 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // The location of the vanilla GUI icons texture.
-    private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+    // The sprite resources for armor in 1.21.1
+    private static final ResourceLocation ARMOR_EMPTY_SPRITE = ResourceLocation.withDefaultNamespace("hud/armor_empty");
+    private static final ResourceLocation ARMOR_HALF_SPRITE = ResourceLocation.withDefaultNamespace("hud/armor_half");
+    private static final ResourceLocation ARMOR_FULL_SPRITE = ResourceLocation.withDefaultNamespace("hud/armor_full");
 
     private static final int BAR_WIDTH = 81;
     private static final int BAR_HEIGHT = 9;
@@ -136,27 +138,22 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
             // - Full armor icon if the segment value is less than the armor value.
             // - Half armor icon if the segment value exactly equals the armor value.
             // - Otherwise, draw the empty armor icon background.
+            ResourceLocation armorSprite;
             if (armorSegment < armorValue) {
                 // Full armor icon
-                if (isRightAligned) {
-                    SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, iconX, iconY, 0, 34, 9, iconSize, iconSize, 256, 256);
-                } else {
-                    graphics.blit(GUI_ICONS_LOCATION, iconX, iconY, 34, 9, iconSize, iconSize);
-                }
+                armorSprite = ARMOR_FULL_SPRITE;
             } else if (armorSegment == armorValue) {
                 // Half armor icon
-                if (isRightAligned) {
-                    SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, iconX, iconY, 0, 25, 9, iconSize, iconSize, 256, 256);
-                } else {
-                    graphics.blit(GUI_ICONS_LOCATION, iconX, iconY, 25, 9, iconSize, iconSize);
-                }
+                armorSprite = ARMOR_HALF_SPRITE;
             } else {
                 // Empty armor icon (background)
-                if (isRightAligned) {
-                    SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, iconX, iconY, 0, 16, 9, iconSize, iconSize, 256, 256);
-                } else {
-                    graphics.blit(GUI_ICONS_LOCATION, iconX, iconY, 16, 9, iconSize, iconSize);
-                }
+                armorSprite = ARMOR_EMPTY_SPRITE;
+            }
+            
+            if (isRightAligned) {
+                SpiffyRenderUtils.blitSpriteMirrored(graphics, armorSprite, iconX, iconY, iconSize, iconSize);
+            } else {
+                graphics.blitSprite(armorSprite, iconX, iconY, iconSize, iconSize);
             }
 
         }

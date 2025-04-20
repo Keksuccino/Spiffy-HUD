@@ -6,6 +6,7 @@
     "client.IMixinGui",
     "client.IMixinSpectatorGui",
     "client.MixinAnchorPointOverlay",
+    "client.MixinBossHealthOverlay",
     "client.MixinChatComponent",
     "client.MixinChatScreen",
     "client.MixinCustomizationOverlayUI",

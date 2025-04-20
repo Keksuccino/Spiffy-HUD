@@ -3,7 +3,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'maven-publish'
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.9-SNAPSHOT'
 }
 
 base {
@@ -18,17 +18,18 @@ dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
+        parchment("org.parchmentmc.data:parchment-1.21.1:2024.11.17@zip")
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     implementation project(":common")
-    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.2")))
-    modImplementation "curse.maven:melody-938643:4983989"
-    modImplementation "maven.modrinth:konkrete:1.8.1-1.20.1-fabric"
-    modImplementation "maven.modrinth:modmenu:7.2.2"
-    modImplementation "maven.modrinth:fancymenu:3.5.0-1.20.1-fabric"
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.5")))
+    implementation 'com.github.Keksuccino:japng:0.5.3'
+    modImplementation "maven.modrinth:melody:1.0.10-1.21-fabric"
+    modImplementation "maven.modrinth:konkrete:1.9.9-1.21-fabric"
+    modImplementation "maven.modrinth:fancymenu:3.5.0-1.21.1-fabric"
+    modImplementation "maven.modrinth:modmenu:11.0.0-rc.2"
 }
 
 loom {

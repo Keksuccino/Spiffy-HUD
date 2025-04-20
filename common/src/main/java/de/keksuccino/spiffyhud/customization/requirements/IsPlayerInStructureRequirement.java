@@ -151,9 +151,9 @@ public class IsPlayerInStructureRequirement extends LoadingRequirement {
         }
 
         @Override
-        public boolean mouseScrolled(double $$0, double $$1, double $$2) {
-            if (this.structureKeySuggestions.mouseScrolled($$2)) return true;
-            return super.mouseScrolled($$0, $$1, $$2);
+        public boolean mouseScrolled(double $$0, double $$1, double $$2, double d) {
+            if (this.structureKeySuggestions.mouseScrolled(d)) return true;
+            return super.mouseScrolled($$0, $$1, $$2, d);
         }
 
         @Override

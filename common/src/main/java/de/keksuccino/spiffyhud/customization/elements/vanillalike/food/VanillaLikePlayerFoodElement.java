@@ -22,7 +22,14 @@ import org.jetbrains.annotations.Nullable;
 public class VanillaLikePlayerFoodElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+
+    // Sprite resources for food icons in 1.21.1
+    private static final ResourceLocation FOOD_EMPTY_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_empty");
+    private static final ResourceLocation FOOD_HALF_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_half");
+    private static final ResourceLocation FOOD_FULL_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_full");
+    private static final ResourceLocation FOOD_EMPTY_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_empty_hunger");
+    private static final ResourceLocation FOOD_HALF_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_half_hunger");
+    private static final ResourceLocation FOOD_FULL_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_full_hunger");
 
     private static final int BAR_WIDTH = 81;
     private static final int BAR_HEIGHT = 9;
@@ -110,21 +117,20 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
         // we want to mirror the icon textures.
         boolean mirrorIcons = shouldRenderIconsLeftToRight();
 
-        // Define texture source parameters.
-        int hungerTextureOffset = 0;
-        int textureBaseX = 16;
-        if (player.hasEffect(MobEffects.HUNGER)) {
-            textureBaseX += 36;
-            hungerTextureOffset = 13;
-        }
-        int emptyIconTexX = 16 + hungerTextureOffset * 9;
-        int fullIconTexX = textureBaseX + 36;
-        int halfIconTexX = textureBaseX + 45;
-        int texV = 27;
+        // Determine which set of sprites to use based on hunger effect
+        ResourceLocation emptySprite;
+        ResourceLocation halfSprite;
+        ResourceLocation fullSprite;
 
-        // Assume texture size for icons.png is 256x256.
-        final int TEXTURE_WIDTH = 256;
-        final int TEXTURE_HEIGHT = 256;
+        if (player.hasEffect(MobEffects.HUNGER)) {
+            emptySprite = FOOD_EMPTY_HUNGER_SPRITE;
+            halfSprite = FOOD_HALF_HUNGER_SPRITE;
+            fullSprite = FOOD_FULL_HUNGER_SPRITE;
+        } else {
+            emptySprite = FOOD_EMPTY_SPRITE;
+            halfSprite = FOOD_HALF_SPRITE;
+            fullSprite = FOOD_FULL_SPRITE;
+        }
 
         // Loop through each food icon slot.
         for (int i = 0; i < numIcons; i++) {
@@ -138,24 +144,28 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
                 iconY += this.random.nextInt(3) - 1; // Random offset: -1, 0, or 1
             }
 
+            // Always draw the empty food icon first
             if (mirrorIcons) {
-                // Draw mirrored icons by swapping U texture coordinates.
-                SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, iconX, iconY, 0,
-                        emptyIconTexX, texV, ICON_WIDTH, ICON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                // Draw mirrored icons
+                SpiffyRenderUtils.blitSpriteMirrored(graphics, emptySprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
+
                 if (i * 2 + 1 < foodLevel) {
-                    SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, iconX, iconY, 0,
-                            fullIconTexX, texV, ICON_WIDTH, ICON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                    // Full food icon
+                    SpiffyRenderUtils.blitSpriteMirrored(graphics, fullSprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
                 } else if (i * 2 + 1 == foodLevel) {
-                    SpiffyRenderUtils.blitMirrored(graphics, GUI_ICONS_LOCATION, iconX, iconY, 0,
-                            halfIconTexX, texV, ICON_WIDTH, ICON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                    // Half food icon
+                    SpiffyRenderUtils.blitSpriteMirrored(graphics, halfSprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
                 }
             } else {
-                // Normal (non-mirrored) drawing.
-                graphics.blit(GUI_ICONS_LOCATION, iconX, iconY, emptyIconTexX, texV, ICON_WIDTH, ICON_HEIGHT);
+                // Normal (non-mirrored) drawing using sprites
+                graphics.blitSprite(emptySprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
+
                 if (i * 2 + 1 < foodLevel) {
-                    graphics.blit(GUI_ICONS_LOCATION, iconX, iconY, fullIconTexX, texV, ICON_WIDTH, ICON_HEIGHT);
+                    // Full food icon
+                    graphics.blitSprite(fullSprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
                 } else if (i * 2 + 1 == foodLevel) {
-                    graphics.blit(GUI_ICONS_LOCATION, iconX, iconY, halfIconTexX, texV, ICON_WIDTH, ICON_HEIGHT);
+                    // Half food icon
+                    graphics.blitSprite(halfSprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
                 }
             }
 
