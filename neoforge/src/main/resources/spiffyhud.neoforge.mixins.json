@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "de.keksuccino.spiffyhud.mixin.mixins.neoforge",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "client.MixinVanillaWidgetEditorElement"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "spiffyhud.refmap.json",
+  "minVersion": "0.8"
+}

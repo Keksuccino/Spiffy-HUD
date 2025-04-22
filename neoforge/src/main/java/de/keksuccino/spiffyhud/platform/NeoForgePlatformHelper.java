@@ -1,7 +1,7 @@
-package de.keksuccino.drippyloadingscreen.platform;
+package de.keksuccino.spiffyhud.platform;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import de.keksuccino.drippyloadingscreen.platform.services.IPlatformHelper;
+import de.keksuccino.spiffyhud.platform.services.IPlatformHelper;
 import net.minecraft.client.KeyMapping;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModContainer;
