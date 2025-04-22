@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "client.IMixinGui",
+    "client.IMixinPauseScreen",
     "client.IMixinSpectatorGui",
     "client.MixinAnchorPointOverlay",
     "client.MixinChatComponent",
