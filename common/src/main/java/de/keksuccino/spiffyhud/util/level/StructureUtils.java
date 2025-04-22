@@ -10,7 +10,7 @@ import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,12 +26,12 @@ public class StructureUtils {
      * @param structure The structure key to check for
      * @return true if the position is within the structure, false otherwise
      */
-    public static boolean isInStructure(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull ResourceKey<Structure> structure) {
+    public static boolean isInStructure(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull ResourceKey<ConfiguredStructureFeature<?, ?>> structure) {
         if (!level.isLoaded(pos)) {
             return false; // Position not loaded, can't check
         }
-        List<ResourceKey<Structure>> structures = getAllStructuresAt(level, pos);
-        for (ResourceKey<Structure> key : structures) {
+        List<ResourceKey<ConfiguredStructureFeature<?, ?>>> structures = getAllStructuresAt(level, pos);
+        for (ResourceKey<ConfiguredStructureFeature<?, ?>> key : structures) {
             if (key.toString().equals(structure.toString())) return true;
         }
         return false;
@@ -45,17 +45,17 @@ public class StructureUtils {
      * @return A list of ResourceKeys for all structures at this position
      */
     @NotNull
-    public static List<ResourceKey<Structure>> getAllStructuresAt(@NotNull ServerLevel level, @NotNull BlockPos pos) {
+    public static List<ResourceKey<ConfiguredStructureFeature<?, ?>>> getAllStructuresAt(@NotNull ServerLevel level, @NotNull BlockPos pos) {
 
         if (!level.isLoaded(pos)) {
             return List.of(); // Position not loaded, can't check
         }
 
         // Get all structures in the registry
-        Registry<Structure> structureRegistry = level.registryAccess().registryOrThrow(BuiltinRegistries.STRUCTURES.key());
+        Registry<ConfiguredStructureFeature<?, ?>> structureRegistry = level.registryAccess().registryOrThrow(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE.key());
 
-        List<ResourceKey<Structure>> keys = new ArrayList<>();
-        level.structureManager().getAllStructuresAt(pos).forEach((structure, longs) -> {
+        List<ResourceKey<ConfiguredStructureFeature<?, ?>>> keys = new ArrayList<>();
+        level.structureFeatureManager().getAllStructuresAt(pos).forEach((structure, longs) -> {
             var structureKey = structureRegistry.getResourceKey(structure);
             structureKey.ifPresent(keys::add);
         });
@@ -70,7 +70,7 @@ public class StructureUtils {
      * @return The ResourceKey for the structure
      */
     @NotNull
-    public static ResourceKey<Structure> getStructureKey(@NotNull String structureId) {
+    public static ResourceKey<ConfiguredStructureFeature<?, ?>> getStructureKey(@NotNull String structureId) {
         ResourceLocation resourceLocation = new ResourceLocation(structureId);
         return getStructureKey(resourceLocation);
     }
@@ -82,8 +82,8 @@ public class StructureUtils {
      * @return The ResourceKey for the structure
      */
     @NotNull
-    public static ResourceKey<Structure> getStructureKey(@NotNull ResourceLocation location) {
-        return ResourceKey.create(BuiltinRegistries.STRUCTURES.key(), location);
+    public static ResourceKey<ConfiguredStructureFeature<?, ?>> getStructureKey(@NotNull ResourceLocation location) {
+        return ResourceKey.create(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE.key(), location);
     }
 
     /**
@@ -93,9 +93,18 @@ public class StructureUtils {
      * @return A list of all structure resource keys
      */
     @NotNull
-    public static List<ResourceKey<Structure>> getAllStructureKeys(@NotNull RegistryAccess registryAccess) {
-        Registry<Structure> structureRegistry = registryAccess.registryOrThrow(BuiltinRegistries.STRUCTURES.key());
-        return new ArrayList<>(structureRegistry.registryKeySet());
+    public static List<ResourceKey<ConfiguredStructureFeature<?, ?>>> getAllStructureKeys(@NotNull RegistryAccess registryAccess, @NotNull ServerLevel level) {
+
+        // Get all structures in the registry
+        Registry<ConfiguredStructureFeature<?, ?>> structureRegistry = level.registryAccess().registryOrThrow(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE.key());
+
+        List<ResourceKey<ConfiguredStructureFeature<?, ?>>> keys = new ArrayList<>();
+        structureRegistry.stream().toList().forEach(structure -> {
+            var structureKey = structureRegistry.getResourceKey(structure);
+            structureKey.ifPresent(keys::add);
+        });
+
+        return keys;
     }
 
     /**
@@ -106,12 +115,12 @@ public class StructureUtils {
      * @return An Optional containing the structure key if found, or empty if not found
      */
     @NotNull
-    public static Optional<ResourceKey<Structure>> findStructureKey(@NotNull RegistryAccess registryAccess, @NotNull String structureName) {
+    public static Optional<ResourceKey<ConfiguredStructureFeature<?, ?>>> findStructureKey(@NotNull RegistryAccess registryAccess, @NotNull String structureName) {
         try {
             ResourceLocation resourceLocation = new ResourceLocation(structureName);
-            ResourceKey<Structure> key = ResourceKey.create(BuiltinRegistries.STRUCTURES.key(), resourceLocation);
+            ResourceKey<ConfiguredStructureFeature<?, ?>> key = ResourceKey.create(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE.key(), resourceLocation);
             // Verify the key exists in the registry
-            Registry<Structure> structureRegistry = registryAccess.registryOrThrow(BuiltinRegistries.STRUCTURES.key());
+            Registry<ConfiguredStructureFeature<?, ?>> structureRegistry = registryAccess.registryOrThrow(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE.key());
             if (structureRegistry.containsKey(key)) {
                 return Optional.of(key);
             }
@@ -122,7 +131,7 @@ public class StructureUtils {
     }
 
     @NotNull
-    public static List<String> convertStructureKeysToStrings(@NotNull List<ResourceKey<Structure>> keys) {
+    public static List<String> convertStructureKeysToStrings(@NotNull List<ResourceKey<ConfiguredStructureFeature<?, ?>>> keys) {
         List<String> stringKeys = new ArrayList<>();
         keys.forEach(structureResourceKey -> stringKeys.add(structureResourceKey.location().toString()));
         return stringKeys;

@@ -7,6 +7,7 @@ import de.keksuccino.spiffyhud.mixin.mixins.common.client.IMixinGui;
 import de.keksuccino.spiffyhud.util.ComponentUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

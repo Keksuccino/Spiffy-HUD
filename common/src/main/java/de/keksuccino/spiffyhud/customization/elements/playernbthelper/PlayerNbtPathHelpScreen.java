@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.Component;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class PlayerNbtPathHelpScreen extends ModernScreen {
     });
 
     public PlayerNbtPathHelpScreen(@NotNull Screen parent) {
-        super(Component.empty());
+        super(Components.empty());
         this.parent = parent;
     }
 
@@ -66,7 +66,7 @@ public class PlayerNbtPathHelpScreen extends ModernScreen {
         this.markdownRenderer.getMarkdownRenderer().setTextShadow(false);
         this.addRenderableWidget(this.markdownRenderer);
 
-        UIBase.applyDefaultWidgetSkinTo(this.addRenderableWidget(new ExtendedButton(centerX - 100, this.height - this.footerHeight / 2 - 10, 200, 20, Component.translatable("fancymenu.common.close"), (var1) -> this.onClose())));
+        UIBase.applyDefaultWidgetSkinTo(this.addRenderableWidget(new ExtendedButton(centerX - 100, this.height - this.footerHeight / 2 - 10, 200, 20, Components.translatable("fancymenu.common.close"), (var1) -> this.onClose())));
 
     }
 

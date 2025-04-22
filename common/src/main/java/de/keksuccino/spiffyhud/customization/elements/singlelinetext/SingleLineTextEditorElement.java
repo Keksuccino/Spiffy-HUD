@@ -6,7 +6,7 @@ import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
 import de.keksuccino.fancymenu.util.rendering.ui.tooltip.Tooltip;
 import de.keksuccino.spiffyhud.customization.elements.chatcustomizer.ChatCustomizerHandler;
-import net.minecraft.network.chat.Component;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import org.jetbrains.annotations.NotNull;
 
 public class SingleLineTextEditorElement extends AbstractEditorElement {
@@ -31,7 +31,7 @@ public class SingleLineTextEditorElement extends AbstractEditorElement {
         this.addStringInputContextMenuEntryTo(this.rightClickMenu, "text", SingleLineTextEditorElement.class,
                 chatCustomizerEditorElement -> chatCustomizerEditorElement.getElement().text,
                 (chatCustomizerEditorElement, s) -> chatCustomizerEditorElement.getElement().text = s,
-                null, false, true, Component.translatable("spiffyhud.elements.single_line_text.text"), true, null, null, null);
+                null, false, true, Components.translatable("spiffyhud.elements.single_line_text.text"), true, null, null, null);
 
     }
 

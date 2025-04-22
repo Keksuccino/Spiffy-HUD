@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.scores.*;
@@ -127,7 +128,7 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
         Objective objectiveToRender = (objective != null) ? objective : scoreboard.getDisplayObjective(1);
         // In editor mode, use a dummy objective.
         if (isEditor()) {
-            objectiveToRender = new Objective(scoreboard, "", ObjectiveCriteria.DUMMY, Component.empty(), ObjectiveCriteria.RenderType.INTEGER);
+            objectiveToRender = new Objective(scoreboard, "", ObjectiveCriteria.DUMMY, Components.empty(), ObjectiveCriteria.RenderType.INTEGER);
         }
         if (objectiveToRender != null) {
             displayScoreboardSidebar(graphics, objectiveToRender, offsetX, offsetY, applyOffset);
@@ -168,7 +169,7 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
 
         // In editor mode, use dummy values
         if (isEditor()) {
-            title = Component.translatable("spiffyhud.elements.dummy.scoreboard_sidebar.title").withStyle(ChatFormatting.BOLD);
+            title = Components.translatable("spiffyhud.elements.dummy.scoreboard_sidebar.title").withStyle(ChatFormatting.BOLD);
             List<Score> dummyEntries = new ArrayList<>();
             String dummyLineText = I18n.get("spiffyhud.elements.dummy.scoreboard_sidebar.line");
             for (int i = 0; i < 6; i++) {
@@ -184,7 +185,7 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
         int maxEntryWidth = titleWidth;
         for (Score scoreEntry : scoresToDisplay) {
             PlayerTeam team = scoreboard.getPlayersTeam(scoreEntry.getOwner());
-            MutableComponent scoreComponent = PlayerTeam.formatNameForTeam(team, Component.literal(scoreEntry.getOwner()));
+            MutableComponent scoreComponent = PlayerTeam.formatNameForTeam(team, Components.literal(scoreEntry.getOwner()));
             scoreComponents.add(Pair.of(scoreEntry, scoreComponent));
             int entryWidth = this.getFont().width(scoreComponent) + spacerWidth + this.getFont().width(Integer.toString(scoreEntry.getScore()));
             maxEntryWidth = Math.max(maxEntryWidth, entryWidth);

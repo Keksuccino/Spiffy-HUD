@@ -11,7 +11,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import org.jetbrains.annotations.NotNull;
 
 public class SlotIdHelpScreen extends ModernScreen {
@@ -25,7 +25,7 @@ public class SlotIdHelpScreen extends ModernScreen {
     protected final List<String> lines = List.of(LocalizationUtils.splitLocalizedStringLines("spiffyhud.elements.slot.slot_id_help.text"));
 
     public SlotIdHelpScreen(@NotNull Screen parent) {
-        super(Component.empty());
+        super(Components.empty());
         this.parent = parent;
     }
 
@@ -46,7 +46,7 @@ public class SlotIdHelpScreen extends ModernScreen {
         this.markdownRenderer.getMarkdownRenderer().setTextShadow(false);
         this.addRenderableWidget(this.markdownRenderer);
 
-        UIBase.applyDefaultWidgetSkinTo(this.addRenderableWidget(new ExtendedButton(centerX - 100, this.height - this.footerHeight / 2 - 10, 200, 20, Component.translatable("fancymenu.common.close"), (var1) -> this.onClose())));
+        UIBase.applyDefaultWidgetSkinTo(this.addRenderableWidget(new ExtendedButton(centerX - 100, this.height - this.footerHeight / 2 - 10, 200, 20, Components.translatable("fancymenu.common.close"), (var1) -> this.onClose())));
 
     }
 

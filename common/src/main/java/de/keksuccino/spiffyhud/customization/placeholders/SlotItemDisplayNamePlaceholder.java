@@ -5,13 +5,14 @@ import de.keksuccino.fancymenu.customization.placeholder.Placeholder;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
 import de.keksuccino.fancymenu.util.MathUtils;
 import de.keksuccino.fancymenu.util.SerializationUtils;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import de.keksuccino.spiffyhud.mixin.mixins.common.client.IMixinSpectatorGui;
 import de.keksuccino.spiffyhud.util.ComponentUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.spectator.SpectatorMenu;
 import net.minecraft.client.gui.spectator.SpectatorMenuItem;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.Component;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +42,7 @@ public class SlotItemDisplayNamePlaceholder extends Placeholder {
                     return ComponentUtils.toJson(mutableComponent);
                 }
             } else if (!stack.isEmpty()) {
-                MutableComponent mutableComponent = Component.empty().append(stack.getHoverName()).withStyle(stack.getRarity().color);
+                MutableComponent mutableComponent = Components.empty().append(stack.getHoverName()).withStyle(stack.getRarity().color);
                 return ComponentUtils.toJson(mutableComponent);
             }
         }

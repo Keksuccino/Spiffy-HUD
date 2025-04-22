@@ -26,10 +26,10 @@ dependencies {
     implementation project(":common")
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.2")))
     include(implementation 'org.joml:joml:1.10.8')
-    modImplementation "maven.modrinth:melody:1.0.1-1.19.2-fabric"
-    modImplementation "maven.modrinth:konkrete:1.8.0-1.19.1-1.19.2-fabric"
-    modImplementation "maven.modrinth:modmenu:4.1.2"
-    modImplementation "maven.modrinth:fancymenu:3.5.0-1.19.2-fabric"
+    modImplementation "maven.modrinth:melody:1.0.1-1.18.2-fabric"
+    modImplementation "maven.modrinth:konkrete:1.8.0-1.18-1.18.2-fabric"
+    modImplementation "maven.modrinth:modmenu:3.2.5"
+    modImplementation "maven.modrinth:fancymenu:3.5.0-1.18.2-fabric"
 }
 
 loom {

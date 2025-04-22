@@ -44,7 +44,8 @@ public class SpiffyRenderUtils {
         bufferBuilder.vertex(matrix, (float)x, (float)(y + height), (float)blitOffset).uv(minU, maxV).endVertex();
         bufferBuilder.vertex(matrix, (float)(x + width), (float)(y + height), (float)blitOffset).uv(maxU, maxV).endVertex();
         bufferBuilder.vertex(matrix, (float)(x + width), (float)y, (float)blitOffset).uv(maxU, minV).endVertex();
-        BufferUploader.drawWithShader(bufferBuilder.end());
+        bufferBuilder.end();
+        BufferUploader.end(bufferBuilder);
 
         RenderSystem.disableBlend();
 

@@ -8,11 +8,13 @@ import de.keksuccino.fancymenu.customization.placeholder.PlaceholderParser;
 import de.keksuccino.fancymenu.util.MathUtils;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
 import de.keksuccino.fancymenu.util.rendering.gui.GuiRenderTypes;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import de.keksuccino.fancymenu.util.rendering.ui.UIBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -59,10 +61,10 @@ public class SlotElement extends AbstractElement {
 
             if (isEditor()) {
 
-                MutableComponent label = this.useSelectedSlot ? Component.literal("SEL") : Component.literal("" + this.parsedSlot);
+                MutableComponent label = this.useSelectedSlot ? Components.literal("SEL") : Components.literal("" + this.parsedSlot);
                 if (this.customElementLayerName != null) {
                     label = buildComponent(this.customElementLayerName).copy();
-                    label.append(this.useSelectedSlot ? Component.literal(" (SEL)") : Component.literal(" (" + this.parsedSlot + ")"));
+                    label.append(this.useSelectedSlot ? Components.literal(" (SEL)") : Components.literal(" (" + this.parsedSlot + ")"));
                 }
 
                 graphics.fill(x, y, x + w, y + h, this.inEditorColor.getColorIntWithAlpha(0.5F));
@@ -175,7 +177,7 @@ public class SlotElement extends AbstractElement {
     @Override
     public @NotNull Component getDisplayName() {
         MutableComponent c = super.getDisplayName().copy();
-        c.append(this.useSelectedSlot ? Component.literal(" (SEL)") : Component.literal(" (" + this.parsedSlot + ")"));
+        c.append(this.useSelectedSlot ? Components.literal(" (SEL)") : Components.literal(" (" + this.parsedSlot + ")"));
         return c;
     }
 

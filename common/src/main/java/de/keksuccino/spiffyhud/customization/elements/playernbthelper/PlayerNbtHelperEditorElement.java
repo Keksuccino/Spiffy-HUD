@@ -4,7 +4,7 @@ import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.editor.AbstractEditorElement;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerNbtHelperEditorElement extends AbstractEditorElement {
@@ -33,7 +33,7 @@ public class PlayerNbtHelperEditorElement extends AbstractEditorElement {
 
         super.init();
 
-        this.rightClickMenu.addClickableEntry("nbt_paths_screen", Component.translatable("spiffyhud.elements.player_nbt_helper.paths"), (contextMenu, clickableContextMenuEntry) -> {
+        this.rightClickMenu.addClickableEntry("nbt_paths_screen", Components.translatable("spiffyhud.elements.player_nbt_helper.paths"), (contextMenu, clickableContextMenuEntry) -> {
             Minecraft.getInstance().setScreen(new PlayerNbtPathHelpScreen(this.editor));
         });
 

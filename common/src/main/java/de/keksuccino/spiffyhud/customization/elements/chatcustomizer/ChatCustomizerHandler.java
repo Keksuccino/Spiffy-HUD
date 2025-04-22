@@ -14,7 +14,6 @@ public class ChatCustomizerHandler {
     public static ChatCorner chatCorner = ChatCorner.BOTTOM_LEFT;
     public static DrawableColor chatBackgroundColor = null;
     public static DrawableColor inputBackgroundColor = null;
-    public static Double lineSpacing = null;
 
     public static void tick() {
 
@@ -22,7 +21,6 @@ public class ChatCustomizerHandler {
         chatCorner = ChatCorner.BOTTOM_LEFT;
         chatBackgroundColor = null;
         inputBackgroundColor = null;
-        lineSpacing = null;
 
         ScreenCustomizationLayer layer = ScreenCustomizationLayerHandler.getLayerOfScreen(SpiffyOverlayScreen.class);
         if (layer != null) {
@@ -38,9 +36,6 @@ public class ChatCustomizerHandler {
                         }
                         if (inputBackgroundColor == null) {
                             inputBackgroundColor = e.getCustomInputBackgroundColor();
-                        }
-                        if (lineSpacing == null) {
-                            lineSpacing = e.getCustomLineSpacing();
                         }
 
                     }

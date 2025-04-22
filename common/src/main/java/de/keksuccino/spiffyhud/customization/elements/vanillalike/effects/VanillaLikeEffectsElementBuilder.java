@@ -7,6 +7,7 @@ import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
 import de.keksuccino.spiffyhud.customization.elements.vanillalike.air.VanillaLikePlayerAirElement;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,7 +67,7 @@ public class VanillaLikeEffectsElementBuilder extends ElementBuilder<VanillaLike
 
     @Override
     public @NotNull Component getDisplayName(@Nullable AbstractElement element) {
-        return Component.translatable("spiffyhud.elements.vanillalike.effects");
+        return Components.translatable("spiffyhud.elements.vanillalike.effects");
     }
 
     @Override

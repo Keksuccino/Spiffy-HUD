@@ -3,6 +3,7 @@ package de.keksuccino.spiffyhud.networking.packets.structure.structures;
 import de.keksuccino.fancymenu.networking.PacketHandler;
 import de.keksuccino.fancymenu.util.threading.MainThreadTaskExecutor;
 import de.keksuccino.spiffyhud.util.level.StructureUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +18,7 @@ public class StructuresPacketLogic {
     protected static boolean handleOnServer(@NotNull StructuresPacket packet, @NotNull ServerPlayer sender) {
         StructuresPacket answer = new StructuresPacket();
         List<String> keys = new ArrayList<>();
-        StructureUtils.getAllStructureKeys(sender.level.registryAccess()).forEach(structureResourceKey -> keys.add(structureResourceKey.location().toString()));
+        StructureUtils.getAllStructureKeys(sender.level.registryAccess(), (ServerLevel) sender.level).forEach(structureResourceKey -> keys.add(structureResourceKey.location().toString()));
         answer.keys = keys;
         PacketHandler.sendToClient(sender, answer);
         return true;

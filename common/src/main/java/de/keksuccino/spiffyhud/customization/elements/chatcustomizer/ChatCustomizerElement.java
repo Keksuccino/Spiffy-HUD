@@ -23,17 +23,13 @@ public class ChatCustomizerElement extends AbstractElement {
     public String customChatBackgroundColor = null;
     @Nullable
     public String customInputBackgroundColor = null;
-    @Nullable
-    public String customLineSpacing = null;
     @NotNull
     public ChatCustomizerHandler.ChatCorner chatCorner = ChatCustomizerHandler.ChatCorner.BOTTOM_LEFT;
 
     protected String lastCustomChatBackgroundColor = null;
     protected String lastCustomInputBackgroundColor = null;
-    protected String lastCustomLineSpacing = null;
     protected DrawableColor cachedCustomChatBackgroundColor = null;
     protected DrawableColor cachedCustomInputBackgroundColor = null;
-    protected Double cachedCustomLineSpacing = null;
 
     public ChatCustomizerElement(@NotNull ElementBuilder<?, ?> builder) {
         super(builder);
@@ -69,22 +65,6 @@ public class ChatCustomizerElement extends AbstractElement {
             this.cachedCustomInputBackgroundColor = null;
         }
         return this.cachedCustomInputBackgroundColor;
-    }
-
-    @Nullable
-    public Double getCustomLineSpacing() {
-        // Update cached custom line spacing
-        if (this.customLineSpacing != null) {
-            String parsedCustomLineSpacing = PlaceholderParser.replacePlaceholders(this.customLineSpacing);
-            if (!Objects.equals(parsedCustomLineSpacing, this.lastCustomLineSpacing) && MathUtils.isDouble(parsedCustomLineSpacing)) {
-                this.cachedCustomLineSpacing = Double.parseDouble(parsedCustomLineSpacing);
-            }
-            this.lastCustomLineSpacing = parsedCustomLineSpacing;
-        } else {
-            this.lastCustomLineSpacing = null;
-            this.cachedCustomLineSpacing = null;
-        }
-        return this.cachedCustomLineSpacing;
     }
 
     @Override

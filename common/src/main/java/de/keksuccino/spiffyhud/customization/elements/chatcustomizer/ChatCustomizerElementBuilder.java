@@ -6,13 +6,15 @@ import de.keksuccino.fancymenu.customization.element.SerializedElement;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.awt.*;
+import java.awt.Color;
 import java.util.Objects;
 
 public class ChatCustomizerElementBuilder extends ElementBuilder<ChatCustomizerElement, ChatCustomizerEditorElement> {
@@ -43,7 +45,6 @@ public class ChatCustomizerElementBuilder extends ElementBuilder<ChatCustomizerE
 
         element.customChatBackgroundColor = serialized.getValue("custom_chat_background_color");
         element.customInputBackgroundColor = serialized.getValue("custom_input_background_color");
-        element.customLineSpacing = serialized.getValue("custom_line_spacing");
 
         return element;
 
@@ -60,9 +61,6 @@ public class ChatCustomizerElementBuilder extends ElementBuilder<ChatCustomizerE
         if (element.customInputBackgroundColor != null) {
             serializeTo.putProperty("custom_input_background_color", element.customInputBackgroundColor);
         }
-        if (element.customLineSpacing != null) {
-            serializeTo.putProperty("custom_line_spacing", element.customLineSpacing);
-        }
 
         return serializeTo;
 
@@ -75,7 +73,7 @@ public class ChatCustomizerElementBuilder extends ElementBuilder<ChatCustomizerE
 
     @Override
     public @NotNull Component getDisplayName(@Nullable AbstractElement element) {
-        return Component.translatable("spiffyhud.elements.chat_customizer");
+        return Components.translatable("spiffyhud.elements.chat_customizer");
     }
 
     @Override

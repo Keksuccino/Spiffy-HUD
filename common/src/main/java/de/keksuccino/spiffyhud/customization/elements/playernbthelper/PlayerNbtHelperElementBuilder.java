@@ -7,12 +7,13 @@ import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.awt.*;
+import java.awt.Color;
 
 public class PlayerNbtHelperElementBuilder extends ElementBuilder<PlayerNbtHelperElement, PlayerNbtHelperEditorElement> {
 
@@ -54,7 +55,7 @@ public class PlayerNbtHelperElementBuilder extends ElementBuilder<PlayerNbtHelpe
 
     @Override
     public @NotNull Component getDisplayName(@Nullable AbstractElement element) {
-        return Component.translatable("spiffyhud.elements.player_nbt_helper");
+        return Components.translatable("spiffyhud.elements.player_nbt_helper");
     }
 
     @Override

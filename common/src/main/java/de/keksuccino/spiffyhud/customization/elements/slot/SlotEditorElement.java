@@ -4,7 +4,7 @@ import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.editor.AbstractEditorElement;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import org.jetbrains.annotations.NotNull;
 
 public class SlotEditorElement extends AbstractEditorElement {
@@ -26,7 +26,7 @@ public class SlotEditorElement extends AbstractEditorElement {
         this.addStringInputContextMenuEntryTo(this.rightClickMenu, "inventory_slot", SlotEditorElement.class,
                 slotEditorElement -> slotEditorElement.getElement().slot,
                 (slotEditorElement, s) -> slotEditorElement.getElement().slot = s,
-                null, false, true, Component.translatable("spiffyhud.elements.slot.slot"), true, "0", null, null)
+                null, false, true, Components.translatable("spiffyhud.elements.slot.slot"), true, "0", null, null)
                 .setStackable(false)
                 .addIsActiveSupplier((contextMenu, contextMenuEntry) -> !this.getElement().useSelectedSlot);
 
@@ -42,7 +42,7 @@ public class SlotEditorElement extends AbstractEditorElement {
 
         this.rightClickMenu.addSeparatorEntry("separator_before_slot_id_help");
 
-        this.rightClickMenu.addClickableEntry("slot_id_help", Component.translatable("spiffyhud.elements.slot.slot_id_help"), (menu, entry) -> {
+        this.rightClickMenu.addClickableEntry("slot_id_help", Components.translatable("spiffyhud.elements.slot.slot_id_help"), (menu, entry) -> {
             this.rightClickMenu.closeMenu();
             Minecraft.getInstance().setScreen(new SlotIdHelpScreen(this.editor));
         });

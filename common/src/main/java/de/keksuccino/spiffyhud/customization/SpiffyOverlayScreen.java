@@ -27,6 +27,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Widget;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -59,7 +60,7 @@ public class SpiffyOverlayScreen extends ModernScreen {
     protected final Minecraft minecraft = Minecraft.getInstance();
 
     public SpiffyOverlayScreen(boolean showFancyMenuOverlay) {
-        super(Component.empty());
+        super(Components.empty());
         this.forceEnableCustomizations();
         this.showFancyMenuOverlay = showFancyMenuOverlay;
     }
@@ -74,39 +75,39 @@ public class SpiffyOverlayScreen extends ModernScreen {
     @Override
     protected void init() {
 
-        this.addRenderableWidget(this.buildHotbarWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.hotbar"));
+        this.addRenderableWidget(this.buildHotbarWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.hotbar"));
 
-        this.addRenderableWidget(this.buildJumpMeterWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.jump_meter"));
+        this.addRenderableWidget(this.buildJumpMeterWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.jump_meter"));
 
-        this.addRenderableWidget(this.buildExperienceBarWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.experience_bar"));
+        this.addRenderableWidget(this.buildExperienceBarWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.experience_bar"));
 
-        this.addRenderableWidget(this.buildSelectedItemNameWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.selected_item_name"));
+        this.addRenderableWidget(this.buildSelectedItemNameWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.selected_item_name"));
 
-        this.addRenderableWidget(this.buildScoreboardSidebarWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.scoreboard_sidebar"));
+        this.addRenderableWidget(this.buildScoreboardSidebarWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.scoreboard_sidebar"));
 
-        this.addRenderableWidget(this.buildFoodBarWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.food_bar"));
+        this.addRenderableWidget(this.buildFoodBarWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.food_bar"));
 
-        this.addRenderableWidget(this.buildArmorBarWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.armor_bar"));
+        this.addRenderableWidget(this.buildArmorBarWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.armor_bar"));
 
-        this.addRenderableWidget(this.buildAirBarWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.air_bar"));
+        this.addRenderableWidget(this.buildAirBarWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.air_bar"));
 
-        this.addRenderableWidget(this.buildHealthBarWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.health_bar"));
+        this.addRenderableWidget(this.buildHealthBarWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.health_bar"));
 
-        this.addRenderableWidget(this.buildMountHealthBarWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.mount_health_bar"));
+        this.addRenderableWidget(this.buildMountHealthBarWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.mount_health_bar"));
 
-        this.addRenderableWidget(this.buildOverlayMessageWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.overlay_message"));
+        this.addRenderableWidget(this.buildOverlayMessageWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.overlay_message"));
 
-        this.addRenderableWidget(this.buildCrosshairWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.crosshair"));
+        this.addRenderableWidget(this.buildCrosshairWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.crosshair"));
 
-        this.addRenderableWidget(this.buildAttackIndicatorWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.attack_indicator"));
+        this.addRenderableWidget(this.buildAttackIndicatorWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.attack_indicator"));
 
-        this.addRenderableWidget(this.buildTitleWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.title"));
+        this.addRenderableWidget(this.buildTitleWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.title"));
 
-        this.addRenderableWidget(this.buildSubtitleWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.subtitle"));
+        this.addRenderableWidget(this.buildSubtitleWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.subtitle"));
 
-        this.addRenderableWidget(this.buildBossBarWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.boss_bars"));
+        this.addRenderableWidget(this.buildBossBarWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.boss_bars"));
 
-        this.addRenderableWidget(this.buildEffectsWidget()).setMessage(Component.translatable("spiffyhud.elements.dummy.effects"));
+        this.addRenderableWidget(this.buildEffectsWidget()).setMessage(Components.translatable("spiffyhud.elements.dummy.effects"));
 
     }
 
@@ -174,7 +175,7 @@ public class SpiffyOverlayScreen extends ModernScreen {
 
     protected RendererWidget buildSelectedItemNameWidget() {
 
-        MutableComponent mutableComponent = Component.empty().append(Component.translatable("spiffyhud.elements.dummy.selected_item_name")).withStyle(ChatFormatting.LIGHT_PURPLE);
+        MutableComponent mutableComponent = Components.empty().append(Components.translatable("spiffyhud.elements.dummy.selected_item_name")).withStyle(ChatFormatting.LIGHT_PURPLE);
         int textWidth = font.width(mutableComponent);
         int textX = (this.width - textWidth) / 2;
         int textY = (this.height - 59) - 18; // -18 is a custom offset to move the text above the bars that got moved up because of the Jump Meter
@@ -197,10 +198,10 @@ public class SpiffyOverlayScreen extends ModernScreen {
         //Build line entries
         record DisplayEntry(Component name, Component score, int scoreWidth) {}
         List<DisplayEntry> entryList = new ArrayList<>();
-        Component name = Component.translatable("spiffyhud.elements.dummy.scoreboard_sidebar.line");
-        Component score = Component.literal("0").withStyle(ChatFormatting.RED);
+        Component name = Components.translatable("spiffyhud.elements.dummy.scoreboard_sidebar.line");
+        Component score = Components.literal("0").withStyle(ChatFormatting.RED);
         int scoreWidth = font.width(score);
-        entryList.add(new DisplayEntry(Component.empty(), Component.empty(), scoreWidth));
+        entryList.add(new DisplayEntry(Components.empty(), Components.empty(), scoreWidth));
         entryList.add(new DisplayEntry(name, score, scoreWidth));
         entryList.add(new DisplayEntry(name, score, scoreWidth));
         entryList.add(new DisplayEntry(name, score, scoreWidth));
@@ -209,7 +210,7 @@ public class SpiffyOverlayScreen extends ModernScreen {
         entryList.add(new DisplayEntry(name, score, scoreWidth));
         DisplayEntry[] entries = entryList.toArray(new DisplayEntry[0]);
 
-        Component title = Component.translatable("spiffyhud.elements.dummy.scoreboard_sidebar.title").withStyle(ChatFormatting.BOLD);
+        Component title = Components.translatable("spiffyhud.elements.dummy.scoreboard_sidebar.title").withStyle(ChatFormatting.BOLD);
         int titleWidth = font.width(title);
         int totalSidebarWidth = titleWidth;
         int spacerWidth = font.width(spacer);
@@ -313,7 +314,7 @@ public class SpiffyOverlayScreen extends ModernScreen {
     }
 
     protected RendererWidget buildOverlayMessageWidget() {
-        Component message = Component.literal("Overlay Message");
+        Component message = Components.literal("Overlay Message");
         int messageWidth = font.width(message);
         int textX = (this.width / 2) - (messageWidth / 2);
         int textY = ((this.height - 68) - 4) - 18;
@@ -377,7 +378,7 @@ public class SpiffyOverlayScreen extends ModernScreen {
 
     protected RendererWidget buildTitleWidget() {
 
-        Component title = Component.translatable("spiffyhud.elements.dummy.title");
+        Component title = Components.translatable("spiffyhud.elements.dummy.title");
         int titleWidth = font.width(title);
         int totalWidth = titleWidth * 4;
         int totalHeight = font.lineHeight * 4;
@@ -403,7 +404,7 @@ public class SpiffyOverlayScreen extends ModernScreen {
     }
 
     protected RendererWidget buildSubtitleWidget() {
-        Component subtitle = Component.literal("Subtitle");
+        Component subtitle = Components.literal("Subtitle");
         int subtitleWidth = font.width(subtitle);
         int totalWidth = subtitleWidth * 2;
         int totalHeight = font.lineHeight * 2;

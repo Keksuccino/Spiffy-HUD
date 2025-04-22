@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
-import net.minecraft.client.OptionInstance;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 @Mixin(ChatComponent.class)
@@ -50,28 +49,6 @@ public abstract class MixinChatComponent {
             // Default position
             original.call(poseStack, x, y, z);
         }
-    }
-
-    /**
-     * Wrap line spacing option value when accessed in render method
-     */
-    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;"))
-    private Object wrap_OptionGet_Spiffy(OptionInstance<?> instance, Operation<Object> original) {
-        if (instance == minecraft.options.chatLineSpacing() && ChatCustomizerHandler.lineSpacing != null) {
-            return ChatCustomizerHandler.lineSpacing;
-        }
-        return original.call(instance);
-    }
-
-    /**
-     * Wrap line spacing in getLineHeight method
-     */
-    @WrapOperation(method = "getLineHeight", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;"))
-    private Object wrap_LineSpacingGet_Spiffy(OptionInstance<?> instance, Operation<Object> original) {
-        if (instance == minecraft.options.chatLineSpacing() && ChatCustomizerHandler.lineSpacing != null) {
-            return ChatCustomizerHandler.lineSpacing;
-        }
-        return original.call(instance);
     }
 
     /**

@@ -10,6 +10,7 @@ import de.keksuccino.fancymenu.util.LocalizationUtils;
 import de.keksuccino.fancymenu.util.event.acara.EventListener;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import de.keksuccino.fancymenu.util.rendering.ui.UIBase;
 import de.keksuccino.fancymenu.util.rendering.ui.tooltip.Tooltip;
 import de.keksuccino.fancymenu.util.rendering.ui.tooltip.TooltipHandler;
@@ -18,7 +19,7 @@ import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
 import de.keksuccino.spiffyhud.networking.packets.structure.structures.StructuresPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
-import net.minecraft.network.chat.Component;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +34,7 @@ public class SpiffyEvents {
 
         if ((e.getScreen() instanceof PauseScreen p) && p.isPauseScreen() && CustomizationOverlay.isOverlayVisible(e.getScreen())) {
 
-            this.spiffyButton = new ExtendedButton(-30, 40, 80, 40, Component.empty(), (button) -> {
+            this.spiffyButton = new ExtendedButton(-30, 40, 80, 40, Components.empty(), (button) -> {
 
                 Minecraft.getInstance().setScreen(new SpiffyOverlayScreen(true));
 

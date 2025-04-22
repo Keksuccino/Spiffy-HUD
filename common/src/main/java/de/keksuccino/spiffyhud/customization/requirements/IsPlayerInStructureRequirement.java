@@ -4,6 +4,7 @@ import de.keksuccino.fancymenu.customization.loadingrequirement.LoadingRequireme
 import de.keksuccino.fancymenu.customization.loadingrequirement.internal.LoadingRequirementInstance;
 import de.keksuccino.fancymenu.networking.PacketHandler;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import de.keksuccino.fancymenu.util.rendering.ui.UIBase;
 import de.keksuccino.fancymenu.util.rendering.ui.screen.StringBuilderScreen;
 import de.keksuccino.fancymenu.util.rendering.ui.screen.texteditor.TextEditorFormattingRule;
@@ -14,7 +15,7 @@ import net.minecraft.client.Minecraft;
 import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.Component;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -115,7 +116,7 @@ public class IsPlayerInStructureRequirement extends LoadingRequirement {
         protected EditBoxSuggestions structureKeySuggestions;
 
         protected IsPlayerInStructureValueConfigScreen(@NotNull String value, @NotNull Consumer<String> callback) {
-            super(Component.translatable("fancymenu.editor.elements.visibilityrequirements.edit_value"), callback);
+            super(Components.translatable("fancymenu.editor.elements.visibilityrequirements.edit_value"), callback);
             this.oldStructureKey = value;
         }
 
@@ -125,7 +126,7 @@ public class IsPlayerInStructureRequirement extends LoadingRequirement {
             this.addSpacerCell(20);
 
             String id = this.getStructureKeyString();
-            this.addLabelCell(Component.translatable("spiffyhud.requirements.is_player_in_structure.key"));
+            this.addLabelCell(Components.translatable("spiffyhud.requirements.is_player_in_structure.key"));
             this.structureKeyCell = this.addTextInputCell(null, true, true).setText(id);
 
             this.addCellGroupEndSpacerCell();

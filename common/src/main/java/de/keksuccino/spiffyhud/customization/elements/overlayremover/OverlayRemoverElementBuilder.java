@@ -6,13 +6,14 @@ import de.keksuccino.fancymenu.customization.element.SerializedElement;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
 import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.awt.*;
+import java.awt.Color;
 import java.util.Objects;
 
 public class OverlayRemoverElementBuilder extends ElementBuilder<OverlayRemoverElement, OverlayRemoverEditorElement> {
@@ -61,7 +62,7 @@ public class OverlayRemoverElementBuilder extends ElementBuilder<OverlayRemoverE
 
     @Override
     public @NotNull Component getDisplayName(@Nullable AbstractElement element) {
-        return Component.translatable("spiffyhud.elements.overlay_remover");
+        return Components.translatable("spiffyhud.elements.overlay_remover");
     }
 
     @Override

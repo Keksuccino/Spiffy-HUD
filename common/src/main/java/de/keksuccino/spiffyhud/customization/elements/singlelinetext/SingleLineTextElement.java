@@ -6,6 +6,7 @@ import de.keksuccino.fancymenu.util.rendering.DrawableColor;
 import de.keksuccino.spiffyhud.util.ComponentUtils;
 import net.minecraft.client.Minecraft;
 import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,9 +29,9 @@ public class SingleLineTextElement extends AbstractElement {
 
         if (this.shouldRender()) {
 
-            Component c = (this.text != null) ? ComponentUtils.fromJsonOrPlainText(this.text) : Component.literal("--------------------");
+            Component c = (this.text != null) ? ComponentUtils.fromJsonOrPlainText(this.text) : Components.literal("--------------------");
             if (c.getString().isBlank() && isEditor()) {
-                c = Component.literal("--------------------");
+                c = Components.literal("--------------------");
             }
             this.baseWidth = Minecraft.getInstance().font.width(c);
             if ((this.baseWidth < 10) && isEditor()) {

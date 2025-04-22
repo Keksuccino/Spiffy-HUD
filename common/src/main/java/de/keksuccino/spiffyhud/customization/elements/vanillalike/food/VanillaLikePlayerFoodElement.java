@@ -10,7 +10,6 @@ import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.client.Minecraft;
 import de.keksuccino.fancymenu.util.rendering.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -18,6 +17,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Random;
 
 public class VanillaLikePlayerFoodElement extends AbstractElement {
 
@@ -28,7 +29,7 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
     private static final int BAR_HEIGHT = 9;
 
     private final Minecraft minecraft = Minecraft.getInstance();
-    protected final RandomSource random = RandomSource.create();
+    protected final Random random = new Random();
     protected int tickCount;
 
     @NotNull

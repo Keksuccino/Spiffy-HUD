@@ -6,7 +6,7 @@ import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.util.input.TextValidators;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
-import net.minecraft.network.chat.Component;
+import de.keksuccino.fancymenu.util.rendering.text.Components;
 import org.jetbrains.annotations.NotNull;
 
 public class VanillaLikeScoreboardEditorElement extends AbstractEditorElement {
@@ -43,7 +43,7 @@ public class VanillaLikeScoreboardEditorElement extends AbstractEditorElement {
                         element.getElement().customTitleBackgroundColor = null;
                     }
                 },
-                null, false, false, Component.translatable("spiffyhud.elements.vanillalike.scoreboard.title_background_color"),
+                null, false, false, Components.translatable("spiffyhud.elements.vanillalike.scoreboard.title_background_color"),
                 true, null, TextValidators.HEX_COLOR_TEXT_VALIDATOR, null);
 
         this.addStringInputContextMenuEntryTo(this.rightClickMenu, "lines_background_color", VanillaLikeScoreboardEditorElement.class,
@@ -56,7 +56,7 @@ public class VanillaLikeScoreboardEditorElement extends AbstractEditorElement {
                         element.getElement().customLineBackgroundColor = null;
                     }
                 },
-                null, false, false, Component.translatable("spiffyhud.elements.vanillalike.scoreboard.lines_background_color"),
+                null, false, false, Components.translatable("spiffyhud.elements.vanillalike.scoreboard.lines_background_color"),
                 true, null, TextValidators.HEX_COLOR_TEXT_VALIDATOR, null);
 
     }
