@@ -1,4 +1,4 @@
-package de.keksuccino.spiffyhud.mixin.mixins.common.client;
+package de.keksuccino.spiffyhud.mixin.mixins.neoforge.client;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -47,8 +47,8 @@ public class MixinGui {
     /**
      * @reason Hide the hotbar when hidden by Spiffy HUD and renders Spiffy's overlay.
      */
-    @Inject(method = "renderHotbarAndDecorations", at = @At(value = "HEAD"), cancellable = true)
-    private void before_renderHotbarAndDecorations_Spiffy(GuiGraphics graphics, DeltaTracker deltaTracker, CallbackInfo info) {
+    @Inject(method = "renderHotbar", at = @At(value = "HEAD"), cancellable = true)
+    private void before_renderHotbar_Spiffy(GuiGraphics graphics, DeltaTracker deltaTracker, CallbackInfo info) {
 
         if (this.spiffyGui == null) this.spiffyGui = SpiffyGui.INSTANCE;
 
@@ -89,8 +89,8 @@ public class MixinGui {
     /**
      * @reason Hide the selected item name when hidden by Spiffy HUD.
      */
-    @Inject(method = "renderSelectedItemName", at = @At(value = "HEAD"), cancellable = true)
-    private void before_renderSelectedItemName_Spiffy(GuiGraphics guiGraphics, CallbackInfo info) {
+    @Inject(method = "renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;I)V", at = @At(value = "HEAD"), cancellable = true)
+    private void before_renderSelectedItemName_Spiffy(GuiGraphics graphics, int yShift, CallbackInfo info) {
         if (VanillaHudElements.isHidden(VanillaHudElements.SELECTED_ITEM_NAME_IDENTIFIER)) info.cancel();
     }
 
@@ -141,43 +141,33 @@ public class MixinGui {
     /**
      * @reason Hide the player armor bar when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderArmor(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/entity/player/Player;IIII)V"))
-    private boolean wrap_renderArmor_in_renderPlayerHealth_Spiffy(GuiGraphics l, Player k, int j, int p_332897_, int p_332999_, int p_330861_) {
-        return !VanillaHudElements.isHidden(VanillaHudElements.ARMOR_BAR_IDENTIFIER);
-    }
-
-    /**
-     * @reason Hide the player food bar when hidden by Spiffy HUD.
-     */
-    @WrapWithCondition(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderFood(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/entity/player/Player;II)V"))
-    private boolean wrap_renderFood_in_renderPlayerHealth_Spiffy(Gui instance, GuiGraphics resourcelocation1, Player resourcelocation2, int k, int resourcelocation) {
-        return !VanillaHudElements.isHidden(VanillaHudElements.FOOD_BAR_IDENTIFIER);
+    @Inject(method = "renderArmorLevel", at = @At(value = "HEAD"), cancellable = true)
+    private void before_renderArmorLevel_Spiffy(GuiGraphics p_283143_, CallbackInfo info) {
+        if (VanillaHudElements.isHidden(VanillaHudElements.ARMOR_BAR_IDENTIFIER)) info.cancel();
     }
 
     /**
      * @reason Hide the player health bar when hidden by Spiffy HUD.
      */
-    @WrapWithCondition(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHearts(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V"))
-    private boolean wrap_renderHearts_in_renderPlayerHealth_Spiffy(Gui instance, GuiGraphics j2, Player flag3, int flag4, int i1, int j1, int k1, float l1, int i2, int flag1, int l, boolean b) {
-        return !VanillaHudElements.isHidden(VanillaHudElements.PLAYER_HEALTH_BAR_IDENTIFIER);
+    @Inject(method = "renderHealthLevel", at = @At(value = "HEAD"), cancellable = true)
+    private void before_renderHealthLevel_Spiffy(GuiGraphics p_283143_, CallbackInfo info) {
+        if (VanillaHudElements.isHidden(VanillaHudElements.PLAYER_HEALTH_BAR_IDENTIFIER)) info.cancel();
+    }
+
+    /**
+     * @reason Hide the player food bar when hidden by Spiffy HUD.
+     */
+    @Inject(method = "renderFoodLevel", at = @At(value = "HEAD"), cancellable = true)
+    private void before_renderFoodLevel_Spiffy(GuiGraphics p_283143_, CallbackInfo info) {
+        if (VanillaHudElements.isHidden(VanillaHudElements.FOOD_BAR_IDENTIFIER)) info.cancel();
     }
 
     /**
      * @reason Hide the player air bar when hidden by Spiffy HUD.
      */
-    @WrapOperation(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getAirSupply()I"))
-    private int wrap_getAirSupply_in_renderPlayerHealth_Spiffy(Player instance, Operation<Integer> original) {
-        if (VanillaHudElements.isHidden(VanillaHudElements.AIR_BAR_IDENTIFIER)) return 1000000000; //air bar is invisible when air is >= max air, so just set a very high air here to hide the bar
-        return original.call(instance);
-    }
-
-    /**
-     * @reason Hide the player air bar when hidden by Spiffy HUD.
-     */
-    @WrapOperation(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
-    private boolean wrap_isEyeInFluid_in_renderPlayerHealth_Spiffy(Player instance, TagKey<?> tagKey, Operation<Boolean> original) {
-        if (VanillaHudElements.isHidden(VanillaHudElements.AIR_BAR_IDENTIFIER)) return false;
-        return original.call(instance, tagKey);
+    @Inject(method = "renderAirLevel", at = @At(value = "HEAD"), cancellable = true)
+    private void before_renderAirLevel_Spiffy(GuiGraphics p_283143_, CallbackInfo info) {
+        if (VanillaHudElements.isHidden(VanillaHudElements.AIR_BAR_IDENTIFIER)) info.cancel();
     }
 
     /**

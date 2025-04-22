@@ -20,9 +20,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 public class SpiffyEvents {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private static final ResourceLocation EDIT_BUTTON_TEXTURE = ResourceLocation.fromNamespaceAndPath("spiffyhud", "textures/edit_button.png");
 
@@ -31,7 +35,7 @@ public class SpiffyEvents {
     @EventListener
     public void onInitOrResizeScreenCompleted(InitOrResizeScreenCompletedEvent e) {
 
-        if ((e.getScreen() instanceof PauseScreen p) && p.isPauseScreen() && CustomizationOverlay.isOverlayVisible(e.getScreen())) {
+        if ((e.getScreen() instanceof PauseScreen p) && p.showsPauseMenu() && CustomizationOverlay.isOverlayVisible(p)) {
 
             this.spiffyButton = new ExtendedButton(-30, 40, 80, 40, Component.empty(), (button) -> {
 
@@ -80,7 +84,7 @@ public class SpiffyEvents {
     @EventListener(priority = 0) //FM is -1
     public void onScreenRenderPost(RenderScreenEvent.Post e) {
 
-        if ((e.getScreen() instanceof PauseScreen p) && p.isPauseScreen() && CustomizationOverlay.isOverlayVisible(e.getScreen())) {
+        if ((e.getScreen() instanceof PauseScreen p) && p.showsPauseMenu() && CustomizationOverlay.isOverlayVisible(p)) {
             if (this.spiffyButton != null) {
                 this.spiffyButton.render(e.getGraphics(), e.getMouseX(), e.getMouseY(), e.getPartial());
             }
