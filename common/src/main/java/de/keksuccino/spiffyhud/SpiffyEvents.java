@@ -14,6 +14,7 @@ import de.keksuccino.fancymenu.util.rendering.ui.tooltip.Tooltip;
 import de.keksuccino.fancymenu.util.rendering.ui.tooltip.TooltipHandler;
 import de.keksuccino.fancymenu.util.rendering.ui.widget.button.ExtendedButton;
 import de.keksuccino.spiffyhud.customization.SpiffyOverlayScreen;
+import de.keksuccino.spiffyhud.mixin.mixins.common.client.IMixinPauseScreen;
 import de.keksuccino.spiffyhud.networking.packets.structure.structures.StructuresPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -31,7 +32,7 @@ public class SpiffyEvents {
     @EventListener
     public void onInitOrResizeScreenCompleted(InitOrResizeScreenCompletedEvent e) {
 
-        if ((e.getScreen() instanceof PauseScreen p) && p.isPauseScreen() && CustomizationOverlay.isOverlayVisible(e.getScreen())) {
+        if ((e.getScreen() instanceof PauseScreen p) && ((IMixinPauseScreen)p).get_showPauseMenu_Spiffy() && CustomizationOverlay.isOverlayVisible(e.getScreen())) {
 
             this.spiffyButton = new ExtendedButton(-30, 40, 80, 40, Component.empty(), (button) -> {
 
@@ -80,7 +81,7 @@ public class SpiffyEvents {
     @EventListener(priority = 0) //FM is -1
     public void onScreenRenderPost(RenderScreenEvent.Post e) {
 
-        if ((e.getScreen() instanceof PauseScreen p) && p.isPauseScreen() && CustomizationOverlay.isOverlayVisible(e.getScreen())) {
+        if ((e.getScreen() instanceof PauseScreen p) && ((IMixinPauseScreen)p).get_showPauseMenu_Spiffy() && CustomizationOverlay.isOverlayVisible(e.getScreen())) {
             if (this.spiffyButton != null) {
                 this.spiffyButton.render(e.getGraphics(), e.getMouseX(), e.getMouseY(), e.getPartial());
             }
