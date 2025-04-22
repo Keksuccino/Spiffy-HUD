@@ -31,22 +31,14 @@ public class MixinForgeGui extends Gui {
         super(null, null);
     }
 
-    @Unique
-    private SpiffyGui spiffyGui = null;
+    @Unique private SpiffyGui spiffyGui = null;
+    @Unique private float cachedPartial_Spiffy = 0;
 
-    /**
-     * @reason Renders Spiffy's overlay to the HUD.
-     */
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;setSeed(J)V"))
     private void before_setSeed_in_render_Spiffy(PoseStack poseStack, float partial, CallbackInfo ci) {
 
         if (this.spiffyGui == null) this.spiffyGui = SpiffyGui.INSTANCE;
-
-        if (!Minecraft.getInstance().options.hideGui) {
-            spiffyGui.render(GuiGraphics.currentGraphics(), -10000000, -10000000, partial);
-            RenderSystem.enableBlend();
-            RenderSystem.enableDepthTest();
-        }
+        this.cachedPartial_Spiffy = partial;
 
     }
 
@@ -69,6 +61,17 @@ public class MixinForgeGui extends Gui {
      */
     @Inject(method = "pre", at = @At("HEAD"), cancellable = true, remap = false) //use HEAD to stop mods from rendering custom stuff to overlay elements if the element is hidden
     private void head_Pre_Spiffy(NamedGuiOverlay overlay, PoseStack poseStack, CallbackInfoReturnable<Boolean> info) {
+
+        // Renders Spiffy's overlay to the HUD
+        if (overlay == VanillaGuiOverlay.HOTBAR.type()) {
+
+            if (!Minecraft.getInstance().options.hideGui) {
+                spiffyGui.render(GuiGraphics.currentGraphics(), -10000000, -10000000, this.cachedPartial_Spiffy);
+                RenderSystem.enableBlend();
+                RenderSystem.enableDepthTest();
+            }
+
+        }
 
         if ((overlay == VanillaGuiOverlay.HOTBAR.type()) && VanillaHudElements.isHidden(VanillaHudElements.HOTBAR_IDENTIFIER)) {
             info.setReturnValue(true);
