@@ -1,6 +1,6 @@
 ---
 name: Mod Incompatibility
-about: Some mod is conflicting with FancyMenu? Tell me about it!
+about: Some mod is conflicting with SpiffyHUD? Tell me about it!
 title: ''
 labels: mod conflict
 assignees: ''
@@ -19,7 +19,8 @@ If screenshots would help to explain the issue, please include these.
 
 **Basic Informations (please complete the following information):**
  - OS: [e.g. Windows]
- - FancyMenu Version [e.g. 0.2]
- - Forge/Fabric Version [e.g. 31.2.24]
+ - Spiffy Version [e.g. 3.0.1]
+ - FancyMenu Version [e.g. 3.5.0]
+ - Fabric/Forge/NeoForge Version [e.g. 31.2.24]
  - Minecraft Version [e.g. 1.15.1]
  - Active Mods [e.g. Optifine, 5zig, TooManyItems]
