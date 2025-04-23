@@ -8,6 +8,6 @@ Check the branches to see the **source code** for all versions of FancyMenu.
 
 ## Copyright
 
-Spiffy HUD © Copyright 2021-2025 Keksuccino.<br>
-Spiffy HUD is licensed under DSMSLv3 (DON'T SNATCH MA STUFF LICENSE V3).<br>
+SpiffyHUD © Copyright 2021-2025 Keksuccino.<br>
+SpiffyHUD is licensed under DSMSLv3 (DON'T SNATCH MA STUFF LICENSE V3).<br>
 See `LICENSE.md` for more information.
