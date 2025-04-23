@@ -1,6 +1,10 @@
 ## About
 
-This is the repository for Spiffy HUD, a mod for Minecraft to customize the in-game HUD.
+This is the repository for SpiffyHUD, an addon for [FancyMenu](https://github.com/Keksuccino/FancyMenu), to customize Minecraft's HUD.
+
+## Branches | Source Code
+
+Check the branches to see the **source code** for all versions of FancyMenu.
 
 ## Copyright
 
