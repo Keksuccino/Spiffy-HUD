@@ -28,7 +28,7 @@ DON'T SEND LOG SNIPPETS OR CRASH LOGS, PLEASE SEND THE WHOLE LATEST.LOG FILE!
 **Screenshots**
 If screenshots would help to explain the issue, please include these.
 
-**Basic Informations (please complete the following information):**
+**Basic Information (please complete the following information):**
  - OS: [e.g. Windows]
  - Spiffy Version [e.g. 3.0.1]
  - FancyMenu Version [e.g. 3.5.0]
