@@ -4,7 +4,7 @@ This is the repository for SpiffyHUD, an addon for [FancyMenu](https://github.co
 
 ## Branches | Source Code
 
-Check the branches to see the **source code** for all versions of FancyMenu.
+Check the branches to see the **source code** for all versions of SpiffyHUD.
 
 ## Copyright
 
