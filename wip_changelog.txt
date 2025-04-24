@@ -1,3 +1,5 @@
-CHANGELOG | SPIFFYHUD v3.X.X
+CHANGELOG | SPIFFYHUD v3.1.0
 
-- 
+- The "Player NBT Data" placeholder now has a refresh cooldown value to control how often the placeholder should update the NBT data
+  - Setting higher cooldowns means better performance, but the returned NBT data is not as "realtime" as with lower cooldowns (cooldown of 100ms normally is best for most NBT data)
+  - You need to add a new placeholder of that type to see the new cooldown value (existing placeholders still work, but have a cooldown of 0ms by default)
