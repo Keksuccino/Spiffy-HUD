@@ -40,6 +40,8 @@ public class SpiffyOverlayScreen extends Screen {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    public static final SpiffyOverlayScreen DUMMY_INSTANCE = new SpiffyOverlayScreen(true);
+
     private static final ResourceLocation CROSSHAIR_SPRITE = ResourceLocation.withDefaultNamespace("hud/crosshair");
     private static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/crosshair_attack_indicator_background");
     private static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/crosshair_attack_indicator_progress");
