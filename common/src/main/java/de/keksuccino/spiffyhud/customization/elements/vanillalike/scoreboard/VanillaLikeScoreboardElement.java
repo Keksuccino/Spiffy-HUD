@@ -225,11 +225,11 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
 
         // If we are in rendering mode, draw each score line and then the title background.
         if (this.renderSidebar) {
-            // Get the opacity as a color component (0-255)
-            int alpha = Math.round(this.opacity * 255);
-            int opacityAdjustedLineBackground = SpiffyRenderUtils.colorWithAlpha(lineBackgroundColor, alpha);
-            int opacityAdjustedTitleBackground = SpiffyRenderUtils.colorWithAlpha(titleBackgroundColor, alpha);
-            int opacityAdjustedTextColor = ARGB.color(alpha, 255, 255, 255); // White text with custom alpha
+            float lineAlpha = ARGB.alpha(lineBackgroundColor);
+            float titleAlpha = ARGB.alpha(titleBackgroundColor);
+            int opacityAdjustedLineBackground = SpiffyRenderUtils.colorWithAlpha(lineBackgroundColor, lineAlpha * this.opacity);
+            int opacityAdjustedTitleBackground = SpiffyRenderUtils.colorWithAlpha(titleBackgroundColor, titleAlpha * this.opacity);
+            int opacityAdjustedTextColor = ARGB.white(this.opacity); // White text with custom alpha
             
             for (int i = 0; i < displayEntries.length; i++) {
                 DisplayEntry entry = displayEntries[i];
