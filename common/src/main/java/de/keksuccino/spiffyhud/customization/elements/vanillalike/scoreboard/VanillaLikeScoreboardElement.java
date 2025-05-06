@@ -23,6 +23,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 import java.util.*;
 import java.util.Comparator;
 
@@ -225,31 +227,34 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
 
         // If we are in rendering mode, draw each score line and then the title background.
         if (this.renderSidebar) {
-            float lineAlpha = ARGB.alpha(lineBackgroundColor);
-            float titleAlpha = ARGB.alpha(titleBackgroundColor);
+            float lineAlpha = (float)ARGB.alpha(lineBackgroundColor) / 255.0f;
+            float titleAlpha = (float)ARGB.alpha(titleBackgroundColor) / 255.0f;
             int opacityAdjustedLineBackground = SpiffyRenderUtils.colorWithAlpha(lineBackgroundColor, lineAlpha * this.opacity);
             int opacityAdjustedTitleBackground = SpiffyRenderUtils.colorWithAlpha(titleBackgroundColor, titleAlpha * this.opacity);
             int opacityAdjustedTextColor = ARGB.white(this.opacity); // White text with custom alpha
             
+            // Calculate positions for backgrounds (vanilla-style)
+            int titleTop = effectiveBaseY - numberOfLines * lineHeight - lineHeight - 1;
+            int contentTop = titleTop + lineHeight;
+            
+            // Draw backgrounds in two calls (like vanilla)
+            // First: Title background
+            guiGraphics.fill(RenderType.gui(), effectiveBaseX - 2, titleTop, rightX, contentTop, opacityAdjustedTitleBackground);
+            // Second: Content background 
+            guiGraphics.fill(RenderType.gui(), effectiveBaseX - 2, contentTop, rightX, effectiveBaseY, opacityAdjustedLineBackground);
+            
+            // Draw title centered
+            Font font = this.getFont();
+            int titleX = effectiveBaseX + maxEntryWidth / 2 - titleWidth / 2;
+            guiGraphics.drawString(font, title, titleX, titleTop + 1, opacityAdjustedTextColor, false);
+            
+            // Draw each score line
             for (int i = 0; i < displayEntries.length; i++) {
                 DisplayEntry entry = displayEntries[i];
-                int lineY = effectiveBaseY - (i + 1) * lineHeight;
-                
-                // Draw background for this score line
-                guiGraphics.fill(RenderType.gui(), effectiveBaseX - 2, lineY, rightX, lineY + lineHeight, opacityAdjustedLineBackground);
-                
+                int lineY = effectiveBaseY - (numberOfLines - i) * lineHeight;
                 // Draw the player's name and score
                 guiGraphics.drawString(this.getFont(), entry.name, effectiveBaseX, lineY, opacityAdjustedTextColor, false);
                 guiGraphics.drawString(this.getFont(), entry.score, rightX - entry.scoreWidth, lineY, opacityAdjustedTextColor, false);
-                
-                // On the last line, also draw the title background and title text
-                if (i == displayEntries.length - 1) {
-                    guiGraphics.fill(RenderType.gui(), effectiveBaseX - 2, lineY - lineHeight - 1, rightX, lineY - 1, opacityAdjustedTitleBackground);
-                    guiGraphics.fill(RenderType.gui(), effectiveBaseX - 2, lineY - 1, rightX, lineY, opacityAdjustedLineBackground);
-                    Font font = this.getFont();
-                    int titleX = effectiveBaseX + maxEntryWidth / 2 - titleWidth / 2;
-                    guiGraphics.drawString(font, title, titleX, lineY - lineHeight, opacityAdjustedTextColor, false);
-                }
             }
         }
     }

@@ -208,6 +208,8 @@ public class SpiffyRenderUtils {
      */
     public static int colorWithAlpha(int color, float alpha) {
         int alphaComponent = Math.round(alpha * 255.0f);
+        if (alphaComponent > 255) alphaComponent = 255;
+        if (alphaComponent < 0) alphaComponent = 0;
         // Extract color components
         int red = ARGB.red(color);
         int green = ARGB.green(color);
