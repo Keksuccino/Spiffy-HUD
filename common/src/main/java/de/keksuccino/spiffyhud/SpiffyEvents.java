@@ -1,6 +1,5 @@
 package de.keksuccino.spiffyhud;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.overlay.CustomizationOverlay;
 import de.keksuccino.fancymenu.events.screen.InitOrResizeScreenCompletedEvent;
 import de.keksuccino.fancymenu.events.screen.OpenScreenEvent;
@@ -8,7 +7,6 @@ import de.keksuccino.fancymenu.events.screen.RenderScreenEvent;
 import de.keksuccino.fancymenu.networking.PacketHandler;
 import de.keksuccino.fancymenu.util.LocalizationUtils;
 import de.keksuccino.fancymenu.util.event.acara.EventListener;
-import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.fancymenu.util.rendering.ui.UIBase;
 import de.keksuccino.fancymenu.util.rendering.ui.tooltip.Tooltip;
 import de.keksuccino.fancymenu.util.rendering.ui.tooltip.TooltipHandler;
@@ -18,6 +16,7 @@ import de.keksuccino.spiffyhud.networking.packets.structure.structures.Structure
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 public class SpiffyEvents {
 
     private static final Logger LOGGER = LogManager.getLogger();
-
     private static final ResourceLocation EDIT_BUTTON_TEXTURE = ResourceLocation.fromNamespaceAndPath("spiffyhud", "textures/edit_button.png");
 
     private ExtendedButton spiffyButton;
@@ -59,10 +57,7 @@ public class SpiffyEvents {
 
                     super.render(graphics, mouseX, mouseY, partial);
 
-                    RenderSystem.enableBlend();
-                    RenderingUtils.resetShaderColor(graphics);
-                    graphics.blit(EDIT_BUTTON_TEXTURE, this.getX(), this.getY(), 0.0f, 0.0f, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight());
-                    RenderingUtils.resetShaderColor(graphics);
+                    graphics.blit(RenderType::guiTextured, EDIT_BUTTON_TEXTURE, this.getX(), this.getY(), 0.0f, 0.0f, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight());
 
                 }
 

@@ -2,21 +2,21 @@ package de.keksuccino.spiffyhud.customization.elements.vanillalike.effects;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
-import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.spiffyhud.SpiffyUtils;
 import de.keksuccino.spiffyhud.util.SizeAndPositionRecorder;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +27,7 @@ import java.util.Objects;
 
 public class VanillaLikeEffectsElement extends AbstractElement {
 
-    // Sprite resources for effect backgrounds in 1.21.1
+    // Sprite resources for effect backgrounds in 1.21.5
     private static final ResourceLocation EFFECT_BACKGROUND_AMBIENT_SPRITE = ResourceLocation.withDefaultNamespace("hud/effect_background_ambient");
     private static final ResourceLocation EFFECT_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/effect_background");
 
@@ -51,7 +51,7 @@ public class VanillaLikeEffectsElement extends AbstractElement {
 
     /**
      * Renders the element.
-     *
+     * <p>
      * This method first calls renderEffects(...) with a dummy offset to update the bar dimensions.
      * Then it calculates the base (top-left) coordinates using the element's absolute position.
      * Vertical alignment is corrected based on the element's height versus the bar's height.
@@ -90,15 +90,9 @@ public class VanillaLikeEffectsElement extends AbstractElement {
         // For horizontal base, we simply use the element's absolute X.
         int baseX = elementAbsX;
 
-        RenderSystem.enableBlend();
-        RenderingUtils.resetShaderColor(graphics);
-
         // Render effects directly at (baseX, baseY).
         this.shouldRenderBar = true;
         this.renderEffects(graphics, baseX, baseY);
-
-        RenderingUtils.resetShaderColor(graphics);
-
     }
 
     /**
@@ -127,19 +121,10 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             );
         }
 
-        // Do not render if there are no effects or if the current screen is already showing them.
-        Screen currentScreen;
-        if (activeEffects.isEmpty() ||
-                (currentScreen = this.minecraft.screen) instanceof EffectRenderingInventoryScreen &&
-                        ((EffectRenderingInventoryScreen<?>) currentScreen).canSeeEffects()) {
+        // Do not render if there are no effects
+        if (activeEffects.isEmpty()) {
             return;
         }
-
-        RenderSystem.enableBlend();
-
-        // Enable blending and set the shader color with the desired opacity.
-        RenderSystem.enableBlend();
-        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
 
         // Separate effects into beneficial and harmful lists (sorted in reverse order).
         List<MobEffectInstance> beneficialEffects = new ArrayList<>();
@@ -213,12 +198,13 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             int relativeX = beneficialStartX + 25 * i;
             int finalIconX = baseX + relativeX;
             float iconAlpha = 1.0f;
+            
             if (this.shouldRenderBar) {
                 // Render background for the effect icon.
                 if (effectInstance.isAmbient()) {
-                    graphics.blitSprite(EFFECT_BACKGROUND_AMBIENT_SPRITE, finalIconX, beneficialRowY, 24, 24);
+                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_AMBIENT_SPRITE, finalIconX, beneficialRowY, 24, 24);
                 } else {
-                    graphics.blitSprite(EFFECT_BACKGROUND_SPRITE, finalIconX, beneficialRowY, 24, 24);
+                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_SPRITE, finalIconX, beneficialRowY, 24, 24);
                     if (effectInstance.endsWithin(200)) {
                         int duration = effectInstance.getDuration();
                         int fadeFactor = 10 - duration / 20;
@@ -228,17 +214,34 @@ public class VanillaLikeEffectsElement extends AbstractElement {
                     }
                 }
             }
-            TextureAtlasSprite effectSprite = effectTextureManager.get(effectInstance.getEffect());
+            
+            Holder<MobEffect> effectHolder = effectInstance.getEffect();
+            TextureAtlasSprite effectSprite = effectTextureManager.get(effectHolder);
             recorder.updateX(finalIconX);
             recorder.updateY(beneficialRowY);
+            
             final int iconX = finalIconX;
             final int iconY = beneficialRowY;
-            final float iconTransparency = (iconAlpha > this.opacity) ? this.opacity : iconAlpha;
+            final float finalIconAlpha = iconAlpha;
+            
             if (this.shouldRenderBar) {
                 renderTasks.add(() -> {
-                    graphics.setColor(1.0f, 1.0f, 1.0f, iconTransparency);
-                    graphics.blit(iconX + 3, iconY + 3, 0, 18, 18, effectSprite);
-                    graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+                    // Calculate color with proper alpha
+                    int color = ARGB.color(
+                        Math.round(finalIconAlpha * this.opacity * 255f), 
+                        255, 255, 255
+                    );
+                    
+                    // Render the effect icon
+                    graphics.blitSprite(
+                        RenderType::guiTextured,
+                        effectSprite,
+                        iconX + 3,
+                        iconY + 3,
+                        18,
+                        18,
+                        color
+                    );
                 });
             }
         }
@@ -249,11 +252,12 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             int relativeX = harmfulStartX + 25 * i;
             int finalIconX = baseX + relativeX;
             float iconAlpha = 1.0f;
+            
             if (this.shouldRenderBar) {
                 if (effectInstance.isAmbient()) {
-                    graphics.blitSprite(EFFECT_BACKGROUND_AMBIENT_SPRITE, finalIconX, harmfulRowY, 24, 24);
+                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_AMBIENT_SPRITE, finalIconX, harmfulRowY, 24, 24);
                 } else {
-                    graphics.blitSprite(EFFECT_BACKGROUND_SPRITE, finalIconX, harmfulRowY, 24, 24);
+                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_SPRITE, finalIconX, harmfulRowY, 24, 24);
                     if (effectInstance.endsWithin(200)) {
                         int duration = effectInstance.getDuration();
                         int fadeFactor = 10 - duration / 20;
@@ -263,17 +267,34 @@ public class VanillaLikeEffectsElement extends AbstractElement {
                     }
                 }
             }
-            TextureAtlasSprite effectSprite = effectTextureManager.get(effectInstance.getEffect());
+            
+            Holder<MobEffect> effectHolder = effectInstance.getEffect();
+            TextureAtlasSprite effectSprite = effectTextureManager.get(effectHolder);
             recorder.updateX(finalIconX);
             recorder.updateY(harmfulRowY);
+            
             final int iconX = finalIconX;
             final int iconY = harmfulRowY;
-            final float iconTransparency = (iconAlpha > this.opacity) ? this.opacity : iconAlpha;
+            final float finalIconAlpha = iconAlpha;
+            
             if (this.shouldRenderBar) {
                 renderTasks.add(() -> {
-                    graphics.setColor(1.0f, 1.0f, 1.0f, iconTransparency);
-                    graphics.blit(iconX + 3, iconY + 3, 0, 18, 18, effectSprite);
-                    graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+                    // Calculate color with proper alpha
+                    int color = ARGB.color(
+                        Math.round(finalIconAlpha * this.opacity * 255f), 
+                        255, 255, 255
+                    );
+                    
+                    // Render the effect icon
+                    graphics.blitSprite(
+                        RenderType::guiTextured,
+                        effectSprite,
+                        iconX + 3,
+                        iconY + 3,
+                        18,
+                        18,
+                        color
+                    );
                 });
             }
         }
@@ -284,9 +305,6 @@ public class VanillaLikeEffectsElement extends AbstractElement {
 
         // Execute all rendering tasks.
         renderTasks.forEach(Runnable::run);
-
-        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-
     }
 
     @Override
@@ -298,5 +316,4 @@ public class VanillaLikeEffectsElement extends AbstractElement {
     public int getAbsoluteHeight() {
         return this.barHeight;
     }
-
 }

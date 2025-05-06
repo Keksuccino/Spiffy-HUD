@@ -1,14 +1,17 @@
 package de.keksuccino.spiffyhud.customization.elements.vanillalike.air;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.spiffyhud.SpiffyUtils;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
+import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
@@ -20,16 +23,22 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // In 1.21.1, dedicated sprite resources are used instead of texture coordinates
+    // Updated sprite resources for 1.21.5
     private static final ResourceLocation AIR_SPRITE = ResourceLocation.withDefaultNamespace("hud/air");
-    private static final ResourceLocation AIR_BURSTING_SPRITE = ResourceLocation.withDefaultNamespace("hud/air_bursting");
+    private static final ResourceLocation AIR_POPPING_SPRITE = ResourceLocation.withDefaultNamespace("hud/air_bursting");
+    private static final ResourceLocation AIR_EMPTY_SPRITE = ResourceLocation.withDefaultNamespace("hud/air_empty");
 
     // Define constants for bubble dimensions.
     private static final int BUBBLE_SIZE = 9;      // The width (and height) of a bubble in pixels.
     private static final int BUBBLE_SPACING = 8;   // The spacing offset between bubbles.
+    private static final int AIR_BUBBLE_TOTAL = 10; // Total number of air bubbles
 
     private static final int TOTAL_BAR_WIDTH = 81;
     private static final int TOTAL_BAR_HEIGHT = 9;
+    
+    // Constants from Minecraft's Gui class
+    private static final int AIR_BUBBLE_POPPING_DURATION = 2;
+    private static final int EMPTY_AIR_BUBBLE_DELAY_DURATION = 1;
 
     private final Minecraft minecraft = Minecraft.getInstance();
     protected int tickCount;
@@ -50,7 +59,6 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
-
         // Update the tick counter.
         this.tickCount = SpiffyUtils.getGuiAccessor().getTickCount_Spiffy();
 
@@ -69,7 +77,6 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
         int elementHeight = this.getAbsoluteHeight();
 
         // Calculate the aligned position for the air bar within this element.
-        // de.keksuccino.spiffyhud.util.Alignment.calculateElementBodyPosition() returns an array { alignedX, alignedY }.
         Integer[] alignedPosition = SpiffyAlignment.calculateElementBodyPosition(
                 this.spiffyAlignment,
                 elementAbsX,
@@ -82,14 +89,9 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
         int barAbsX = alignedPosition[0];
         int barAbsY = alignedPosition[1];
 
-        // Directly draw the air bar at the calculated absolute position.
-        RenderSystem.enableBlend();
-        RenderingUtils.resetShaderColor(graphics);
-
+        // Now render the air bar at the calculated position
         this.shouldRenderBar = true;
         this.renderPlayerAir(graphics, barAbsX, barAbsY);
-
-        RenderingUtils.resetShaderColor(graphics);
     }
 
     /**
@@ -98,84 +100,103 @@ public class VanillaLikePlayerAirElement extends AbstractElement {
      * @param graphics The graphics context.
      * @param offsetX  The absolute X coordinate where the air bar should start.
      * @param offsetY  The absolute Y coordinate where the air bar should start.
-     *
-     * This method calculates the number of full and empty bubbles based on the player's air supply.
-     * It then determines the drawing order (left-to-right for left-based alignment, right-to-left for right-based or centered)
-     * and draws each bubble at the appropriate absolute position.
-     *
-     * When shouldRenderBar is false, the method only updates the bar's dimensions (barWidth and barHeight).
      */
     private void renderPlayerAir(GuiGraphics graphics, int offsetX, int offsetY) {
-
         Player player = getCameraPlayer();
         if (player == null) {
             return;
         }
 
-        // Enable blending and set the shader color with the desired opacity.
-        RenderSystem.enableBlend();
-        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
-
-        // Get the maximum and current air supply.
+        // Only render air bubbles if player is underwater or previously had reduced air
+        boolean isInWater = player.isEyeInFluid(FluidTags.WATER);
         int maxAir = player.getMaxAirSupply();
         int currentAir = Math.min(player.getAirSupply(), maxAir);
+        
+        if (!isInWater && currentAir >= maxAir) {
+            return;
+        }
 
-        // Calculate the number of full and empty air bubbles (using vanilla-like logic).
-        int fullAirBubbles = Mth.ceil((currentAir - 2) * 10.0 / maxAir);
-        int emptyAirBubbles = Mth.ceil(currentAir * 10.0 / maxAir) - fullAirBubbles;
-        int totalBubbles = fullAirBubbles + emptyAirBubbles;
+        // Using the same logic as in Minecraft's Gui class for 1.21.5
+        int currentAirBubble = getCurrentAirSupplyBubble(currentAir, maxAir, -2);
+        int lastAirBubble = getCurrentAirSupplyBubble(currentAir, maxAir, 0);
+        int emptyBubbleStart = 10 - getCurrentAirSupplyBubble(currentAir, maxAir, getEmptyBubbleDelayDuration(currentAir, isInWater));
+        boolean bubbleBursting = currentAirBubble != lastAirBubble;
 
-        // Total width of the air bar is the width of one bubble plus spacing for remaining bubbles.
-        int totalBarWidth = BUBBLE_SIZE + (totalBubbles - 1) * BUBBLE_SPACING;
+        // Calculate the total width of the air bar (10 bubbles with spacing)
+        int totalBarWidth = BUBBLE_SIZE + (AIR_BUBBLE_TOTAL - 1) * BUBBLE_SPACING;
 
-        // Determine the drawing direction based on the element's alignment.
-        // Left-based alignments: TOP_LEFT, MID_LEFT, BOTTOM_LEFT.
-        // Right-based alignments: TOP_RIGHT, MID_RIGHT, BOTTOM_RIGHT.
-        // Centered alignments (TOP_CENTERED, MID_CENTERED, BOTTOM_CENTERED) are treated like right-based.
-        boolean leftAligned = (this.spiffyAlignment == SpiffyAlignment.TOP_LEFT ||
-                this.spiffyAlignment == SpiffyAlignment.MID_LEFT ||
-                this.spiffyAlignment == SpiffyAlignment.BOTTOM_LEFT);
+        // Determine whether we need to mirror based on alignment
+        boolean shouldMirror = this.spiffyAlignment != SpiffyAlignment.TOP_LEFT && 
+                               this.spiffyAlignment != SpiffyAlignment.MID_LEFT && 
+                               this.spiffyAlignment != SpiffyAlignment.BOTTOM_LEFT;
 
-        // Calculate the starting X coordinate within the air bar.
-        // For left-aligned, drawing starts at the left edge (0), for right-based it starts at the right edge.
-        int localStartX = leftAligned ? 0 : (totalBarWidth - BUBBLE_SIZE);
-        // The base Y coordinate (local) is 0.
-        int localStartY = 0;
+        // Calculate the color with opacity
+        int color = ARGB.color(Math.round(this.opacity * 255f), 255, 255, 255);
 
-        // Render each bubble.
-        for (int i = 0; i < totalBubbles; i++) {
-            int bubbleLocalX;
-            if (leftAligned) {
-                // In left-to-right mode, each subsequent bubble is shifted to the right.
-                bubbleLocalX = localStartX + i * BUBBLE_SPACING;
-            } else {
-                // In right-to-left mode, each subsequent bubble is shifted to the left.
-                bubbleLocalX = localStartX - i * BUBBLE_SPACING;
-            }
-            int bubbleAbsX = offsetX + bubbleLocalX;
-            int bubbleAbsY = offsetY + localStartY;
-
-            // Determine if this bubble should be rendered as full.
-            boolean isFullBubble = (i < fullAirBubbles);
+        for (int i = 1; i <= AIR_BUBBLE_TOTAL; i++) {
+            int bubbleX = offsetX + (i - 1) * BUBBLE_SPACING;
+            int bubbleY = offsetY;
 
             if (this.shouldRenderBar) {
-                // In 1.21.1, use sprite rendering instead of texture coordinates
-                if (isFullBubble) {
-                    // Render a full air bubble using AIR_SPRITE
-                    graphics.blitSprite(AIR_SPRITE, bubbleAbsX, bubbleAbsY, BUBBLE_SIZE, BUBBLE_SIZE);
+                ResourceLocation bubbleSprite;
+                if (i <= currentAirBubble) {
+                    // Full air bubble
+                    bubbleSprite = AIR_SPRITE;
+                } else if (bubbleBursting && i == lastAirBubble && isInWater) {
+                    // Popping/bursting air bubble
+                    bubbleSprite = AIR_POPPING_SPRITE;
+                } else if (i > AIR_BUBBLE_TOTAL - emptyBubbleStart) {
+                    // Empty air bubble
+                    bubbleSprite = AIR_EMPTY_SPRITE;
                 } else {
-                    // Render an empty/bursting air bubble using AIR_BURSTING_SPRITE
-                    graphics.blitSprite(AIR_BURSTING_SPRITE, bubbleAbsX, bubbleAbsY, BUBBLE_SIZE, BUBBLE_SIZE);
+                    // No bubble to render
+                    continue;
+                }
+                
+                if (shouldMirror) {
+                    // Use the mirrored sprite rendering for non-left alignments
+                    SpiffyRenderUtils.blitSpriteMirrored(
+                        graphics, 
+                        RenderType::guiTextured,
+                        bubbleSprite, 
+                        bubbleX, 
+                        bubbleY, 
+                        BUBBLE_SIZE, 
+                        BUBBLE_SIZE,
+                        color
+                    );
+                } else {
+                    // Use normal sprite rendering for left alignments
+                    graphics.blitSprite(
+                        RenderType::guiTextured,
+                        bubbleSprite, 
+                        bubbleX, 
+                        bubbleY, 
+                        BUBBLE_SIZE, 
+                        BUBBLE_SIZE, 
+                        color
+                    );
                 }
             }
         }
 
-        // Update the bar's recorded drawing origin and size.
-        // When called in dry-run mode (offsetX == 0, offsetY == 0) these values help position the bar within the element.
+        // Update the bar's recorded drawing size
         this.barWidth = totalBarWidth;
         this.barHeight = BUBBLE_SIZE;
+    }
 
-        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    /**
+     * Calculate the current air supply bubble count based on vanilla logic.
+     */
+    private static int getCurrentAirSupplyBubble(int currentAirSupply, int maxAirSupply, int offset) {
+        return Mth.ceil((float)((currentAirSupply + offset) * 10) / maxAirSupply);
+    }
+
+    /**
+     * Determine empty bubble delay duration based on vanilla logic.
+     */
+    private static int getEmptyBubbleDelayDuration(int airSupply, boolean inWater) {
+        return airSupply != 0 && inWater ? 1 : 0;
     }
 
     @Nullable

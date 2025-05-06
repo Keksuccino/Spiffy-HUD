@@ -1,12 +1,13 @@
 package de.keksuccino.spiffyhud.customization.elements.vanillalike.attackindicator;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
-import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
+import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.LivingEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,14 +54,8 @@ public class VanillaLikeAttackIndicatorElement extends AbstractElement {
         int elementWidth = this.getAbsoluteWidth();
         int elementHeight = this.getAbsoluteHeight();
 
-        // Prepare the render state.
-        RenderSystem.enableBlend();
-        RenderingUtils.resetShaderColor(graphics);
-
         // Render the experience bar using the element's own bounds.
         this.renderAttackIndicator(graphics, this.isHotbar, elementX, elementY, elementWidth, elementHeight);
-
-        RenderingUtils.resetShaderColor(graphics);
 
     }
 
@@ -79,24 +74,22 @@ public class VanillaLikeAttackIndicatorElement extends AbstractElement {
         float attackStrength = this.minecraft.player.getAttackStrengthScale(0.0f);
         if (isEditor()) attackStrength = 0.5f;
 
-        RenderSystem.enableBlend();
-        graphics.setColor(1.0F, 1.0F, 1.0F, this.opacity);
-
         if (isHotbar) {
             // Render hotbar version (only shown when not fully charged)
             if (attackStrength < 1.0f) {
                 // First render the background
-                graphics.blitSprite(HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE, x, y, width, height);
+                graphics.blitSprite(RenderType::guiTextured, HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE, x, y, width, height, ARGB.white(this.opacity));
 
                 // Then render the foreground based on attack strength
                 int fillHeight = (int)(height * attackStrength);
                 if (fillHeight > 0) {
                     // For hotbar indicator, the original sprite is 18x18 and fills from bottom
-                    graphics.blitSprite(HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE, 
-                        width, height,  // Full widget size
-                        0, height - fillHeight,  // Start from the bottom
-                        x, y + height - fillHeight,  // Position at the bottom
-                        width, fillHeight  // Fill portion from bottom
+                    SpiffyRenderUtils.blitSprite(graphics, RenderType::guiTextured, HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE,
+                            width, height,  // Full widget size
+                            0, height - fillHeight,  // Start from the bottom
+                            x, y + height - fillHeight,  // Position at the bottom
+                            width, fillHeight,  // Fill portion from bottom
+                            ARGB.white(this.opacity)
                     );
                 }
             }
@@ -112,7 +105,7 @@ public class VanillaLikeAttackIndicatorElement extends AbstractElement {
 
             if (readyToAttack) {
                 // Render the "ready to attack" indicator
-                graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE, x, y, width, height);
+                graphics.blitSprite(RenderType::guiTextured, CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE, x, y, width, height, ARGB.white(this.opacity));
             } else if (attackStrength < 1.0f) {
                 // Determine a proper height for the progress bar (maintaining aspect ratio)
                 int barHeight = height;
@@ -121,23 +114,22 @@ public class VanillaLikeAttackIndicatorElement extends AbstractElement {
                 }
 
                 // First render the background bar
-                graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE, x, y, width, barHeight);
+                graphics.blitSprite(RenderType::guiTextured, CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE, x, y, width, barHeight, ARGB.white(this.opacity));
 
                 // Then render the foreground based on attack strength
                 int fillWidth = (int)(width * attackStrength);
                 if (fillWidth > 0) {
                     // For crosshair indicator, the original sprite is 16x4 and fills from left
-                    graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE, 
-                        width, barHeight,  // Full widget size
-                        0, 0,  // Start from top-left
-                        x, y,  // Position at top-left
-                        fillWidth, barHeight  // Fill portion from left
+                    SpiffyRenderUtils.blitSprite(graphics, RenderType::guiTextured, CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE,
+                            width, barHeight,  // Full widget size
+                            0, 0,  // Start from top-left
+                            x, y,  // Position at top-left
+                            fillWidth, barHeight,  // Fill portion from left
+                            ARGB.white(this.opacity)
                     );
                 }
             }
         }
-
-        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     }
 

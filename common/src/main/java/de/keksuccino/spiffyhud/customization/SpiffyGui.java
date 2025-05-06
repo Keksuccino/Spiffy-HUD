@@ -1,13 +1,11 @@
 package de.keksuccino.spiffyhud.customization;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.ScreenCustomization;
 import de.keksuccino.fancymenu.customization.layer.ScreenCustomizationLayer;
 import de.keksuccino.fancymenu.customization.layer.ScreenCustomizationLayerHandler;
 import de.keksuccino.fancymenu.customization.layout.editor.LayoutEditorScreen;
 import de.keksuccino.fancymenu.events.screen.*;
 import de.keksuccino.fancymenu.util.event.acara.EventHandler;
-import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
@@ -29,7 +27,6 @@ public class SpiffyGui implements Renderable {
     private SpiffyGui() {
 
         if (!initialized) {
-            //TODO init stuff here if needed
             initialized = true;
         }
 
@@ -65,9 +62,7 @@ public class SpiffyGui implements Renderable {
     }
 
     private void restoreRenderDefaults(@NotNull GuiGraphics graphics) {
-        RenderingUtils.resetShaderColor(graphics);
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableBlend();
+        // Unused in 1.21.5
     }
 
     private boolean shouldRenderCustomizations() {

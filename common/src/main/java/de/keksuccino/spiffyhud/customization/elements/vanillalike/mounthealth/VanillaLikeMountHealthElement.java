@@ -1,6 +1,5 @@
 package de.keksuccino.spiffyhud.customization.elements.vanillalike.mounthealth;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
@@ -9,7 +8,9 @@ import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -79,14 +80,9 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
         int barRenderX = alignedBody[0];
         int barRenderY = alignedBody[1];
 
-        RenderSystem.enableBlend();
-
         //––– Now, actually render the hearts using the computed offset.
         this.shouldRenderBar = true;
         this.renderVehicleHealth(graphics, barRenderX, barRenderY);
-
-        RenderingUtils.resetShaderColor(graphics);
-
     }
 
     /**
@@ -127,9 +123,8 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
             return;
         }
 
-        // Enable blending and set the shader color with the desired opacity.
-        RenderSystem.enableBlend();
-        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+        // Calculate color with opacity
+        int color = ARGB.color(Math.round(this.opacity * 255f), 255, 255, 255);
 
         final int heartsPerRow = 10;
         // For drawing alignment purposes, we always use a fixed row width.
@@ -202,34 +197,82 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
                 if (this.shouldRenderBar) {
                     // Draw empty heart background.
                     if (mirrorHearts) {
-                        SpiffyRenderUtils.blitSpriteMirrored(graphics, HEART_VEHICLE_CONTAINER_SPRITE, heartX, heartY, 9, 9);
+                        SpiffyRenderUtils.blitSpriteMirrored(
+                            graphics, 
+                            RenderType::guiTextured,
+                            HEART_VEHICLE_CONTAINER_SPRITE, 
+                            heartX, 
+                            heartY, 
+                            9, 
+                            9,
+                            color
+                        );
                     } else {
-                        graphics.blitSprite(HEART_VEHICLE_CONTAINER_SPRITE, heartX, heartY, 9, 9);
+                        graphics.blitSprite(
+                            RenderType::guiTextured,
+                            HEART_VEHICLE_CONTAINER_SPRITE, 
+                            heartX, 
+                            heartY, 
+                            9, 
+                            9,
+                            color
+                        );
                     }
                     // Each heart represents 2 health points.
                     int heartThreshold = overallHeartIndex * 2 + 1;
                     if (heartThreshold < currentHealth) {
                         // Render full heart.
                         if (mirrorHearts) {
-                            SpiffyRenderUtils.blitSpriteMirrored(graphics, HEART_VEHICLE_FULL_SPRITE, heartX, heartY, 9, 9);
+                            SpiffyRenderUtils.blitSpriteMirrored(
+                                graphics, 
+                                RenderType::guiTextured,
+                                HEART_VEHICLE_FULL_SPRITE, 
+                                heartX, 
+                                heartY, 
+                                9, 
+                                9,
+                                color
+                            );
                         } else {
-                            graphics.blitSprite(HEART_VEHICLE_FULL_SPRITE, heartX, heartY, 9, 9);
+                            graphics.blitSprite(
+                                RenderType::guiTextured,
+                                HEART_VEHICLE_FULL_SPRITE, 
+                                heartX, 
+                                heartY, 
+                                9, 
+                                9,
+                                color
+                            );
                         }
                     } else if (heartThreshold == currentHealth) {
                         // Render half heart.
                         if (mirrorHearts) {
-                            SpiffyRenderUtils.blitSpriteMirrored(graphics, HEART_VEHICLE_HALF_SPRITE, heartX, heartY, 9, 9);
+                            SpiffyRenderUtils.blitSpriteMirrored(
+                                graphics, 
+                                RenderType::guiTextured,
+                                HEART_VEHICLE_HALF_SPRITE, 
+                                heartX, 
+                                heartY, 
+                                9, 
+                                9,
+                                color
+                            );
                         } else {
-                            graphics.blitSprite(HEART_VEHICLE_HALF_SPRITE, heartX, heartY, 9, 9);
+                            graphics.blitSprite(
+                                RenderType::guiTextured,
+                                HEART_VEHICLE_HALF_SPRITE, 
+                                heartX, 
+                                heartY, 
+                                9, 
+                                9,
+                                color
+                            );
                         }
                     }
                     // Otherwise, leave the empty heart.
                 }
             }
         }
-
-        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-
     }
 
     /**
@@ -281,5 +324,4 @@ public class VanillaLikeMountHealthElement extends AbstractElement {
     public int getAbsoluteHeight() {
         return this.barHeight;
     }
-
 }

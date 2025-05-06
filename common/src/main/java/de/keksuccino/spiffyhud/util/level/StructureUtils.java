@@ -52,7 +52,7 @@ public class StructureUtils {
         }
 
         // Get all structures in the registry
-        Registry<Structure> structureRegistry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
+        Registry<Structure> structureRegistry = level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
 
         List<ResourceKey<Structure>> keys = new ArrayList<>();
         level.structureManager().getAllStructuresAt(pos).forEach((structure, longs) -> {
@@ -94,7 +94,7 @@ public class StructureUtils {
      */
     @NotNull
     public static List<ResourceKey<Structure>> getAllStructureKeys(@NotNull RegistryAccess registryAccess) {
-        Registry<Structure> structureRegistry = registryAccess.registryOrThrow(Registries.STRUCTURE);
+        Registry<Structure> structureRegistry = registryAccess.lookupOrThrow(Registries.STRUCTURE);
         return new ArrayList<>(structureRegistry.registryKeySet());
     }
 
@@ -111,7 +111,7 @@ public class StructureUtils {
             ResourceLocation resourceLocation = ResourceLocation.parse(structureName);
             ResourceKey<Structure> key = ResourceKey.create(Registries.STRUCTURE, resourceLocation);
             // Verify the key exists in the registry
-            Registry<Structure> structureRegistry = registryAccess.registryOrThrow(Registries.STRUCTURE);
+            Registry<Structure> structureRegistry = registryAccess.lookupOrThrow(Registries.STRUCTURE);
             if (structureRegistry.containsKey(key)) {
                 return Optional.of(key);
             }

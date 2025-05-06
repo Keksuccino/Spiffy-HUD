@@ -2,6 +2,7 @@ package de.keksuccino.spiffyhud.util.rendering;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import de.keksuccino.fancymenu.mixin.mixins.common.client.IMixinGuiGraphics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -111,21 +112,18 @@ public class GuiEntityRenderer {
         // Setup lighting for GUI entity rendering.
         Lighting.setupForEntityInInventory();
         // Enable blending and set the shader color with the desired opacity.
-        RenderSystem.enableBlend();
-        graphics.setColor(1.0f, 1.0f, 1.0f, opacity);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, opacity);
 
         // Retrieve the entity render dispatcher and disable shadow rendering.
         EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         dispatcher.setRenderShadow(false);
-        RenderSystem.runAsFancy(() -> {
-            dispatcher.render(entity, 0.0, 0.0, 0.0, 0.0f, 1.0f,
-                    graphics.pose(), graphics.bufferSource(), 0xF000F0);
-        });
+        graphics.drawSpecial(multiBufferSource -> dispatcher.render(entity, 0.0, 0.0, 0.0, 1.0f, graphics.pose(), multiBufferSource, 15728880));
         graphics.flush();
         dispatcher.setRenderShadow(true);
         graphics.pose().popPose();
         Lighting.setupFor3DItems();
-        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        graphics.flush();
 
         // Restore the entity's original rotation values.
         entity.yBodyRot = origYBodyRot;

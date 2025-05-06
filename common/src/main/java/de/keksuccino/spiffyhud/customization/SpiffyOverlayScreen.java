@@ -1,6 +1,5 @@
 package de.keksuccino.spiffyhud.customization;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.ScreenCustomization;
 import de.keksuccino.fancymenu.customization.element.anchor.ElementAnchorPoints;
@@ -26,6 +25,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -184,10 +184,8 @@ public class SpiffyOverlayScreen extends Screen {
 
         return new SpiffyRendererWidget(textX, textY, textWidth, font.lineHeight,
                 (graphics, mouseX, mouseY, partial, x, y, width, height, widget) -> {
-                    RenderSystem.enableBlend();
                     graphics.fill(textX - 2, textY - 2, textX + textWidth + 2, textY + font.lineHeight + 2, Minecraft.getInstance().options.getBackgroundColor(0));
                     graphics.drawString(font, mutableComponent, textX, textY, -1);
-                    RenderingUtils.resetShaderColor(graphics);
                 }
         ).setWidgetIdentifierFancyMenu(VanillaHudElements.SELECTED_ITEM_NAME_IDENTIFIER);
 
@@ -233,7 +231,6 @@ public class SpiffyOverlayScreen extends Screen {
 
         return new SpiffyRendererWidget(sidebarXStart, sidebarY, totalSidebarWidth, sidebarHeight,
                 (graphics, mouseX, mouseY, partial, x, y, width, height, widget) -> {
-                    RenderSystem.enableBlend();
                     //Render title background
                     graphics.fill(sidebarXStart - 2, sidebarYBase - font.lineHeight - 1, sidebarXEnd, sidebarYBase - 1, backgroundColorTitle);
                     //Render lines background
@@ -247,7 +244,6 @@ public class SpiffyOverlayScreen extends Screen {
                         graphics.drawString(font, entry.name, sidebarXStart, u, -1, false);
                         graphics.drawString(font, entry.score, sidebarXEnd - entry.scoreWidth, u, -1, false);
                     }
-                    RenderingUtils.resetShaderColor(graphics);
                 }
         ).setWidgetIdentifierFancyMenu(VanillaHudElements.SCOREBOARD_SIDEBAR_IDENTIFIER);
 
@@ -322,13 +318,11 @@ public class SpiffyOverlayScreen extends Screen {
         int textY = ((this.height - 68) - 4) - 18;
         ObjectHolder<Float> animatedTickHolder = ObjectHolder.of(0.0f);
         return new SpiffyRendererWidget(textX - 2, textY - 2, messageWidth + 4, font.lineHeight + 4, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            RenderSystem.enableBlend();
             // Update the animated tick value by incrementing it
             animatedTickHolder.set(animatedTickHolder.get() + 0.005f);
             // Use the animated tick value to create a color cycle
             int animatedTextColor = Mth.hsvToRgb(animatedTickHolder.get() % 1.0f, 0.7f, 0.6f) | 0xFF000000;
             graphics.drawString(Minecraft.getInstance().font, message, textX, textY, animatedTextColor);
-            RenderingUtils.resetShaderColor(graphics);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.OVERLAY_MESSAGE_IDENTIFIER);
     }
 
@@ -336,14 +330,8 @@ public class SpiffyOverlayScreen extends Screen {
         int crosshairX = (this.width - 15) / 2;
         int crosshairY = (this.height - 15) / 2;
         return new SpiffyRendererWidget(crosshairX, crosshairY, 15, 15, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            RenderSystem.enableBlend();
-            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR,
-                    GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR,
-                    GlStateManager.SourceFactor.ONE,
-                    GlStateManager.DestFactor.ZERO);
-            graphics.blitSprite(CROSSHAIR_SPRITE, crosshairX, crosshairY, 15, 15);
-            RenderSystem.defaultBlendFunc();
-            RenderingUtils.resetShaderColor(graphics);
+            // In 1.21.5, use the RenderType.crosshair() method for proper rendering
+            graphics.blitSprite(RenderType::crosshair, CROSSHAIR_SPRITE, crosshairX, crosshairY, 15, 15);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.CROSSHAIR_IDENTIFIER);
     }
 
@@ -358,28 +346,27 @@ public class SpiffyOverlayScreen extends Screen {
         return new SpiffyRendererWidget(hotX, hotY, 18 + 2 + 16, 18,
                 (graphics, mouseX, mouseY, partial, x, y, width, height, widget) -> {
 
-                    RenderSystem.enableBlend();
-
                     // Render crosshair indicator with sprite system
                     int fillWidth = (int)(progress * 16.0f);
-                    RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-                    graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE, crossX, crossY, 16, 4);
+                    
+                    // Use crosshair RenderType for attack indicator background
+                    graphics.blitSprite(RenderType::crosshair, CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE, crossX, crossY, 16, 4);
+                    
                     if (fillWidth > 0) {
-                        graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE, 16, 4, 0, 0, crossX, crossY, fillWidth, 4);
+                        // Use crosshair RenderType for attack indicator progress
+                        graphics.blitSprite(RenderType::crosshair, CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE, 16, 4, 0, 0, crossX, crossY, fillWidth, 4);
                     }
-                    RenderSystem.defaultBlendFunc();
 
-                    RenderSystem.enableBlend();
-
-                    // Render hotbar indicator with sprite system
+                    // Render hotbar indicator with RenderType.guiTextured
                     int fillHeight = (int)(progress * 18.0f);
-                    graphics.blitSprite(HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE, hotX, hotY, 18, 18);
+                    
+                    // Render background
+                    graphics.blitSprite(RenderType::guiTextured, HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE, hotX, hotY, 18, 18);
+                    
                     if (fillHeight > 0) {
-                        graphics.blitSprite(HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE, 18, 18, 0, 18 - fillHeight, hotX, hotY + 18 - fillHeight, 18, fillHeight);
+                        // Render progress bar
+                        graphics.blitSprite(RenderType::guiTextured, HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE, 18, 18, 0, 18 - fillHeight, hotX, hotY + 18 - fillHeight, 18, fillHeight);
                     }
-
-                    RenderingUtils.resetShaderColor(graphics);
-
                 }
         ).setWidgetIdentifierFancyMenu(VanillaHudElements.ATTACK_INDICATOR_IDENTIFIER);
 
@@ -396,17 +383,14 @@ public class SpiffyOverlayScreen extends Screen {
 
         return new SpiffyRendererWidget(textX, textY, totalWidth, totalHeight,
                 (graphics, mouseX, mouseY, partial, x, y, width, height, widget) -> {
-                    RenderSystem.enableBlend();
                     graphics.pose().pushPose();
                     graphics.pose().translate((float)this.width / 2, (float)this.height / 2, 0.0f);
-                    RenderSystem.enableBlend();
                     //Render title
                     graphics.pose().pushPose();
                     graphics.pose().scale(4.0f, 4.0f, 4.0f);
                     graphics.drawString(font, title, -titleWidth / 2, -12, -1);
                     graphics.pose().popPose();
                     graphics.pose().popPose();
-                    RenderingUtils.resetShaderColor(graphics);
                 }
         ).setWidgetIdentifierFancyMenu(VanillaHudElements.TITLE_IDENTIFIER);
 
@@ -420,7 +404,6 @@ public class SpiffyOverlayScreen extends Screen {
         int textX = (this.width / 2) - (totalWidth / 2);
         int textY = (this.height / 2) + (6 * 2);
         return new SpiffyRendererWidget(textX, textY, totalWidth, totalHeight, (graphics, mX, mY, partial, gx, gy, gwidth, gheight, widget) -> {
-            RenderSystem.enableBlend();
             graphics.pose().pushPose();
             graphics.pose().translate(this.width / 2, this.height / 2, 0.0f);
             graphics.pose().pushPose();
@@ -428,7 +411,6 @@ public class SpiffyOverlayScreen extends Screen {
             graphics.drawString(Minecraft.getInstance().font, subtitle, -subtitleWidth / 2, 6, 0xFFFFFF);
             graphics.pose().popPose();
             graphics.pose().popPose();
-            RenderingUtils.resetShaderColor(graphics);
         }).setWidgetIdentifierFancyMenu(VanillaHudElements.SUBTITLE_IDENTIFIER);
     }
 

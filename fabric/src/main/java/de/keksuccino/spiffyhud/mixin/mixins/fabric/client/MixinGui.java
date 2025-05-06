@@ -3,11 +3,13 @@ package de.keksuccino.spiffyhud.mixin.mixins.fabric.client;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.keksuccino.spiffyhud.customization.SpiffyRenderer;
+import de.keksuccino.spiffyhud.customization.SpiffyGui;
 import de.keksuccino.spiffyhud.customization.VanillaHudElements;
 import de.keksuccino.spiffyhud.customization.elements.overlayremover.OverlayRemoverElement;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,12 +18,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.Objective;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -33,8 +38,8 @@ public class MixinGui {
     private Component title;
     @Shadow private Component subtitle;
 
-    @Shadow @Final
-    private static ResourceLocation PUMPKIN_BLUR_LOCATION;
+    @Unique
+    private SpiffyGui spiffyGui = null;
 
     @Shadow @Final private static ResourceLocation POWDER_SNOW_OUTLINE_LOCATION;
 
@@ -44,17 +49,14 @@ public class MixinGui {
     @Inject(method = "renderHotbarAndDecorations", at = @At(value = "HEAD"), cancellable = true)
     private void before_renderHotbarAndDecorations_Spiffy(GuiGraphics graphics, DeltaTracker deltaTracker, CallbackInfo info) {
 
-        SpiffyRenderer.render(graphics, deltaTracker);
+        if (this.spiffyGui == null) this.spiffyGui = SpiffyGui.INSTANCE;
 
-        SpiffyRenderer.captureWorldRender();
+        if (!Minecraft.getInstance().options.hideGui) {
+            spiffyGui.render(graphics, -10000000, -10000000, deltaTracker.getGameTimeDeltaTicks());
+        }
 
         if (VanillaHudElements.isHidden(VanillaHudElements.HOTBAR_IDENTIFIER)) info.cancel();
 
-    }
-
-    @Inject(method = "render", at = @At("RETURN"))
-    private void after_render_Spiffy(GuiGraphics graphics, DeltaTracker deltaTracker, CallbackInfo info) {
-        SpiffyRenderer.applyHoles(graphics);
     }
 
     /**
@@ -160,19 +162,9 @@ public class MixinGui {
     /**
      * @reason Hide the player air bar when hidden by Spiffy HUD.
      */
-    @WrapOperation(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getAirSupply()I"))
-    private int wrap_getAirSupply_in_renderPlayerHealth_Spiffy(Player instance, Operation<Integer> original) {
-        if (VanillaHudElements.isHidden(VanillaHudElements.AIR_BAR_IDENTIFIER)) return 1000000000; //air bar is invisible when air is >= max air, so just set a very high air here to hide the bar
-        return original.call(instance);
-    }
-
-    /**
-     * @reason Hide the player air bar when hidden by Spiffy HUD.
-     */
-    @WrapOperation(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
-    private boolean wrap_isEyeInFluid_in_renderPlayerHealth_Spiffy(Player instance, TagKey<?> tagKey, Operation<Boolean> original) {
-        if (VanillaHudElements.isHidden(VanillaHudElements.AIR_BAR_IDENTIFIER)) return false;
-        return original.call(instance, tagKey);
+    @WrapWithCondition(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderAirBubbles(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/entity/player/Player;III)V"))
+    private boolean wrap_renderAirBubbles_in_renderPlayerHealth_Spiffy(Gui instance, GuiGraphics k1, Player j1, int k, int l, int i1) {
+        return !VanillaHudElements.isHidden(VanillaHudElements.AIR_BAR_IDENTIFIER);
     }
 
     /**
@@ -218,11 +210,19 @@ public class MixinGui {
     }
 
     /**
-     * @reason Hide the pumpkin overlay and the powder snow overlay when hidden by Spiffy HUD.
+     * @reason Hide the pumpkin overlay when hidden by Spiffy HUD.
+     */
+    @WrapOperation(method = "renderCameraOverlays", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;"))
+    private ItemStack wrap_getItemBySlot_in_renderCameraOverlays_Spiffy(LocalPlayer instance, EquipmentSlot equipmentSlot, Operation<ItemStack> original) {
+        if (OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.PUMPKIN)) return ItemStack.EMPTY;
+        return original.call(instance, equipmentSlot);
+    }
+
+    /**
+     * @reason Hide the powder snow overlay when hidden by Spiffy HUD.
      */
     @Inject(method = "renderTextureOverlay", at = @At(value = "HEAD"), cancellable = true)
     private void before_renderTextureOverlay_Spiffy(GuiGraphics guiGraphics, ResourceLocation location, float alpha, CallbackInfo info) {
-        if ((location == PUMPKIN_BLUR_LOCATION) && OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.PUMPKIN)) info.cancel();
         if ((location == POWDER_SNOW_OUTLINE_LOCATION) && OverlayRemoverElement.isOverlayTypeHidden(OverlayRemoverElement.OverlayType.POWDER_SNOW)) info.cancel();
     }
 

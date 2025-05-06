@@ -1,20 +1,22 @@
 package de.keksuccino.spiffyhud.customization.elements.vanillalike.scoreboard;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import de.keksuccino.spiffyhud.util.SpiffyAlignment;
+import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.numbers.StyledFormat;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.scores.*;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.apache.logging.log4j.LogManager;
@@ -91,14 +93,9 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
         int offsetX = alignedPosition[0] - this.sidebarOriginalX;
         int offsetY = alignedPosition[1] - this.sidebarOriginalY;
 
-        RenderSystem.enableBlend();
-
         // Render the scoreboard applying the offset to all drawing coordinates.
         this.renderSidebar = true;
         this.renderScoreboard(graphics, offsetX, offsetY, true);
-
-        RenderingUtils.resetShaderColor(graphics);
-
     }
 
     /**
@@ -110,11 +107,6 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
      * @param applyOffset If true, the computed offset is applied while drawing.
      */
     private void renderScoreboard(GuiGraphics graphics, int offsetX, int offsetY, boolean applyOffset) {
-
-        // Enable blending and set the shader color with the desired opacity.
-        RenderSystem.enableBlend();
-        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
-
         Scoreboard scoreboard = this.minecraft.level.getScoreboard();
         Objective objective = null;
         PlayerTeam playerTeam = scoreboard.getPlayersTeam(this.minecraft.player.getScoreboardName());
@@ -137,8 +129,6 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
         if (objectiveToRender != null) {
             displayScoreboardSidebar(graphics, objectiveToRender, offsetX, offsetY, applyOffset);
         }
-
-        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     /**
@@ -176,7 +166,7 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
                 displayEntries[i] = new DisplayEntry(name, score, this.getFont().width(score));
             }
         } else {
-            // Get player scores using the 1.21.1 API
+            // Get player scores using the 1.21.5 API
             displayEntries = scoreboard.listPlayerScores(objective)
                 .stream()
                 .filter(entry -> !entry.isHidden())
@@ -231,42 +221,36 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
         // Apply offset if needed
         int effectiveBaseX = baseX + (applyOffset ? offsetX : 0);
         int effectiveBaseY = baseY + (applyOffset ? offsetY : 0);
+        int rightX = (getScreenWidth() - 3 + 2) + (applyOffset ? offsetX : 0);
 
         // If we are in rendering mode, draw each score line and then the title background.
         if (this.renderSidebar) {
-            guiGraphics.pose().pushPose();
+            // Get the opacity as a color component (0-255)
+            int alpha = Math.round(this.opacity * 255);
+            int opacityAdjustedLineBackground = SpiffyRenderUtils.colorWithAlpha(lineBackgroundColor, alpha);
+            int opacityAdjustedTitleBackground = SpiffyRenderUtils.colorWithAlpha(titleBackgroundColor, alpha);
+            int opacityAdjustedTextColor = ARGB.color(alpha, 255, 255, 255); // White text with custom alpha
             
-            // Draw managed to ensure blending and other state is properly handled
-            int finalLineBackgroundColor = lineBackgroundColor;
-            int finalTitleBackgroundColor = titleBackgroundColor;
-            int finalMaxEntryWidth = maxEntryWidth;
-            Component finalTitle = title;
-            guiGraphics.drawManaged(() -> {
-                int rightX = (getScreenWidth() - 3 + 2) + (applyOffset ? offsetX : 0);
+            for (int i = 0; i < displayEntries.length; i++) {
+                DisplayEntry entry = displayEntries[i];
+                int lineY = effectiveBaseY - (i + 1) * lineHeight;
                 
-                for (int i = 0; i < displayEntries.length; i++) {
-                    DisplayEntry entry = displayEntries[i];
-                    int lineY = effectiveBaseY - (i + 1) * lineHeight;
-                    
-                    // Draw background for this score line
-                    guiGraphics.fill(effectiveBaseX - 2, lineY, rightX, lineY + lineHeight, finalLineBackgroundColor);
-                    
-                    // Draw the player's name and score
-                    guiGraphics.drawString(this.getFont(), entry.name, effectiveBaseX, lineY, -1, false);
-                    guiGraphics.drawString(this.getFont(), entry.score, rightX - entry.scoreWidth, lineY, -1, false);
-                    
-                    // On the last line, also draw the title background and title text
-                    if (i == displayEntries.length - 1) {
-                        guiGraphics.fill(effectiveBaseX - 2, lineY - lineHeight - 1, rightX, lineY - 1, finalTitleBackgroundColor);
-                        guiGraphics.fill(effectiveBaseX - 2, lineY - 1, rightX, lineY, finalLineBackgroundColor);
-                        Font font = this.getFont();
-                        int titleX = effectiveBaseX + finalMaxEntryWidth / 2 - titleWidth / 2;
-                        guiGraphics.drawString(font, finalTitle, titleX, lineY - lineHeight, -1, false);
-                    }
+                // Draw background for this score line
+                guiGraphics.fill(RenderType.gui(), effectiveBaseX - 2, lineY, rightX, lineY + lineHeight, opacityAdjustedLineBackground);
+                
+                // Draw the player's name and score
+                guiGraphics.drawString(this.getFont(), entry.name, effectiveBaseX, lineY, opacityAdjustedTextColor, false);
+                guiGraphics.drawString(this.getFont(), entry.score, rightX - entry.scoreWidth, lineY, opacityAdjustedTextColor, false);
+                
+                // On the last line, also draw the title background and title text
+                if (i == displayEntries.length - 1) {
+                    guiGraphics.fill(RenderType.gui(), effectiveBaseX - 2, lineY - lineHeight - 1, rightX, lineY - 1, opacityAdjustedTitleBackground);
+                    guiGraphics.fill(RenderType.gui(), effectiveBaseX - 2, lineY - 1, rightX, lineY, opacityAdjustedLineBackground);
+                    Font font = this.getFont();
+                    int titleX = effectiveBaseX + maxEntryWidth / 2 - titleWidth / 2;
+                    guiGraphics.drawString(font, title, titleX, lineY - lineHeight, opacityAdjustedTextColor, false);
                 }
-            });
-            
-            guiGraphics.pose().popPose();
+            }
         }
     }
 
@@ -298,7 +282,7 @@ public class VanillaLikeScoreboardElement extends AbstractElement {
      */
     private static class DummyObjective extends Objective {
         public DummyObjective(Scoreboard scoreboard) {
-            // Constructor parameters in 1.21.1:
+            // Constructor parameters in 1.21.5:
             // scoreboard, name, criteria, displayName, renderType, displayAutoUpdate, numberFormat
             super(
                 scoreboard, 

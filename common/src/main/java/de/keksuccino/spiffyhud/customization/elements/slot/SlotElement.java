@@ -1,5 +1,6 @@
 package de.keksuccino.spiffyhud.customization.elements.slot;
 
+import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
@@ -8,6 +9,7 @@ import de.keksuccino.fancymenu.customization.placeholder.PlaceholderParser;
 import de.keksuccino.fancymenu.util.MathUtils;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
 import de.keksuccino.fancymenu.util.rendering.ui.UIBase;
+import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -54,8 +56,6 @@ public class SlotElement extends AbstractElement {
             int w = this.getAbsoluteWidth();
             int h = this.getAbsoluteHeight();
 
-            RenderSystem.enableBlend();
-
             if (isEditor()) {
 
                 MutableComponent label = this.useSelectedSlot ? Component.literal("SEL") : Component.literal("" + this.parsedSlot);
@@ -71,15 +71,13 @@ public class SlotElement extends AbstractElement {
 
             } else {
 
-                ItemStack slotItem = this.useSelectedSlot ? Minecraft.getInstance().player.getInventory().getSelected() : Minecraft.getInstance().player.getInventory().getItem(this.parsedSlot);
+                ItemStack slotItem = this.useSelectedSlot ? Minecraft.getInstance().player.getInventory().getSelectedItem() : Minecraft.getInstance().player.getInventory().getItem(this.parsedSlot);
                 if (slotItem == ItemStack.EMPTY) return;
 
                 //Render the item slightly smaller than the actual element, so it renders at 16x16 pixels when the element is 20x20 (like Vanilla)
                 this.renderItem(graphics, x + 2, y + 2, w - 4, h - 4, mouseX, mouseY, slotItem);
 
             }
-
-            RenderSystem.disableBlend();
 
         }
 
@@ -111,12 +109,11 @@ public class SlotElement extends AbstractElement {
         float scale = Math.min(width, height) / 16.0F;
         pose.scale(scale, scale, 1.0F);
 
-        // Enable blending and set the shader color with the desired opacity.
-        RenderSystem.enableBlend();
-        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
-
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, this.opacity);
         // Now render the item at (0,0) because the translation has been applied.
         graphics.renderItem(stack, 0, 0);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        graphics.flush();
 
         // Render durability bar if enabled and needed
         if (this.showDurability && stack.isBarVisible()) {
@@ -131,16 +128,14 @@ public class SlotElement extends AbstractElement {
             graphics.fill(RenderType.guiOverlay(),
                           barX, barY, 
                           barX + 13, barY + 2, 
-                          -16777216);
+                          SpiffyRenderUtils.colorWithAlpha(-16777216, this.opacity));
             
             // Draw the colored part of the bar
             graphics.fill(RenderType.guiOverlay(),
                           barX, barY, 
-                          barX + barWidth, barY + 1, 
-                          barColor | 0xFF000000);
+                          barX + barWidth, barY + 1,
+                    SpiffyRenderUtils.colorWithAlpha(barColor | 0xFF000000, this.opacity));
         }
-
-        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         // Restore the previous transformation state.
         pose.popPose();

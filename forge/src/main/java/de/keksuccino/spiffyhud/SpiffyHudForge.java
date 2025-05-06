@@ -7,7 +7,7 @@ public class SpiffyHudForge {
     
     public SpiffyHudForge() {
 
-        SpiffyHud.init();
+        // SpiffyHud.init(); moved to MixinScreenCustomization in common
 
     }
 

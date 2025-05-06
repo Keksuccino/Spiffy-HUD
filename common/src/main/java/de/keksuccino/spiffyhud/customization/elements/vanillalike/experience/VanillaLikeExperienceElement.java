@@ -1,13 +1,14 @@
 package de.keksuccino.spiffyhud.customization.elements.vanillalike.experience;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ public class VanillaLikeExperienceElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // Sprite resources for the experience bar in 1.21.1
+    // Sprite resources for the experience bar in 1.21.5
     private static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_background");
     private static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_progress");
 
@@ -39,7 +40,6 @@ public class VanillaLikeExperienceElement extends AbstractElement {
      */
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
-
         // Do nothing if the player or level is missing.
         if (this.minecraft.player == null || this.minecraft.level == null) {
             return;
@@ -51,19 +51,12 @@ public class VanillaLikeExperienceElement extends AbstractElement {
         int elementWidth = this.getAbsoluteWidth();
         int elementHeight = this.getAbsoluteHeight();
 
-        // Prepare the render state.
-        RenderSystem.enableBlend();
-        RenderingUtils.resetShaderColor(graphics);
-
         // Render the experience bar using the element's own bounds.
         renderExperienceBar(graphics, elementX, elementY, elementWidth, elementHeight);
-
-        RenderingUtils.resetShaderColor(graphics);
-
     }
 
     /**
-     * Renders the background bar, the filled portion according to the player’s experience progress,
+     * Renders the background bar, the filled portion according to the player's experience progress,
      * and overlays the player's current experience level as text.
      *
      * @param graphics The graphics context to draw on.
@@ -73,13 +66,11 @@ public class VanillaLikeExperienceElement extends AbstractElement {
      * @param height   The height of the element (should be 5 pixels).
      */
     public void renderExperienceBar(GuiGraphics graphics, int x, int y, int width, int height) {
-
         var player = this.minecraft.player;
         if (player == null) return;
 
-        // Enable blending and set the shader color with the desired opacity.
-        RenderSystem.enableBlend();
-        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
+        // Calculate the color with opacity
+        int color = ARGB.color(Math.round(this.opacity * 255f), 255, 255, 255);
 
         // Only draw the bar if the player requires XP for the next level.
         int xpNeeded = player.getXpNeededForNextLevel();
@@ -90,18 +81,36 @@ public class VanillaLikeExperienceElement extends AbstractElement {
             if (isEditor()) filledBarWidth = BAR_WIDTH / 2;
 
             // Draw the empty (background) experience bar.
-            graphics.blitSprite(EXPERIENCE_BAR_BACKGROUND_SPRITE, x, y, width, height);
+            graphics.blitSprite(
+                RenderType::guiTextured,
+                EXPERIENCE_BAR_BACKGROUND_SPRITE, 
+                x, 
+                y, 
+                width, 
+                height,
+                color
+            );
 
             // Draw the filled part of the bar if any XP has been gained.
             if (filledBarWidth > 0) {
-                // In 1.21.1, we use the progress sprite with specified dimensions
-                graphics.blitSprite(EXPERIENCE_BAR_PROGRESS_SPRITE, width, height, 0, 0, x, y, filledBarWidth, height);
+                // In 1.21.5, we need to use the proper method for rendering a partial sprite
+                // This uses the EXPERIENCE_BAR_PROGRESS_SPRITE and clips it to the filled width
+                graphics.enableScissor(x, y, x + filledBarWidth, y + height);
+                graphics.blitSprite(
+                    RenderType::guiTextured,
+                    EXPERIENCE_BAR_PROGRESS_SPRITE,
+                    x,
+                    y,
+                    width,
+                    height,
+                    color
+                );
+                graphics.disableScissor();
             }
         }
 
         // Render the experience level number if the level is greater than zero.
         if ((player.experienceLevel > 0) || isEditor()) {
-
             String levelText = String.valueOf(player.experienceLevel);
             if (isEditor()) levelText = "42";
 
@@ -113,6 +122,7 @@ public class VanillaLikeExperienceElement extends AbstractElement {
             // That places the text 6 pixels above the bar. Here we mimic that by drawing at y - 6.
             int textY = y - 6;
 
+            // Draw shadow and main text using 1.21.5 drawing methods with proper color
             // Draw a shadow around the text for better readability.
             graphics.drawString(this.getFont(), levelText, textX + 1, textY, 0, false);
             graphics.drawString(this.getFont(), levelText, textX - 1, textY, 0, false);
@@ -120,11 +130,7 @@ public class VanillaLikeExperienceElement extends AbstractElement {
             graphics.drawString(this.getFont(), levelText, textX, textY - 1, 0, false);
             // Draw the main level number in yellow (color code 8453920).
             graphics.drawString(this.getFont(), levelText, textX, textY, 8453920, false);
-
         }
-
-        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-
     }
 
     /**
@@ -145,5 +151,4 @@ public class VanillaLikeExperienceElement extends AbstractElement {
     public int getAbsoluteHeight() {
         return BAR_HEIGHT;
     }
-
 }

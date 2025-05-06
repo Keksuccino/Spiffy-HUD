@@ -3,6 +3,8 @@ package de.keksuccino.spiffyhud.util.level;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.arguments.NbtPathArgument;
@@ -32,6 +34,7 @@ public class EntityNbtUtils {
      */
     @Nullable
     public static String getNbtString(@NotNull Entity entity, @NotNull String path) {
+
         try {
             // Save entity data to a compound tag
             CompoundTag entityData = new CompoundTag();
@@ -50,28 +53,34 @@ public class EntityNbtUtils {
             Tag tag = results.get(0);
 
             // Special handling for numeric values to remove the type suffix
-            if (tag instanceof NumericTag) {
-                NumericTag numericTag = (NumericTag) tag;
+            if (tag instanceof NumericTag numericTag) {
 
-                // Handle different numeric types to remove suffixes like 'd', 'f', etc.
-                if (tag.getAsString().endsWith("d") ||
-                        tag.getAsString().endsWith("f") ||
-                        tag.getAsString().endsWith("b") ||
-                        tag.getAsString().endsWith("s") ||
-                        tag.getAsString().endsWith("L")) {
+                String tagString = tag.asString().orElse(null);
+                Double tagDouble = numericTag.asDouble().orElse(null);
+                Long tagLong = numericTag.asLong().orElse(null);
 
-                    // For float/double, just use the numeric value without suffix
-                    if (tag.getAsString().contains(".")) {
-                        return String.valueOf(numericTag.getAsDouble());
-                    } else {
-                        // For integers, bytes, shorts, longs
-                        return String.valueOf(numericTag.getAsLong());
+                if (tagString != null) {
+                    // Handle different numeric types to remove suffixes like 'd', 'f', etc.
+                    if (tagString.endsWith("d") ||
+                            tagString.endsWith("f") ||
+                            tagString.endsWith("b") ||
+                            tagString.endsWith("s") ||
+                            tagString.endsWith("L")) {
+
+                        // For float/double, just use the numeric value without suffix
+                        if (tagString.contains(".") && (tagDouble != null)) {
+                            return String.valueOf(tagDouble);
+                        } else if (tagLong != null) {
+                            // For integers, bytes, shorts, longs
+                            return String.valueOf(tagLong);
+                        }
                     }
                 }
+
             }
 
             // Default case - return as string
-            return tag.getAsString();
+            return tag.asString().orElse(null);
 
         } catch (CommandSyntaxException ignore) {}
         return null;
@@ -110,7 +119,7 @@ public class EntityNbtUtils {
         if (tag instanceof CompoundTag) {
             CompoundTag compound = (CompoundTag) tag;
 
-            for (String key : compound.getAllKeys()) {
+            for (String key : compound.keySet()) {
                 String newPrefix = prefix.isEmpty() ? key : prefix + "." + key;
                 collectPaths(newPrefix, compound.get(key), paths);
             }

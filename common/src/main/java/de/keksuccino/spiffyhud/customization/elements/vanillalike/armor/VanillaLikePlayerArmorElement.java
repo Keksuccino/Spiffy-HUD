@@ -1,6 +1,5 @@
 package de.keksuccino.spiffyhud.customization.elements.vanillalike.armor;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
@@ -9,7 +8,9 @@ import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +21,7 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // The sprite resources for armor in 1.21.1
+    // The sprite resources for armor in 1.21.5
     private static final ResourceLocation ARMOR_EMPTY_SPRITE = ResourceLocation.withDefaultNamespace("hud/armor_empty");
     private static final ResourceLocation ARMOR_HALF_SPRITE = ResourceLocation.withDefaultNamespace("hud/armor_half");
     private static final ResourceLocation ARMOR_FULL_SPRITE = ResourceLocation.withDefaultNamespace("hud/armor_full");
@@ -40,7 +41,6 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
-
         // Update the current tick (if needed for any time-dependent effects).
         this.tickCount = SpiffyUtils.getGuiAccessor().getTickCount_Spiffy();
 
@@ -69,13 +69,7 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
         int armorBarY = alignedPosition[1];
 
         // Render the armor bar at the computed aligned position.
-        RenderSystem.enableBlend();
-        RenderingUtils.resetShaderColor(graphics);
-
         this.renderPlayerArmor(graphics, armorBarX, armorBarY);
-
-        RenderingUtils.resetShaderColor(graphics);
-
     }
 
     /**
@@ -88,16 +82,11 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
      * @param offsetY  the y-coordinate where the bar should start drawing
      */
     private void renderPlayerArmor(GuiGraphics graphics, int offsetX, int offsetY) {
-
         // Retrieve the current player; if unavailable, skip rendering.
         Player player = this.getCameraPlayer();
         if (player == null) {
             return;
         }
-
-        // Enable blending and set the shader color with the desired opacity.
-        RenderSystem.enableBlend();
-        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
 
         // Get the player's armor value.
         int armorValue = player.getArmorValue();
@@ -116,9 +105,11 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
                 spiffyAlignment == SpiffyAlignment.MID_RIGHT ||
                 spiffyAlignment == SpiffyAlignment.BOTTOM_RIGHT;
 
+        // Calculate color with opacity
+        int color = ARGB.color(Math.round(this.opacity * 255f), 255, 255, 255);
+
         // Loop over each armor slot.
         for (int slot = 0; slot < iconCount; slot++) {
-
             // Calculate the x-coordinate based on alignment:
             // - For right-based alignment, we render from right to left.
             // - For left or centered alignments, we render from left to right.
@@ -151,15 +142,28 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
             }
             
             if (isRightAligned) {
-                SpiffyRenderUtils.blitSpriteMirrored(graphics, armorSprite, iconX, iconY, iconSize, iconSize);
+                SpiffyRenderUtils.blitSpriteMirrored(
+                    graphics,
+                    RenderType::guiTextured,
+                    armorSprite,
+                    iconX,
+                    iconY,
+                    iconSize,
+                    iconSize,
+                    color
+                );
             } else {
-                graphics.blitSprite(armorSprite, iconX, iconY, iconSize, iconSize);
+                graphics.blitSprite(
+                    RenderType::guiTextured,
+                    armorSprite,
+                    iconX,
+                    iconY,
+                    iconSize,
+                    iconSize,
+                    color
+                );
             }
-
         }
-
-        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-
     }
 
     /**
@@ -179,5 +183,4 @@ public class VanillaLikePlayerArmorElement extends AbstractElement {
     public int getAbsoluteHeight() {
         return BAR_HEIGHT;
     }
-
 }

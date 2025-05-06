@@ -11,7 +11,7 @@ public class SpiffyHudFabric implements ModInitializer {
     @Override
     public void onInitialize() {
 
-        SpiffyHud.init();
+        // SpiffyHud.init(); moved to MixinScreenCustomization in common
 
     }
 

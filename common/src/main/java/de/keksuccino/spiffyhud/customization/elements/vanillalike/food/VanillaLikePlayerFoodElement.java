@@ -1,6 +1,5 @@
 package de.keksuccino.spiffyhud.customization.elements.vanillalike.food;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
@@ -9,7 +8,9 @@ import de.keksuccino.spiffyhud.util.SpiffyAlignment;
 import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +24,7 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // Sprite resources for food icons in 1.21.1
+    // Sprite resources for food icons in 1.21.5 (same as 1.21.1)
     private static final ResourceLocation FOOD_EMPTY_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_empty");
     private static final ResourceLocation FOOD_HALF_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_half");
     private static final ResourceLocation FOOD_FULL_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_full");
@@ -52,7 +53,6 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
      */
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
-
         this.tickCount = SpiffyUtils.getGuiAccessor().getTickCount_Spiffy();
 
         if (this.minecraft.player == null || this.minecraft.level == null) {
@@ -75,13 +75,7 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
         int barPosY = alignedPosition[1];
 
         // Render the food bar at the calculated aligned position.
-        RenderSystem.enableBlend();
-        RenderingUtils.resetShaderColor(graphics);
-
         this.renderFoodBar(graphics, barPosX, barPosY);
-
-        RenderingUtils.resetShaderColor(graphics);
-
     }
 
     /**
@@ -94,13 +88,8 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
      * @param baseY    The Y coordinate where the food bar starts.
      */
     private void renderFoodBar(GuiGraphics graphics, int baseX, int baseY) {
-
         Player player = getCameraPlayer();
         if (player == null) return;
-
-        // Enable blending and set the shader color with the desired opacity.
-        RenderSystem.enableBlend();
-        graphics.setColor(1.0f, 1.0f, 1.0f, this.opacity);
 
         FoodData foodData = player.getFoodData();
         int foodLevel = foodData.getFoodLevel();
@@ -113,7 +102,8 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
         final int ICON_WIDTH = 9;
         final int ICON_HEIGHT = 9;
         final int ICON_SPACING = 8;
-        // When rendering left-to-right (for left- and center–based alignments),
+        
+        // When rendering left-to-right (for left- and center-based alignments),
         // we want to mirror the icon textures.
         boolean mirrorIcons = shouldRenderIconsLeftToRight();
 
@@ -132,9 +122,11 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
             fullSprite = FOOD_FULL_SPRITE;
         }
 
+        // Calculate the color with opacity for 1.21.5
+        int color = ARGB.color(Math.round(this.opacity * 255f), 255, 255, 255);
+
         // Loop through each food icon slot.
         for (int i = 0; i < numIcons; i++) {
-
             // Determine horizontal position based on drawing order.
             int iconX = mirrorIcons ? baseX + i * ICON_SPACING : baseX + ((numIcons - 1 - i) * ICON_SPACING);
             int iconY = baseY;
@@ -146,33 +138,80 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
 
             // Always draw the empty food icon first
             if (mirrorIcons) {
-                // Draw mirrored icons
-                SpiffyRenderUtils.blitSpriteMirrored(graphics, emptySprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
+                // Draw mirrored icons using updated method signature for 1.21.5
+                SpiffyRenderUtils.blitSpriteMirrored(
+                    graphics, 
+                    RenderType::guiTextured,
+                    emptySprite, 
+                    iconX, 
+                    iconY, 
+                    ICON_WIDTH, 
+                    ICON_HEIGHT,
+                    color
+                );
 
                 if (i * 2 + 1 < foodLevel) {
                     // Full food icon
-                    SpiffyRenderUtils.blitSpriteMirrored(graphics, fullSprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
+                    SpiffyRenderUtils.blitSpriteMirrored(
+                        graphics, 
+                        RenderType::guiTextured,
+                        fullSprite, 
+                        iconX, 
+                        iconY, 
+                        ICON_WIDTH, 
+                        ICON_HEIGHT,
+                        color
+                    );
                 } else if (i * 2 + 1 == foodLevel) {
                     // Half food icon
-                    SpiffyRenderUtils.blitSpriteMirrored(graphics, halfSprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
+                    SpiffyRenderUtils.blitSpriteMirrored(
+                        graphics, 
+                        RenderType::guiTextured,
+                        halfSprite, 
+                        iconX, 
+                        iconY, 
+                        ICON_WIDTH, 
+                        ICON_HEIGHT,
+                        color
+                    );
                 }
             } else {
-                // Normal (non-mirrored) drawing using sprites
-                graphics.blitSprite(emptySprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
+                // Normal (non-mirrored) drawing using sprites with updated method signature for 1.21.5
+                graphics.blitSprite(
+                    RenderType::guiTextured,
+                    emptySprite, 
+                    iconX, 
+                    iconY, 
+                    ICON_WIDTH, 
+                    ICON_HEIGHT,
+                    color
+                );
 
                 if (i * 2 + 1 < foodLevel) {
                     // Full food icon
-                    graphics.blitSprite(fullSprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
+                    graphics.blitSprite(
+                        RenderType::guiTextured,
+                        fullSprite, 
+                        iconX, 
+                        iconY, 
+                        ICON_WIDTH, 
+                        ICON_HEIGHT,
+                        color
+                    );
                 } else if (i * 2 + 1 == foodLevel) {
                     // Half food icon
-                    graphics.blitSprite(halfSprite, iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
+                    graphics.blitSprite(
+                        RenderType::guiTextured,
+                        halfSprite, 
+                        iconX, 
+                        iconY, 
+                        ICON_WIDTH, 
+                        ICON_HEIGHT,
+                        color
+                    );
                 }
             }
-
         }
-
-        graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-
     }
 
     /**
@@ -204,5 +243,4 @@ public class VanillaLikePlayerFoodElement extends AbstractElement {
     public int getAbsoluteHeight() {
         return BAR_HEIGHT;
     }
-
 }
