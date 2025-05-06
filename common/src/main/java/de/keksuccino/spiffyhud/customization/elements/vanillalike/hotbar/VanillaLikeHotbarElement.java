@@ -1,5 +1,6 @@
 package de.keksuccino.spiffyhud.customization.elements.vanillalike.hotbar;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
 import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
@@ -152,7 +153,10 @@ public class VanillaLikeHotbarElement extends AbstractElement {
         }
 
         // Render the item within the slot.
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, this.opacity);
         graphics.renderItem(player, stack, slotX, slotY, renderSeed);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        graphics.flush();
 
         // If a pop animation was applied, revert the transformation.
         if (popTimeRemaining > 0.0f) {
@@ -160,7 +164,11 @@ public class VanillaLikeHotbarElement extends AbstractElement {
         }
 
         // Render additional item decorations such as count overlays.
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, this.opacity);
+        graphics.renderItem(player, stack, slotX, slotY, renderSeed);
         graphics.renderItemDecorations(Minecraft.getInstance().font, stack, slotX, slotY);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        graphics.flush();
     }
 
     /**

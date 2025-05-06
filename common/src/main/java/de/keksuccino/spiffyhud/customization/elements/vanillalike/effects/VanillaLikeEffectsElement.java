@@ -202,9 +202,9 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             if (this.shouldRenderBar) {
                 // Render background for the effect icon.
                 if (effectInstance.isAmbient()) {
-                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_AMBIENT_SPRITE, finalIconX, beneficialRowY, 24, 24);
+                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_AMBIENT_SPRITE, finalIconX, beneficialRowY, 24, 24, ARGB.white(this.opacity));
                 } else {
-                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_SPRITE, finalIconX, beneficialRowY, 24, 24);
+                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_SPRITE, finalIconX, beneficialRowY, 24, 24, ARGB.white(this.opacity));
                     if (effectInstance.endsWithin(200)) {
                         int duration = effectInstance.getDuration();
                         int fadeFactor = 10 - duration / 20;
@@ -228,10 +228,10 @@ public class VanillaLikeEffectsElement extends AbstractElement {
                 renderTasks.add(() -> {
                     // Calculate color with proper alpha
                     int color = ARGB.color(
-                        Math.round(finalIconAlpha * this.opacity * 255f), 
+                        Math.round(finalIconAlpha * this.opacity * 255f),
                         255, 255, 255
                     );
-                    
+
                     // Render the effect icon
                     graphics.blitSprite(
                         RenderType::guiTextured,
@@ -255,9 +255,9 @@ public class VanillaLikeEffectsElement extends AbstractElement {
             
             if (this.shouldRenderBar) {
                 if (effectInstance.isAmbient()) {
-                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_AMBIENT_SPRITE, finalIconX, harmfulRowY, 24, 24);
+                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_AMBIENT_SPRITE, finalIconX, harmfulRowY, 24, 24, ARGB.white(this.opacity));
                 } else {
-                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_SPRITE, finalIconX, harmfulRowY, 24, 24);
+                    graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_SPRITE, finalIconX, harmfulRowY, 24, 24, ARGB.white(this.opacity));
                     if (effectInstance.endsWithin(200)) {
                         int duration = effectInstance.getDuration();
                         int fadeFactor = 10 - duration / 20;

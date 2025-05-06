@@ -2,7 +2,7 @@ package de.keksuccino.spiffyhud.customization.elements.vanillalike.experience;
 
 import de.keksuccino.fancymenu.customization.element.AbstractElement;
 import de.keksuccino.fancymenu.customization.element.ElementBuilder;
-import de.keksuccino.fancymenu.util.rendering.RenderingUtils;
+import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -124,12 +124,12 @@ public class VanillaLikeExperienceElement extends AbstractElement {
 
             // Draw shadow and main text using 1.21.5 drawing methods with proper color
             // Draw a shadow around the text for better readability.
-            graphics.drawString(this.getFont(), levelText, textX + 1, textY, 0, false);
-            graphics.drawString(this.getFont(), levelText, textX - 1, textY, 0, false);
-            graphics.drawString(this.getFont(), levelText, textX, textY + 1, 0, false);
-            graphics.drawString(this.getFont(), levelText, textX, textY - 1, 0, false);
+            graphics.drawString(this.getFont(), levelText, textX + 1, textY, SpiffyRenderUtils.colorWithAlpha(0, this.opacity), false);
+            graphics.drawString(this.getFont(), levelText, textX - 1, textY, SpiffyRenderUtils.colorWithAlpha(0, this.opacity), false);
+            graphics.drawString(this.getFont(), levelText, textX, textY + 1, SpiffyRenderUtils.colorWithAlpha(0, this.opacity), false);
+            graphics.drawString(this.getFont(), levelText, textX, textY - 1, SpiffyRenderUtils.colorWithAlpha(0, this.opacity), false);
             // Draw the main level number in yellow (color code 8453920).
-            graphics.drawString(this.getFont(), levelText, textX, textY, 8453920, false);
+            graphics.drawString(this.getFont(), levelText, textX, textY, SpiffyRenderUtils.colorWithAlpha(8453920, this.opacity), false);
         }
     }
 
