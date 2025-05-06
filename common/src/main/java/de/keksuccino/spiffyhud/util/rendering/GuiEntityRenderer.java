@@ -114,8 +114,10 @@ public class GuiEntityRenderer {
         dispatcher.setRenderShadow(false);
         graphics.drawSpecial(multiBufferSource -> {
             ItemRenderingUtils.setItemOpacity(opacity);
+            BlockRenderingUtils.setBlockOpacity(opacity);
             EntityRenderingUtils.setLivingEntityOpacity(opacity);
             dispatcher.render(entity, 0.0, 0.0, 0.0, 1.0f, graphics.pose(), multiBufferSource, 15728880);
+            BlockRenderingUtils.resetBlockOpacity();
             EntityRenderingUtils.resetLivingEntityOpacity();
             ItemRenderingUtils.resetItemOpacity();
         });

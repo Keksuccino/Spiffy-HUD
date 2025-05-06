@@ -12,11 +12,11 @@
     "client.MixinChatScreen",
     "client.MixinCustomizationOverlayUI",
     "client.MixinEditorElementSettings",
-    "client.MixinItemRenderer",
     "client.MixinLayout",
     "client.MixinLayoutEditorUI",
     "client.MixinLivingEntityRenderer",
     "client.MixinMinecraft",
+    "client.MixinModelBlockRenderer",
     "client.MixinScreenCustomization",
     "client.MixinSpectatorGui",
     "client.MixinVanillaWidgetEditorElement"

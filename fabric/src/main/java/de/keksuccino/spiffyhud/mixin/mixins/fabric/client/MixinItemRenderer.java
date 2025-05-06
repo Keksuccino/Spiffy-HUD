@@ -1,4 +1,4 @@
-package de.keksuccino.spiffyhud.mixin.mixins.common.client;
+package de.keksuccino.spiffyhud.mixin.mixins.fabric.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

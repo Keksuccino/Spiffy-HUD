@@ -7,6 +7,7 @@ import de.keksuccino.fancymenu.customization.placeholder.PlaceholderParser;
 import de.keksuccino.fancymenu.util.MathUtils;
 import de.keksuccino.fancymenu.util.rendering.DrawableColor;
 import de.keksuccino.fancymenu.util.rendering.ui.UIBase;
+import de.keksuccino.spiffyhud.util.rendering.BlockRenderingUtils;
 import de.keksuccino.spiffyhud.util.rendering.ItemRenderingUtils;
 import de.keksuccino.spiffyhud.util.rendering.SpiffyRenderUtils;
 import net.minecraft.client.Minecraft;
@@ -110,7 +111,9 @@ public class SlotElement extends AbstractElement {
 
         // Now render the item at (0,0) because the translation has been applied.
         ItemRenderingUtils.setItemOpacity(this.opacity);
+        BlockRenderingUtils.setBlockOpacity(this.opacity);
         graphics.renderItem(stack, 0, 0);
+        BlockRenderingUtils.resetBlockOpacity();
         ItemRenderingUtils.resetItemOpacity();
 
         // Render durability bar if enabled and needed
