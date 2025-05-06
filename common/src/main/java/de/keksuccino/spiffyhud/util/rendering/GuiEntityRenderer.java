@@ -1,8 +1,6 @@
 package de.keksuccino.spiffyhud.util.rendering;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
-import de.keksuccino.fancymenu.mixin.mixins.common.client.IMixinGuiGraphics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -115,11 +113,11 @@ public class GuiEntityRenderer {
         EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         dispatcher.setRenderShadow(false);
         graphics.drawSpecial(multiBufferSource -> {
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, opacity);
+            ItemRenderingUtils.setItemOpacity(opacity);
+            EntityRenderingUtils.setLivingEntityOpacity(opacity);
             dispatcher.render(entity, 0.0, 0.0, 0.0, 1.0f, graphics.pose(), multiBufferSource, 15728880);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            graphics.flush();
-            graphics.fill(-10000, -10000, -10001, -10001, -1);
+            EntityRenderingUtils.resetLivingEntityOpacity();
+            ItemRenderingUtils.resetItemOpacity();
         });
         graphics.flush();
         dispatcher.setRenderShadow(true);
